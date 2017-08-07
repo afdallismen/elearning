@@ -14,9 +14,15 @@ class Student(models.Model):
 
     GENDER_CHOICES = GENDER_CHOICES
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        User,
+        editable=False,
+        on_delete=models.CASCADE,
+        primary_key=True,
+    )
     nobp = models.CharField(
         max_length=7,
+        unique=True,
         validators=[NOBPVALIDATOR]
     )
     gender = models.CharField(
@@ -25,10 +31,6 @@ class Student(models.Model):
         max_length=1
     )
     birth_date = models.DateField()
-    age = models.PositiveSmallIntegerField(
-        default=0,
-        editable=False,
-    )
     avatar = models.ImageField(
         blank=True,
         default='',
