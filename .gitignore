@@ -100,3 +100,6 @@ ENV/
 
 # migrations
 */migrations/
+
+# sqlite3
+db.sqlite3

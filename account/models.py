@@ -7,7 +7,11 @@ from .utils import user_directory_path
 
 
 MALE = GENDER_CHOICES[0][0]  # Default BaseProfile.gender
-NOBPVALIDATOR = RegexValidator('^(0[1-9]|1[1-9])(10{2}|00{2})([0-9][0-9])$')
+NOBPVALIDATOR = RegexValidator('^(0[1-9]|1[1-9])(10{2}|00{2})([0-9][0-9])$')  # ex: 1510099  # noqa
+PROGRAM = {
+    '000': 'Computer System',
+    '100': 'Information System'
+}
 
 
 class Student(models.Model):
@@ -36,3 +40,19 @@ class Student(models.Model):
         default='',
         upload_to=user_directory_path
     )
+
+    class Meta:
+        verbose_name = 'student'
+        verbose_name_plural = 'student'
+
+    @property
+    def class_of(self):
+        return '20{!s}'.format(self.nobp[0:2])
+
+    @property
+    def program(self):
+        return PROGRAM[self.nobp[2:5]]
+
+    @property
+    def nobp_seq(self):
+        return self.nobp[5:7]

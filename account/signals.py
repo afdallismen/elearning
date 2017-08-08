@@ -5,6 +5,6 @@ from django.dispatch import receiver
 
 @receiver(post_save, sender=User)
 def in_active_user(sender, instance, created, **kwargs):
-    if created:
+    if created and not instance.is_superuser:
         instance.is_active = False
         instance.save()
