@@ -7,7 +7,7 @@ from .utils import user_directory_path
 
 
 MALE = GENDER_CHOICES[0][0]  # Default BaseProfile.gender
-NOBPVALIDATOR = RegexValidator('^(0[1-9]|1[1-9])(10{2}|00{2})([0-9][0-9])$')  # ex: 1510099  # noqa
+NOBPVALIDATOR = RegexValidator('^(0[0-9]|1[0-9])(10{2}|00{2})([0-9][0-9])$')  # ex: 1510099  # noqa
 PROGRAM = {
     '000': 'Computer System',
     '100': 'Information System'
@@ -44,6 +44,13 @@ class Student(models.Model):
     class Meta:
         verbose_name = 'student'
         verbose_name_plural = 'student'
+
+    def __str__(self):
+        return (
+            self.user.get_full_name() or
+            self.user.get_short_name() or
+            self.user.get_username()
+        )
 
     @property
     def class_of(self):
