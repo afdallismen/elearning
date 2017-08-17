@@ -1,9 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
+from django.utils import timezone
 
 from .choices import GENDER_CHOICES
-from .utils import user_directory_path
+from .utils import user_avatar_directory_path
 
 
 MALE = GENDER_CHOICES[0][0]  # Default BaseProfile.gender
@@ -38,12 +39,12 @@ class Student(models.Model):
     avatar = models.ImageField(
         blank=True,
         default='',
-        upload_to=user_directory_path
+        upload_to=user_avatar_directory_path
     )
 
     class Meta:
         verbose_name = 'student'
-        verbose_name_plural = 'student'
+        verbose_name_plural = 'students'
 
     def __str__(self):
         return (
@@ -63,3 +64,18 @@ class Student(models.Model):
     @property
     def nobp_seq(self):
         return self.nobp[5:7]
+
+    @property
+    def in_semester(self):
+        year = timezone.now().year
+        month = timezone.now().month
+        class_of = int(self.class_of)
+        is_odd_semester = (12 / 2) <= month
+        semester = year - class_of
+
+        if year == class_of:
+            return 1
+        elif is_odd_semester:
+            return (semester * 2) + 1
+        else:
+            return (semester * 2) + 2
