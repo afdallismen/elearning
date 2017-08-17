@@ -1,11 +1,14 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
+from django.core.urlresolvers import reverse
+from django.utils.html import format_html
+
 
 from account.list_filter import (
     StudentProgramListFilter as filter_program,
     CredentialListFilter as filter_credential)
-from account.models import Student
+from account.models import Student, Lecturer
 
 
 def activate_users(model_admin, request, queryset):
@@ -24,7 +27,6 @@ class UserAdmin(BaseUserAdmin):
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
         ('Personal info', {'fields': ('first_name', 'last_name', 'email')}),
-        (None, {'fields': ('groups', )})
     )
     add_fieldsets = (
         (None, {
@@ -40,18 +42,89 @@ class UserAdmin(BaseUserAdmin):
 
 
 class StudentAdmin(admin.ModelAdmin):
-    action = ()
-    list_display = ('full_name', 'nobp', 'class_of', 'in_semester')
+    list_display = ('nobp', 'name', 'class_of', 'in_semester',
+                    'object_action')
+    list_display_links = None
     list_filter = (filter_program, )
 
-    def full_name(self, obj):
+    def name(self, obj):
         return str(obj).title()
+    name.admin_order_field = 'user__first_name'
 
-    def semester(self, obj):
+    def class_of(self, obj):
+        return obj.class_of
+    class_of.admin_order_field = 'nobp'
+
+    def in_semester(self, obj):
         return obj.in_semester
+    in_semester.admin_order_field = 'nobp'
+
+    def object_action(self, obj):
+        html = '''
+            <a href="{}" style="margin-right:10px">
+                <i class="fa fa-vcard-o" aria-hidden="true"></i> Student
+            </a>
+            <a href="{}" style="margin-right:10px">
+                <i class="fa fa-user-circle-o" aria-hidden="true"></i> User
+            </a>
+            <a href="{}">
+                <i class="fa fa-times" aria-hidden="true"></i> Delete
+            </a>'''
+
+        return format_html(
+            html,
+            reverse("admin:account_student_change", args=(obj.pk, )),
+            reverse("admin:auth_user_change", args=(obj.user.id, )),
+            reverse("admin:auth_user_delete", args=(obj.user.id, ))
+        )
+
+    class Media:
+        css = {
+            'all': (
+                "account/font-awesome-4.7.0/css/font-awesome.min.css",
+            )
+        }
+
+
+class LecturerAdmin(admin.ModelAdmin):
+    list_display = ('nip', 'name', 'object_action')
+    list_display_links = None
+
+    def name(self, obj):
+        return str(obj).title()
+    name.admin_order_field = 'user__first_name'
+
+    def object_action(self, obj):
+        html = '''
+            <a href="{}" style="margin-right:10px">
+                <i class="fa fa-vcard-o" aria-hidden="true"></i> Lecturer
+            </a>
+            <a href="{}" style="margin-right:10px">
+                <i class="fa fa-user-circle-o" aria-hidden="true"></i> User
+            </a>
+            <a href="{}">
+                <i class="fa fa-times" aria-hidden="true"></i> Delete
+            </a>'''
+
+        return format_html(
+            html,
+            reverse("admin:account_lecturer_change", args=(obj.pk, )),
+            reverse("admin:auth_user_change", args=(obj.user.id, )),
+            reverse("admin:auth_user_delete", args=(obj.user.id, ))
+        )
+
+    class Media:
+        css = {
+            'all': (
+                "account/font-awesome-4.7.0/css/font-awesome.min.css",
+            )
+        }
 
 
 # Re-register UserAdmin
 admin.site.unregister(User)
+admin.site.unregister(Group)
+
 admin.site.register(User, UserAdmin)
 admin.site.register(Student, StudentAdmin)
+admin.site.register(Lecturer, LecturerAdmin)

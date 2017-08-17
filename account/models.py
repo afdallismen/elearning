@@ -15,27 +15,14 @@ PROGRAM = {
 }
 
 
-class Student(models.Model):
-
-    GENDER_CHOICES = GENDER_CHOICES
-
+class BaseAccountModel(models.Model):
     user = models.OneToOneField(
         User,
         editable=False,
         on_delete=models.CASCADE,
         primary_key=True,
     )
-    nobp = models.CharField(
-        max_length=7,
-        unique=True,
-        validators=[NOBPVALIDATOR]
-    )
-    gender = models.CharField(
-        choices=GENDER_CHOICES,
-        default=MALE,
-        max_length=1
-    )
-    birth_date = models.DateField()
+
     avatar = models.ImageField(
         blank=True,
         default='',
@@ -43,8 +30,7 @@ class Student(models.Model):
     )
 
     class Meta:
-        verbose_name = 'student'
-        verbose_name_plural = 'students'
+        abstract = True
 
     def __str__(self):
         return (
@@ -53,17 +39,35 @@ class Student(models.Model):
             self.user.get_username()
         )
 
+
+class Student(BaseAccountModel):
+    nobp = models.CharField(
+        max_length=7,
+        unique=True,
+        validators=[NOBPVALIDATOR]
+    )
+
+    class Meta:
+        verbose_name = 'student'
+        verbose_name_plural = 'students'
+
     @property
     def class_of(self):
-        return '20{!s}'.format(self.nobp[0:2])
+        if self.nobp:
+            return '20{!s}'.format(self.nobp[0:2])
+        return str(timezone.now().year)
 
     @property
     def program(self):
-        return PROGRAM[self.nobp[2:5]]
+        if self.nobp:
+            return PROGRAM[self.nobp[2:5]]
+        return PROGRAM['000']
 
     @property
     def nobp_seq(self):
-        return self.nobp[5:7]
+        if self.nobp:
+            return self.nobp[5:7]
+        return '00'
 
     @property
     def in_semester(self):
@@ -79,3 +83,15 @@ class Student(models.Model):
             return (semester * 2) + 1
         else:
             return (semester * 2) + 2
+
+
+class Lecturer(BaseAccountModel):
+    nip = models.CharField(
+        max_length=7,
+        unique=True,
+        validators=[NOBPVALIDATOR]
+    )
+
+    class Meta:
+        verbose_name = 'lecturer'
+        verbose_name_plural = 'lecturers'
