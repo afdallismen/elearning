@@ -23,13 +23,13 @@ class StudentProgramListFilter(admin.SimpleListFilter):
 
 
 class CredentialListFilter(admin.SimpleListFilter):
-    title = "credential"
+    title = _("credential")
     parameter_name = "cred"
 
     def lookups(self, request, model_admin):
         return (
-            ('student', 'Student'),
-            ('lecturer', 'Lecturer'),
+            ('student', _('student').title()),
+            ('lecturer', _('lecturer').title()),
         )
 
     def queryset(self, request, queryset):

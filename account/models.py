@@ -5,15 +5,15 @@ from django.utils import timezone
 from django.utils.translation import ugettext as _
 
 
-from .choices import GENDER_CHOICES
-from .utils import user_avatar_directory_path
+from account.utils import user_avatar_directory_path
 
 
-MALE = GENDER_CHOICES[0][0]  # Default BaseProfile.gender
-NOBPVALIDATOR = RegexValidator('^(0[0-9]|1[0-9])(10{2}|00{2})([0-9][0-9])$')  # ex: 1510099  # noqa
+NOBPVALIDATOR = RegexValidator(
+    r'^0|1[0-9]0|10{2}[0-9]{2}$'
+)  # ex: 1510099  # noqa
 PROGRAM = {
-    '000': _('Computer System'),
-    '100': _('Information System')
+    '0': _("Computer System"),
+    '1': _("Information System")
 }
 
 
@@ -47,7 +47,7 @@ class Student(BaseAccountModel):
         max_length=7,
         unique=True,
         validators=[NOBPVALIDATOR],
-        verbose_name="No. BP"
+        verbose_name="no. bp"
     )
 
     class Meta:
@@ -63,8 +63,8 @@ class Student(BaseAccountModel):
 
     def program(self):
         if self.nobp:
-            return PROGRAM[self.nobp[2:5]]
-        return PROGRAM['000']
+            return PROGRAM[self.nobp[2]]
+        return PROGRAM['0']
     program.short_description = _('program')
     program.admin_order_field = 'nobp'
 
@@ -73,7 +73,7 @@ class Student(BaseAccountModel):
             return self.nobp[5:7]
         return '00'
     nobp_seq.short_description = _('sequence')
-    class_of.admin_order_field = 'nobp'
+    nobp_seq.admin_order_field = 'nobp'
 
     def in_semester(self):
         year = timezone.now().year
@@ -97,7 +97,7 @@ class Lecturer(BaseAccountModel):
         max_length=7,
         unique=True,
         validators=[NOBPVALIDATOR],
-        verbose_name="No. NIP"
+        verbose_name="no. nip"
     )
 
     class Meta:
