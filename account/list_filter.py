@@ -1,14 +1,15 @@
 from django.contrib import admin
+from django.utils.translation import ugettext as _
 
 
 class StudentProgramListFilter(admin.SimpleListFilter):
-    title = "program"
+    title = _("program")
     parameter_name = "program"
 
     def lookups(self, request, model_admin):
         return (
-            ('000', 'Computer System'),
-            ('100', 'Information System')
+            ('000', _('Computer System')),
+            ('100', _('Information System'))
         )
 
     def queryset(self, request, queryset):

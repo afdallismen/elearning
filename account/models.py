@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from django.utils import timezone
+from django.utils.translation import ugettext as _
+
 
 from .choices import GENDER_CHOICES
 from .utils import user_avatar_directory_path
@@ -10,8 +12,8 @@ from .utils import user_avatar_directory_path
 MALE = GENDER_CHOICES[0][0]  # Default BaseProfile.gender
 NOBPVALIDATOR = RegexValidator('^(0[0-9]|1[0-9])(10{2}|00{2})([0-9][0-9])$')  # ex: 1510099  # noqa
 PROGRAM = {
-    '000': 'Computer System',
-    '100': 'Information System'
+    '000': _('Computer System'),
+    '100': _('Information System')
 }
 
 
@@ -44,36 +46,39 @@ class Student(BaseAccountModel):
     nobp = models.CharField(
         max_length=7,
         unique=True,
-        validators=[NOBPVALIDATOR]
+        validators=[NOBPVALIDATOR],
+        verbose_name="No. BP"
     )
 
     class Meta:
-        verbose_name = 'student'
-        verbose_name_plural = 'students'
+        verbose_name = _('student')
+        verbose_name_plural = _('students')
 
-    @property
     def class_of(self):
         if self.nobp:
             return '20{!s}'.format(self.nobp[0:2])
         return str(timezone.now().year)
+    class_of.short_description = _('class_of')
+    class_of.admin_order_field = 'nobp'
 
-    @property
     def program(self):
         if self.nobp:
             return PROGRAM[self.nobp[2:5]]
         return PROGRAM['000']
+    program.short_description = _('program')
+    program.admin_order_field = 'nobp'
 
-    @property
     def nobp_seq(self):
         if self.nobp:
             return self.nobp[5:7]
         return '00'
+    nobp_seq.short_description = _('sequence')
+    class_of.admin_order_field = 'nobp'
 
-    @property
     def in_semester(self):
         year = timezone.now().year
         month = timezone.now().month
-        class_of = int(self.class_of)
+        class_of = int(self.class_of())
         is_odd_semester = (12 / 2) <= month
         semester = year - class_of
 
@@ -83,15 +88,18 @@ class Student(BaseAccountModel):
             return (semester * 2) + 1
         else:
             return (semester * 2) + 2
+    in_semester.short_description = _('in_semester')
+    in_semester.admin_order_field = 'nobp'
 
 
 class Lecturer(BaseAccountModel):
     nip = models.CharField(
         max_length=7,
         unique=True,
-        validators=[NOBPVALIDATOR]
+        validators=[NOBPVALIDATOR],
+        verbose_name="No. NIP"
     )
 
     class Meta:
-        verbose_name = 'lecturer'
-        verbose_name_plural = 'lecturers'
+        verbose_name = _('lecturer')
+        verbose_name_plural = _('lecturers')

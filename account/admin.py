@@ -4,7 +4,7 @@ from django.contrib.auth.models import User, Group
 from django.core.urlresolvers import reverse
 from django.utils.html import format_html
 
-
+from account.forms import MyAdminAuthenticationForm
 from account.list_filter import (
     StudentProgramListFilter as filter_program,
     CredentialListFilter as filter_credential)
@@ -46,18 +46,11 @@ class StudentAdmin(admin.ModelAdmin):
                     'object_action')
     list_display_links = None
     list_filter = (filter_program, )
+    search_fields = ('=nobp', '=user__username', '=user__first_name', '=user__last_name')
 
     def name(self, obj):
         return str(obj).title()
     name.admin_order_field = 'user__first_name'
-
-    def class_of(self, obj):
-        return obj.class_of
-    class_of.admin_order_field = 'nobp'
-
-    def in_semester(self, obj):
-        return obj.in_semester
-    in_semester.admin_order_field = 'nobp'
 
     def object_action(self, obj):
         html = '''
@@ -89,6 +82,7 @@ class StudentAdmin(admin.ModelAdmin):
 class LecturerAdmin(admin.ModelAdmin):
     list_display = ('nip', 'name', 'object_action')
     list_display_links = None
+    search_fields = ('=nip', '=user__username', '=user__first_name', '=user__last_name')
 
     def name(self, obj):
         return str(obj).title()
@@ -120,6 +114,8 @@ class LecturerAdmin(admin.ModelAdmin):
             )
         }
 
+
+admin.site.login_form = MyAdminAuthenticationForm
 
 # Re-register UserAdmin
 admin.site.unregister(User)
