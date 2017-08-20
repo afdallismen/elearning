@@ -56,15 +56,10 @@ class BaseAccountAdmin(admin.ModelAdmin):
         '=user__last_name'
     )
 
-    def name(self, obj):
-        return str(obj).title()
-    name.short_description = _("name")
-    name.admin_order_field = 'user__first_name'
-
     class Media:
         css = {
             'all': (
-                "account/font-awesome-4.7.0/css/font-awesome.min.css",
+                "font-awesome-4.7.0/css/font-awesome.min.css",
             )
         }
 

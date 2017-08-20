@@ -8,14 +8,14 @@ class StudentProgramListFilter(admin.SimpleListFilter):
 
     def lookups(self, request, model_admin):
         return (
-            ('000', _('Computer System')),
-            ('100', _('Information System'))
+            ('0', _('Computer System')),
+            ('1', _('Information System'))
         )
 
     def queryset(self, request, queryset):
         if self.value():
             return queryset.filter(
-                nobp__regex=r'^[0-9]{{2}}{}[0-9]{{2}}$'.format(
+                nobp__regex=r'^[0-9]{{2}}{}[0-9]{{4}}$'.format(
                     self.value()
                 )
             )

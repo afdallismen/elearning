@@ -8,13 +8,7 @@ from django.utils.translation import ugettext as _
 from account.utils import user_avatar_directory_path
 
 
-NOBPVALIDATOR = RegexValidator(
-    r'^0|1[0-9]0|10{2}[0-9]{2}$'
-)  # ex: 1510099  # noqa
-PROGRAM = {
-    '0': _("Computer System"),
-    '1': _("Information System")
-}
+NOBPVALIDATOR = RegexValidator(r'^0|1[0-9]0|10{2}[0-9]{2}$')  # ex: 1510099
 
 
 class BaseAccountModel(models.Model):
@@ -34,15 +28,25 @@ class BaseAccountModel(models.Model):
     class Meta:
         abstract = True
 
-    def __str__(self):
+    def name(self):
         return (
             self.user.get_full_name() or
             self.user.get_short_name() or
             self.user.get_username()
         )
+    name.short_description = _("name")
+    name.admin_order_field = 'user__first_name'
+
+    def __str__(self):
+        return self.name()
 
 
 class Student(BaseAccountModel):
+    PROGRAM = {
+        '0': _("Computer System"),
+        '1': _("Information System")
+    }
+
     nobp = models.CharField(
         max_length=7,
         unique=True,
@@ -63,8 +67,8 @@ class Student(BaseAccountModel):
 
     def program(self):
         if self.nobp:
-            return PROGRAM[self.nobp[2]]
-        return PROGRAM['0']
+            return self.PROGRAM[self.nobp[2]]
+        return self.PROGRAM['0']
     program.short_description = _('program')
     program.admin_order_field = 'nobp'
 
