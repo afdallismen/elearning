@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-18 15:35+0700\n"
+"POT-Creation-Date: 2017-08-20 10:44+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,71 +18,71 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: account/admin.py:22
+#: .\account\admin.py:22
 msgid "Make selected users as active"
 msgstr "Aktifkan akun user yang terpilih"
 
-#: account/admin.py:27
+#: .\account\admin.py:27
 msgid "Make selected users as inactive"
 msgstr "Nonaktifkan akun user yang terpilih"
 
-#: account/admin.py:48
+#: .\account\admin.py:48
 msgid "full name"
 msgstr "nama lengkap"
 
-#: account/admin.py:61
+#: .\account\admin.py:61
 msgid "name"
 msgstr "nama"
 
-#: account/admin.py:87 account/admin.py:100
+#: .\account\admin.py:87 .\account\admin.py:100
 msgid "object action"
 msgstr "aksi objek"
 
-#: account/apps.py:7
+#: .\account\apps.py:7
 msgid "account"
 msgstr "akun"
 
-#: account/list_filter.py:6 account/models.py:68
+#: .\account\list_filter.py:6 .\account\models.py:68
 msgid "program"
 msgstr "program studi"
 
-#: account/list_filter.py:11 account/models.py:15
+#: .\account\list_filter.py:11 .\account\models.py:15
 msgid "Computer System"
 msgstr "Sistem Komputer"
 
-#: account/list_filter.py:12 account/models.py:16
+#: .\account\list_filter.py:12 .\account\models.py:16
 msgid "Information System"
 msgstr "Sistem Informasi"
 
-#: account/list_filter.py:26
+#: .\account\list_filter.py:26
 msgid "credential"
 msgstr "kredensial"
 
-#: account/list_filter.py:31 account/models.py:54
+#: .\account\list_filter.py:31 .\account\models.py:54
 msgid "student"
 msgstr "mahasiswa"
 
-#: account/list_filter.py:32 account/models.py:104
+#: .\account\list_filter.py:32 .\account\models.py:104
 msgid "lecturer"
 msgstr "dosen"
 
-#: account/models.py:55
+#: .\account\models.py:55
 msgid "students"
 msgstr "mahasiswa"
 
-#: account/models.py:61
+#: .\account\models.py:61
 msgid "class_of"
 msgstr "angkatan"
 
-#: account/models.py:75
+#: .\account\models.py:75
 msgid "sequence"
 msgstr "urutan"
 
-#: account/models.py:91
+#: .\account\models.py:91
 msgid "in_semester"
 msgstr "semester"
 
-#: account/models.py:105
+#: .\account\models.py:105
 msgid "lecturers"
 msgstr "dosen"
 

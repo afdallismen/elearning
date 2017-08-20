@@ -1,0 +1,99 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-08-20 10:44+0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: .\sis\apps.py:7
+msgid "student information system"
+msgstr "sistem informasi perkuliahan"
+
+#: .\sis\models.py:16
+msgid "file upload"
+msgstr "unggah berkas"
+
+#: .\sis\models.py:22
+msgid "attachment"
+msgstr "lampiran"
+
+#: .\sis\models.py:23 .\sis\models.py:49 .\sis\models.py:99 .\sis\models.py:126
+msgid "attachments"
+msgstr "lampiran"
+
+#: .\sis\models.py:38
+msgid "title"
+msgstr "judul"
+
+#: .\sis\models.py:43
+msgid "created date"
+msgstr "tanggal dibuat"
+
+#: .\sis\models.py:46
+msgid "updated date"
+msgstr "tanggal perubahan"
+
+#: .\sis\models.py:52 .\sis\models.py:73
+msgid "module"
+msgstr "bahan kuliah"
+
+#: .\sis\models.py:53
+msgid "modules"
+msgstr "bahan kuliah"
+
+#: .\sis\models.py:66
+msgid "Daily"
+msgstr "Harian"
+
+#: .\sis\models.py:67
+msgid "Mid semester"
+msgstr "Mid semester"
+
+#: .\sis\models.py:68
+msgid "Final"
+msgstr "Akhir semester"
+
+#: .\sis\models.py:76
+msgid "assignment type"
+msgstr "tipe tugas"
+
+#: .\sis\models.py:79 .\sis\models.py:95
+msgid "assignment"
+msgstr "tugas"
+
+#: .\sis\models.py:80
+msgid "assignments"
+msgstr "tugas"
+
+#: .\sis\models.py:102 .\sis\models.py:122
+msgid "question"
+msgstr "pertanyaan"
+
+#: .\sis\models.py:103
+msgid "questions"
+msgstr "pertanyaan"
+
+#: .\sis\models.py:118
+msgid "author"
+msgstr "penulis"
+
+#: .\sis\models.py:129
+msgid "answer"
+msgstr "jawaban"
+
+#: .\sis\models.py:130
+msgid "answers"
+msgstr "jawaban"

@@ -21,5 +21,7 @@ import debug_toolbar
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^__debug__/', include(debug_toolbar.urls))
+    url(r'^__debug__/', include(debug_toolbar.urls)),
+    url(r'^tinymce/', include('tinymce.urls')),
+    url(r'^nested_admin/', include('nested_admin.urls')),
 ]

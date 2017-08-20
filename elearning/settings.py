@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['localhost']
 
 INSTALLED_APPS = [
     'account.apps.AccountConfig',
+    'sis.apps.SisConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,6 +42,8 @@ INSTALLED_APPS = [
     'django_extensions',
     'debug_toolbar',
     'autofixture',
+    'tinymce',
+    'nested_admin'
 ]
 
 MIDDLEWARE = [
@@ -162,3 +165,7 @@ LOGGING = {
         },
     },
 }
+
+TINYMCE_JS_URL = STATIC_URL + 'tinymce_4.6.5/js/tinymce/tinymce.min.js'
+TINYMCE_JS_ROOT = os.path.join(BASE_DIR, 'sis/static/tinymce_4.6.5/js/tinymce')
+TINYMCE_DEFAULT_CONFIG = {'theme': "modern", 'relative_urls': False}

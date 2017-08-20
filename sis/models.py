@@ -1,0 +1,124 @@
+from django.contrib.contenttypes.fields import (
+    GenericForeignKey, GenericRelation)
+from django.contrib.contenttypes.models import ContentType
+from django.db import models
+from django.utils.translation import ugettext as _
+from django.utils.html import strip_tags
+
+from tinymce import models as tinymce_models
+
+from account.models import Student
+from sis.utils import attachment_directory
+
+
+class Attachment(models.Model):
+    file_upload = models.FileField(
+        upload_to=attachment_directory,
+        verbose_name=_("file upload"))
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
+
+    class Meta:
+        verbose_name = _("attachment")
+        verbose_name_plural = _("attachments")
+
+    def __str__(self):
+        return self.file_upload.name
+
+
+class Module(models.Model):
+    title = models.CharField(
+        max_length=100,
+        verbose_name=_("title"))
+    slug = models.SlugField(max_length=100, blank=True, default="")
+    content = tinymce_models.HTMLField()
+    created_date = models.DateField(
+        auto_now_add=True,
+        verbose_name=_("created date"))
+    updated_date = models.DateField(
+        auto_now=True,
+        verbose_name=_("updated date"))
+    attachments = GenericRelation(
+        Attachment,
+        verbose_name=_("attachments"))
+
+    class Meta:
+        verbose_name = _("module")
+        verbose_name_plural = _("modules")
+
+    def __str__(self):
+        return self.title
+
+
+class Assignment(models.Model):
+    ASSIGNMENT_TYPE_CHOICES = (
+        (0, _("Daily")),
+        (1, _("Mid semester")),
+        (2, _("Final")))
+
+    module = models.ForeignKey(
+        Module,
+        on_delete=models.CASCADE,
+        verbose_name=_("module"))
+    assignment_type = models.PositiveIntegerField(
+        choices=ASSIGNMENT_TYPE_CHOICES,
+        verbose_name=_("assignment type"))
+
+    class Meta:
+        verbose_name = _("assignment")
+        verbose_name_plural = _("assignments")
+
+    def __repr__(self):
+        return "Assignment(pk={}, module__pk={})".format(
+            self.pk,
+            self.module.pk)
+
+    def __str__(self):
+        return repr(self)
+
+
+class Question(models.Model):
+    assignment = models.ForeignKey(
+        Assignment,
+        on_delete=models.CASCADE,
+        verbose_name=_("assignment"))
+    text = tinymce_models.HTMLField()
+    attachments = GenericRelation(
+        Attachment,
+        verbose_name=_("attachments"))
+
+    class Meta:
+        verbose_name = _("question")
+        verbose_name_plural = _("questions")
+
+    def __str__(self):
+        return strip_tags(self.text)
+
+
+class Answer(models.Model):
+    author = models.ForeignKey(
+        Student,
+        on_delete=models.CASCADE,
+        verbose_name=_("author"))
+    question = models.ForeignKey(
+        Question,
+        on_delete=models.CASCADE,
+        verbose_name=_("question"))
+    text = tinymce_models.HTMLField()
+    attachments = GenericRelation(
+        Attachment,
+        verbose_name=_("attachments"))
+
+    class Meta:
+        verbose_name = _("answer")
+        verbose_name_plural = _("answers")
+
+    def __repr__(self):
+        return "Answer(pk={}, author={}, question__pk={})".format(
+            self.pk,
+            str(self.author),
+            self.question.pk)
+
+    def __str__(self):
+        return repr(self)
