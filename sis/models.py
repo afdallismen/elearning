@@ -2,8 +2,10 @@ from django.contrib.contenttypes.fields import (
     GenericForeignKey, GenericRelation)
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
-from django.utils.translation import ugettext as _
+from django.utils import timezone
 from django.utils.html import strip_tags
+from django.utils.translation import ugettext as _
+
 
 from tinymce import models as tinymce_models
 
@@ -50,6 +52,12 @@ class Module(models.Model):
     def __str__(self):
         return self.title
 
+    @property
+    def academic_year(self):
+        return "{}/{}".format(
+            self.created_date.year,
+            self.created_date.year + 1)
+
 
 class Assignment(models.Model):
     ASSIGNMENT_TYPE_CHOICES = (
@@ -64,6 +72,7 @@ class Assignment(models.Model):
     assignment_type = models.PositiveIntegerField(
         choices=ASSIGNMENT_TYPE_CHOICES,
         verbose_name=_("assignment type"))
+    due_date = models.DateField()
 
     class Meta:
         verbose_name = _("assignment")
@@ -76,6 +85,10 @@ class Assignment(models.Model):
 
     def __str__(self):
         return repr(self)
+
+    @property
+    def is_active(self):
+        return timezone.now() > self.due_date
 
 
 class Question(models.Model):

@@ -63,6 +63,11 @@ class BaseAccountAdmin(admin.ModelAdmin):
             )
         }
 
+    def name(self, obj):
+        return obj.name
+    name.short_description = _('user')
+    name.admin_order_field = 'user__fist_name'
+
     def has_add_permission(self, obj):
         return False
 
@@ -71,6 +76,16 @@ class StudentAdmin(BaseAccountAdmin):
     list_display = ('nobp', 'name', 'class_of', 'in_semester',
                     'object_action')
     list_filter = (filter_program, )
+
+    def class_of(self, obj):
+        return obj.class_of
+    class_of.short_description = _('class of')
+    class_of.admin_order_field = 'nobp'
+
+    def in_semester(self, obj):
+        return obj.in_semester
+    in_semester.short_description = _('in semester')
+    in_semester.admin_order_field = 'nobp'
 
     def object_action(self, obj):
         return format_html(

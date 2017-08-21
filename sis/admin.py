@@ -19,7 +19,8 @@ class QuestionInline(nested_admin.NestedStackedInline):
 
 
 class AssignmentAdmin(nested_admin.NestedModelAdmin):
-    list_display = ('id', 'module_link')
+    list_display = ('assignment_type', 'module_link')
+    search_fields = ('module__title', )
     inlines = [QuestionInline]
 
     def module_link(self, obj):
@@ -33,8 +34,9 @@ class AssignmentAdmin(nested_admin.NestedModelAdmin):
         )
 
 
-class ModuleAdmin(admin.ModelAdmin):
+class ModuleAdmin(nested_admin.NestedModelAdmin):
     list_display = ('title', 'created_date', 'updated_date')
+    search_fields = ('title', )
     inlines = [AttachmentInline]
     prepopulated_fields = {"slug": ("title",)}
 
@@ -43,15 +45,12 @@ class AnswerAdmin(nested_admin.NestedModelAdmin):
     list_display = ('id', 'author_link', 'question_link')
     inlines = [AttachmentInline]
 
-    def has_add_permission(self, request):
-        return False
-
     def author_link(self, obj):
         return format_html(
             "<a href={}>{}</a>",
-            reverse(
-                "admin:account_student_changelist",
-            )+"?q={}".format(str(obj.author).replace(" ", "+")),
+            "".join((
+                reverse("admin:account_student_changelist", ),
+                "?q={}".format(str(obj.author).replace(" ", "+")))),
             str(obj.author).title()
         )
 
