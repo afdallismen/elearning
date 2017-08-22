@@ -27,7 +27,7 @@ def createuser():
     admin.save()
 
     dosen = Lecturer.objects.get(user=admin)
-    dosen.nip = "1510099"
+    dosen.nip = "198503302003121002"
     dosen.save()
 
     afdal = User.objects.create(**user['student'])

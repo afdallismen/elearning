@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-20 10:44+0700\n"
+"POT-Creation-Date: 2017-08-22 10:56+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,78 +22,79 @@ msgstr ""
 msgid "student information system"
 msgstr "sistem informasi perkuliahan"
 
-#: .\sis\models.py:16
+#: .\sis\models.py:19
 msgid "file upload"
 msgstr "unggah berkas"
 
-#: .\sis\models.py:22
+#: .\sis\models.py:25
 msgid "attachment"
 msgstr "lampiran"
 
-#: .\sis\models.py:23 .\sis\models.py:49 .\sis\models.py:99 .\sis\models.py:126
+#: .\sis\models.py:26 .\sis\models.py:46 .\sis\models.py:102
+#: .\sis\models.py:124
 msgid "attachments"
 msgstr "lampiran"
 
-#: .\sis\models.py:38
+#: .\sis\models.py:35
 msgid "title"
 msgstr "judul"
 
-#: .\sis\models.py:43
+#: .\sis\models.py:40
 msgid "created date"
 msgstr "tanggal dibuat"
 
-#: .\sis\models.py:46
+#: .\sis\models.py:43
 msgid "updated date"
 msgstr "tanggal perubahan"
 
-#: .\sis\models.py:52 .\sis\models.py:73
+#: .\sis\models.py:49 .\sis\models.py:71
 msgid "module"
 msgstr "bahan kuliah"
 
-#: .\sis\models.py:53
+#: .\sis\models.py:50
 msgid "modules"
 msgstr "bahan kuliah"
 
-#: .\sis\models.py:66
+#: .\sis\models.py:64
 msgid "Daily"
 msgstr "Harian"
 
-#: .\sis\models.py:67
+#: .\sis\models.py:65
 msgid "Mid semester"
 msgstr "Mid semester"
 
-#: .\sis\models.py:68
+#: .\sis\models.py:66
 msgid "Final"
 msgstr "Akhir semester"
 
-#: .\sis\models.py:76
+#: .\sis\models.py:74
 msgid "assignment type"
 msgstr "tipe tugas"
 
-#: .\sis\models.py:79 .\sis\models.py:95
+#: .\sis\models.py:78 .\sis\models.py:98
 msgid "assignment"
 msgstr "tugas"
 
-#: .\sis\models.py:80
+#: .\sis\models.py:79
 msgid "assignments"
 msgstr "tugas"
 
-#: .\sis\models.py:102 .\sis\models.py:122
+#: .\sis\models.py:105 .\sis\models.py:120
 msgid "question"
 msgstr "pertanyaan"
 
-#: .\sis\models.py:103
+#: .\sis\models.py:106
 msgid "questions"
 msgstr "pertanyaan"
 
-#: .\sis\models.py:118
+#: .\sis\models.py:116
 msgid "author"
 msgstr "penulis"
 
-#: .\sis\models.py:129
+#: .\sis\models.py:127
 msgid "answer"
 msgstr "jawaban"
 
-#: .\sis\models.py:130
+#: .\sis\models.py:128
 msgid "answers"
 msgstr "jawaban"

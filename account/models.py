@@ -1,14 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.core.validators import RegexValidator, MinLengthValidator
+from django.core.validators import RegexValidator
 from django.utils import timezone
 from django.utils.translation import ugettext as _
 
 
 from account.utils import user_avatar_directory_path
-
-
-NOBPVALIDATOR = RegexValidator(r'^0|1[0-9]0|10{2}[0-9]{2}$')  # ex: 1510099
 
 
 class BaseAccountModel(models.Model):
@@ -41,9 +38,13 @@ class BaseAccountModel(models.Model):
 
 
 class Student(BaseAccountModel):
+    NOBPVALIDATOR = RegexValidator(
+        r'''^[01][0-9]
+             [01]0{2}
+             [0-9]{2}$''')  # ex: 1510099
     PROGRAM = {
-        '0': _("Computer System"),
-        '1': _("Information System")
+        '0': _("computer system"),
+        '1': _("information system")
     }
 
     nobp = models.CharField(
@@ -66,11 +67,11 @@ class Student(BaseAccountModel):
     @property
     def program(self):
         if self.nobp:
-            return self.PROGRAM[self.nobp[2]]
-        return self.PROGRAM['0']
+            return (self.PROGRAM[self.nobp[2]]).title()
+        return (self.PROGRAM['0']).title()
 
     @property
-    def nobp_seq(self):
+    def nobp_sequence(self):
         if self.nobp:
             return self.nobp[5:7]
         return '00'
@@ -91,15 +92,47 @@ class Student(BaseAccountModel):
 
 
 class Lecturer(BaseAccountModel):
-    NIP_MIN_LENGTH = MinLengthValidator(7)
+    GENDER = {
+        '1': _("male"),
+        '2': _("female")
+    }
+    NIPVALIDATOR = RegexValidator(
+        r'''^[12][09][0-9]{2}[01][0-9][0-9]{2}
+            [12][09][0-9]{2}[01][0-9]
+            [12]
+            [0-9]{3}$''')  # ex: 198503302003121002
 
     nip = models.CharField(
-        max_length=7,
+        max_length=18,
         unique=True,
-        validators=[NIP_MIN_LENGTH],
+        validators=[NIPVALIDATOR],
         verbose_name="no. nip"
     )
 
     class Meta:
         verbose_name = _('lecturer')
         verbose_name_plural = _('lecturers')
+
+    @property
+    def birth_date(self):
+        if self.nip:
+            return timezone.strptime(self.nip[:8], "%Y%m%d").date()
+        return timezone.strptime("19000101", "%Y%m%d").date()
+
+    @property
+    def advancement_date(self):
+        if self.nip:
+            return timezone.strptime(self.nip[8:14], "%Y%m").date()
+        return timezone.strptime("190001", "%Y%m").date()
+
+    @property
+    def gender(self):
+        if self.nip:
+            return (self.GENDER[self.nip[14]]).title()
+        return (self.GENDER['1']).title()
+
+    @property
+    def nip_sequence(self):
+        if self.nip:
+            return int(self.nip[-3:])
+        return "000"

@@ -46,6 +46,7 @@ class UserAdmin(BaseUserAdmin):
     def full_name(self, obj):
         return " ".join((obj.first_name, obj.last_name)).title()
     full_name.short_description = _("full name")
+    full_name.admin_order_field = 'first_name'
 
 
 class BaseAccountAdmin(admin.ModelAdmin):

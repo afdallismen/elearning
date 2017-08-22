@@ -8,8 +8,8 @@ class StudentProgramListFilter(admin.SimpleListFilter):
 
     def lookups(self, request, model_admin):
         return (
-            ('0', _('Computer System')),
-            ('1', _('Information System'))
+            ('0', _('computer system').title()),
+            ('1', _('information system').title())
         )
 
     def queryset(self, request, queryset):
