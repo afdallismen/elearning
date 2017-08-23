@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-22 10:56+0700\n"
+"POT-Creation-Date: 2017-08-23 13:01+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,84 +17,116 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+#: .\sis\admin.py:35
+msgid "is active"
+msgstr "aktif"
 
-#: .\sis\apps.py:7
-msgid "student information system"
-msgstr "sistem informasi perkuliahan"
-
-#: .\sis\models.py:19
-msgid "file upload"
-msgstr "unggah berkas"
-
-#: .\sis\models.py:25
-msgid "attachment"
-msgstr "lampiran"
-
-#: .\sis\models.py:26 .\sis\models.py:46 .\sis\models.py:102
-#: .\sis\models.py:124
-msgid "attachments"
-msgstr "lampiran"
-
-#: .\sis\models.py:35
-msgid "title"
-msgstr "judul"
-
-#: .\sis\models.py:40
-msgid "created date"
-msgstr "tanggal dibuat"
-
-#: .\sis\models.py:43
-msgid "updated date"
-msgstr "tanggal perubahan"
-
-#: .\sis\models.py:49 .\sis\models.py:71
+#: .\sis\admin.py:48 .\sis\list_filters.py:56 .\sis\models.py:55
+#: .\sis\models.py:89
 msgid "module"
 msgstr "bahan kuliah"
 
-#: .\sis\models.py:50
-msgid "modules"
-msgstr "bahan kuliah"
+#: .\sis\admin.py:53 .\sis\admin.py:75 .\sis\list_filters.py:9
+msgid "academic year"
+msgstr "tahun ajaran"
 
-#: .\sis\models.py:64
-msgid "Daily"
-msgstr "Harian"
+#: .\sis\admin.py:58 .\sis\admin.py:80 .\sis\list_filters.py:32
+msgid "semester"
+msgstr "semester"
 
-#: .\sis\models.py:65
-msgid "Mid semester"
-msgstr "Mid semester"
+#: .\sis\admin.py:70 .\sis\models.py:41
+msgid "title"
+msgstr "judul"
 
-#: .\sis\models.py:66
-msgid "Final"
-msgstr "Akhir semester"
+#: .\sis\admin.py:92 .\sis\models.py:171
+msgid "answer"
+msgstr "jawabn"
 
-#: .\sis\models.py:74
-msgid "assignment type"
-msgstr "tipe tugas"
-
-#: .\sis\models.py:78 .\sis\models.py:98
-msgid "assignment"
-msgstr "tugas"
-
-#: .\sis\models.py:79
-msgid "assignments"
-msgstr "tugas"
-
-#: .\sis\models.py:105 .\sis\models.py:120
-msgid "question"
-msgstr "pertanyaan"
-
-#: .\sis\models.py:106
-msgid "questions"
-msgstr "pertanyaan"
-
-#: .\sis\models.py:116
+#: .\sis\admin.py:103 .\sis\models.py:160
 msgid "author"
 msgstr "penulis"
 
-#: .\sis\models.py:127
-msgid "answer"
-msgstr "jawaban"
+#: .\sis\admin.py:113 .\sis\models.py:145 .\sis\models.py:164
+msgid "question"
+msgstr "pertanyaan"
 
-#: .\sis\models.py:128
+#: .\sis\apps.py:7
+msgid "student information system"
+msgstr "sistem imformasi perkuliahan"
+
+#: .\sis\list_filters.py:37 .\sis\models.py:17
+msgid "odd"
+msgstr "ganjil"
+
+#: .\sis\list_filters.py:38 .\sis\models.py:18
+msgid "even"
+msgstr "genap"
+
+#: .\sis\list_filters.py:75 .\sis\models.py:92
+msgid "assignment type"
+msgstr "tipe tugas"
+
+#: .\sis\models.py:25
+msgid "file upload"
+msgstr "unggah file"
+
+#: .\sis\models.py:31
+msgid "attachment"
+msgstr "lampiran"
+
+#: .\sis\models.py:32 .\sis\models.py:52 .\sis\models.py:142
+#: .\sis\models.py:168
+msgid "attachments"
+msgstr "lampiran"
+
+#: .\sis\models.py:46 .\sis\models.py:98
+msgid "created date"
+msgstr "tanggal pembuatan"
+
+#: .\sis\models.py:49
+msgid "updated date"
+msgstr "tanggal perubahan"
+
+#: .\sis\models.py:56
+msgid "modules"
+msgstr "bahan kuliah"
+
+#: .\sis\models.py:82
+msgid "Daily"
+msgstr "Harian"
+
+#: .\sis\models.py:83
+msgid "Mid semester"
+msgstr "Tengah semester"
+
+#: .\sis\models.py:84
+msgid "Final"
+msgstr "Akhir"
+
+#: .\sis\models.py:95
+msgid "due date"
+msgstr "tanggal berakhir"
+
+#: .\sis\models.py:101 .\sis\models.py:138
+msgid "assignment"
+msgstr "tugas"
+
+#: .\sis\models.py:102
+msgid "assignments"
+msgstr "tugas"
+
+#: .\sis\models.py:146
+msgid "questions"
+msgstr "pertanyaan"
+
+#: .\sis\models.py:153 .\sis\models.py:179
+msgid "No text."
+msgstr "Tidak ada text."
+
+#: .\sis\models.py:172
 msgid "answers"
 msgstr "jawaban"
+
+#: .\sis\validators.py:6
+msgid "Ensure this value is greater than or equal to today's date."
+msgstr "Pastikan nilai pada filed ini lebih besar atau sama dengan tanggal hari ini."

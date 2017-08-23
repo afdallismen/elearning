@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
@@ -116,14 +118,14 @@ class Lecturer(BaseAccountModel):
     @property
     def birth_date(self):
         if self.nip:
-            return timezone.strptime(self.nip[:8], "%Y%m%d").date()
-        return timezone.strptime("19000101", "%Y%m%d").date()
+            return datetime.strptime(self.nip[:8], "%Y%m%d").date()
+        return datetime.strptime("19000101", "%Y%m%d").date()
 
     @property
     def advancement_date(self):
         if self.nip:
-            return timezone.strptime(self.nip[8:14], "%Y%m").date()
-        return timezone.strptime("190001", "%Y%m").date()
+            return datetime.strptime(self.nip[8:14], "%Y%m").date()
+        return datetime.strptime("190001", "%Y%m").date()
 
     @property
     def gender(self):
