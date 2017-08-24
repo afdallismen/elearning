@@ -1,6 +1,7 @@
 from django.contrib.contenttypes.fields import (
     GenericForeignKey, GenericRelation)
 from django.contrib.contenttypes.models import ContentType
+from django.core.validators import MaxValueValidator
 from django.db import models
 from django.utils import timezone
 from django.utils.html import strip_tags
@@ -83,10 +84,6 @@ class Assignment(models.Model):
         (1, _("Mid semester")),
         (2, _("Final")))
 
-    module = models.ForeignKey(
-        Module,
-        on_delete=models.CASCADE,
-        verbose_name=_("module"))
     assignment_type = models.PositiveIntegerField(
         choices=ASSIGNMENT_TYPE_CHOICES,
         verbose_name=_("assignment type"))
@@ -102,9 +99,7 @@ class Assignment(models.Model):
         verbose_name_plural = _("assignments")
 
     def __repr__(self):
-        return "Assignment(pk={}, module__pk={})".format(
-            self.pk,
-            self.module.pk)
+        return "{} assignment".format(self.get_assignment_type_display())
 
     def __str__(self):
         return repr(self)
@@ -136,10 +131,15 @@ class Question(models.Model):
         Assignment,
         on_delete=models.CASCADE,
         verbose_name=_("assignment"))
-    text = tinymce_models.HTMLField()
+    text = models.TextField()
     attachments = GenericRelation(
         Attachment,
         verbose_name=_("attachments"))
+    score_percentage = models.PositiveIntegerField(
+        blank=True,
+        default=0,
+        validators=[MaxValueValidator(100)],
+        verbose_name=_("score percentage"))
 
     class Meta:
         verbose_name = _("question")
@@ -166,6 +166,11 @@ class Answer(models.Model):
     attachments = GenericRelation(
         Attachment,
         verbose_name=_("attachments"))
+    score = models.PositiveIntegerField(
+        blank=True,
+        default=0,
+        verbose_name=_("score")
+    )
 
     class Meta:
         verbose_name = _("answer")

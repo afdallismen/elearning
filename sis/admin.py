@@ -4,7 +4,9 @@ from django.contrib import admin
 from django.core.urlresolvers import reverse
 from django.utils.html import format_html
 from django.utils.translation import ugettext as _
+from django.forms import modelformset_factory
 
+from sis.forms import BaseQuestionFormSet
 from sis.list_filters import (
     AcademicYearListFilter as filter_year,
     SemesterListFilter as filter_semester,
@@ -22,31 +24,42 @@ class QuestionInline(nested_admin.NestedStackedInline):
     model = Question
     inlines = [AttachmentInline]
     extra = 0
+    formset = modelformset_factory(
+        Question, fields=("__all__"), formset=BaseQuestionFormSet)
 
 
 class AssignmentAdmin(nested_admin.NestedModelAdmin):
-    list_display = ('assignment_type', 'academic_year', 'semester',
-                    'module_link', 'is_active')
-    search_fields = ('module__title', )
+    list_display = ('assignment_type', 'academic_year', 'semester', 'is_active')
     inlines = [QuestionInline]
+
+    def save_formset(self, request, form, formset, change):
+        instances = formset.save(commit=False)
+
+        if isinstance(formset.instance, Assignment):
+            total_score = sum((
+                instance.score_percentage for instance in instances))
+            is_empty_score = [
+                inst for inst in instances if inst.score_percentage == 0]
+
+            if is_empty_score and 0 < total_score < 100:
+                assigned_score = (100 - total_score) / len(is_empty_score)
+
+                for instance in instances:
+                    if instance in is_empty_score:
+                        instance.score_percentage = assigned_score
+
+        for obj in formset.deleted_objects:
+            obj.delete()
+
+        for instance in instances:
+            instance.save()
+        formset.save_m2m()
 
     def is_active(self, obj):
         return obj.is_active
     is_active.short_description = _("is active")
     is_active.admin_order_field = 'due_date'
     is_active.boolean = True
-
-    def module_link(self, obj):
-        return format_html(
-            "<a href={}>{}</a>",
-            reverse(
-                "admin:sis_module_change",
-                args=(obj.module.pk, ),
-            ),
-            str(obj.module).title()
-        )
-    module_link.short_description = _("module")
-    module_link.admin_order_field = 'module'
 
     def academic_year(self, obj):
         return obj.academic_year
@@ -83,7 +96,8 @@ class ModuleAdmin(nested_admin.NestedModelAdmin):
 
 class AnswerAdmin(nested_admin.NestedModelAdmin):
     search_fields = ('author__user__username', )
-    list_filter = (filter_year, filter_semester, filter_module, filter_assignment)
+    list_filter = (filter_year, filter_semester, filter_module,
+                   filter_assignment)
     list_display = ('answer', 'author_link', 'question_link')
     inlines = [AttachmentInline]
 
