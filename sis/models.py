@@ -169,8 +169,8 @@ class Answer(models.Model):
     score = models.PositiveIntegerField(
         blank=True,
         default=0,
-        verbose_name=_("score")
-    )
+        validators=[MaxValueValidator(100)],
+        verbose_name=_("score"))
 
     class Meta:
         verbose_name = _("answer")
@@ -182,3 +182,31 @@ class Answer(models.Model):
                 self.text[:30] if len(self.text) < 30
                 else self.text[:30] + "...")
         return _("No text.")
+
+
+class Report(models.Model):
+    student = models.ForeignKey(
+        Student,
+        on_delete=models.CASCADE,
+        verbose_name=_("student"))
+    assignments = models.ForeignKey(
+        Assignment,
+        on_delete=models.CASCADE,
+        verbose_name=_("assignment"))
+    final_score = models.PositiveIntegerField(
+        blank=True,
+        default=0,
+        validators=[MaxValueValidator(100)],
+        verbose_name=_("final score"))
+
+    class Meta:
+        verbose_name = _("report")
+        verbose_name_plural = _("report")
+
+    def get_final_score(self):
+        questions = self.assignments.question_set.all()
+        answers = []
+        for question in questions:
+            answer = Answer.objects.get(author=self.student, question=question)
+            answers.append(answer)
+        return sum([answer.score for answer in answers]) // len(questions)

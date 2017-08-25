@@ -10,9 +10,8 @@ from sis.forms import BaseQuestionFormSet
 from sis.list_filters import (
     AcademicYearListFilter as filter_year,
     SemesterListFilter as filter_semester,
-    ModuleListFilter as filter_module,
     AssignmentTypeListFilter as filter_assignment)
-from sis.models import Module, Answer, Attachment, Assignment, Question
+from sis.models import Module, Answer, Attachment, Assignment, Question, Report
 
 
 class AttachmentInline(nested_admin.NestedGenericStackedInline):
@@ -96,8 +95,7 @@ class ModuleAdmin(nested_admin.NestedModelAdmin):
 
 class AnswerAdmin(nested_admin.NestedModelAdmin):
     search_fields = ('author__user__username', )
-    list_filter = (filter_year, filter_semester, filter_module,
-                   filter_assignment)
+    list_filter = (filter_year, filter_semester, filter_assignment)
     list_display = ('answer', 'author_link', 'question_link')
     inlines = [AttachmentInline]
 
@@ -131,3 +129,4 @@ class AnswerAdmin(nested_admin.NestedModelAdmin):
 admin.site.register(Module, ModuleAdmin)
 admin.site.register(Assignment, AssignmentAdmin)
 admin.site.register(Answer, AnswerAdmin)
+admin.site.register(Report)
