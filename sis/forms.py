@@ -9,7 +9,25 @@ class BaseQuestionFormSet(nested_admin.NestedInlineFormSet):
         if any(self.errors):
             return
         total = sum((
-            form.cleaned_data['score_percentage'] for form in self.forms))
-        if 0 < total < 100 or total > 100:
-            raise ValidationError(_("Make sure question score percentage "
+            form.cleaned_data['score_percentage'] for form in self.forms if form.cleaned_data))
+        for form in self.forms:
+            print(form.is_valid())
+        if total < 100:
+            empty_score = []
+            for form in self.forms:
+                if form.cleaned_data['score_percentage'] == 0:
+                    empty_score.append(form)
+
+            if empty_score:
+                assigned_score = (100 - total) // len(empty_score)
+                for form in self.forms:
+                    if form in empty_score:
+                        inst = form.save(commit=False)
+                        inst.score_percentage = assigned_score
+                        inst.save()
+            else:
+                raise ValidationError(_("Make sure score percentage "
+                                        "add up to 100."))
+        elif total > 100:
+            raise ValidationError(_("Make sure score percentage "
                                     "add up to 100."))

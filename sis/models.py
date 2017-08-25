@@ -131,7 +131,7 @@ class Question(models.Model):
         Assignment,
         on_delete=models.CASCADE,
         verbose_name=_("assignment"))
-    text = models.TextField()
+    text = models.TextField(blank=True, default="")
     attachments = GenericRelation(
         Attachment,
         verbose_name=_("attachments"))
@@ -203,7 +203,7 @@ class Report(models.Model):
         verbose_name = _("report")
         verbose_name_plural = _("report")
 
-    def get_final_score(self):
+    def compute_final_score(self):
         questions = self.assignments.question_set.all()
         answers = []
         for question in questions:

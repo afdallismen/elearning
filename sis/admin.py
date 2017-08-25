@@ -28,31 +28,9 @@ class QuestionInline(nested_admin.NestedStackedInline):
 
 
 class AssignmentAdmin(nested_admin.NestedModelAdmin):
-    list_display = ('assignment_type', 'academic_year', 'semester', 'is_active')
+    list_display = ('assignment_type', 'academic_year', 'semester',
+                    'is_active')
     inlines = [QuestionInline]
-
-    def save_formset(self, request, form, formset, change):
-        instances = formset.save(commit=False)
-
-        if isinstance(formset.instance, Assignment):
-            total_score = sum((
-                instance.score_percentage for instance in instances))
-            is_empty_score = [
-                inst for inst in instances if inst.score_percentage == 0]
-
-            if is_empty_score and 0 < total_score < 100:
-                assigned_score = (100 - total_score) / len(is_empty_score)
-
-                for instance in instances:
-                    if instance in is_empty_score:
-                        instance.score_percentage = assigned_score
-
-        for obj in formset.deleted_objects:
-            obj.delete()
-
-        for instance in instances:
-            instance.save()
-        formset.save_m2m()
 
     def is_active(self, obj):
         return obj.is_active
