@@ -39,9 +39,27 @@ class UserAdmin(BaseUserAdmin):
             'fields': ('username', 'password1', 'password2'),
         }),
     )
-    list_display = ('full_name', 'email', 'date_joined', 'is_active')
+    list_display = ('full_name', 'email', 'date_joined', 'is_active',
+                    'object_action')
+    list_display_links = None
     list_filter = ('is_active', filter_credential)
     readonly_fields = ('last_login', 'date_joined')
+
+    class Media:
+        css = {
+            'all': (
+                "font-awesome-4.7.0/css/font-awesome.min.css",
+            )
+        }
+
+    def object_action(self, obj):
+        return format_html(
+            '<a href="{}" style="margin-right:10px">'
+            '<i class="fa fa-user-circle-o" aria-hidden="true"></i> Pengguna'
+            '</a>',
+            reverse("admin:auth_user_change", args=(obj.id, )),
+        )
+    object_action.short_description = _("object action")
 
     def full_name(self, obj):
         return " ".join((obj.first_name, obj.last_name)).title()
@@ -66,7 +84,7 @@ class BaseAccountAdmin(admin.ModelAdmin):
 
     def name(self, obj):
         return obj.name
-    name.short_description = _('user')
+    name.short_description = _('name')
     name.admin_order_field = 'user__fist_name'
 
     def has_add_permission(self, obj):

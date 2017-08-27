@@ -10,7 +10,8 @@ from sis.forms import BaseQuestionFormSet
 from sis.list_filters import (
     AcademicYearListFilter as filter_year,
     SemesterListFilter as filter_semester,
-    AssignmentTypeListFilter as filter_assignment)
+    AssignmentTypeListFilter as filter_assignment,
+    AssignmentActiveListFilter as filter_active)
 from sis.models import Module, Answer, Attachment, Assignment, Question, Report
 
 
@@ -29,8 +30,17 @@ class QuestionInline(nested_admin.NestedStackedInline):
 
 class AssignmentAdmin(nested_admin.NestedModelAdmin):
     list_display = ('assignment_type', 'academic_year', 'semester',
-                    'is_active')
+                    'is_active', 'object_action')
+    list_display_links = None
+    list_filter = (filter_year, filter_semester, filter_active)
     inlines = [QuestionInline]
+
+    class Media:
+        css = {
+            'all': (
+                "font-awesome-4.7.0/css/font-awesome.min.css",
+            )
+        }
 
     def is_active(self, obj):
         return obj.is_active
@@ -48,12 +58,30 @@ class AssignmentAdmin(nested_admin.NestedModelAdmin):
     semester.short_description = _("semester")
     semester.admin_order_field = 'created_date'
 
+    def object_action(self, obj):
+        return format_html(
+            '<a href="{}" style="margin-right:10px">'
+            '<i class="fa fa-file-text-o" aria-hidden="true"></i> Tugas'
+            '</a>',
+            reverse("admin:sis_assignment_change", args=(obj.id, )),
+        )
+    object_action.short_description = _("object action")
+
 
 class ModuleAdmin(nested_admin.NestedModelAdmin):
-    list_display = ('the_title', 'academic_year', 'semester', 'updated_date')
+    list_display = ('the_title', 'academic_year', 'semester', 'updated_date',
+                    'object_action')
+    list_display_links = None
+    list_filter = (filter_year, filter_semester)
     search_fields = ('title', )
     inlines = [AttachmentInline]
-    prepopulated_fields = {"slug": ("title",)}
+
+    class Media:
+        css = {
+            'all': (
+                "font-awesome-4.7.0/css/font-awesome.min.css",
+            )
+        }
 
     def the_title(self, obj):
         return (obj.title).title()
@@ -70,38 +98,46 @@ class ModuleAdmin(nested_admin.NestedModelAdmin):
     semester.short_description = _("semester")
     semester.admin_order_field = 'created_date'
 
+    def object_action(self, obj):
+        return format_html(
+            '<a href="{}" style="margin-right:10px">'
+            '<i class="fa fa-file-text-o" aria-hidden="true"></i> Bahan kuliah'
+            '</a>',
+            reverse("admin:sis_module_change", args=(obj.id, )),
+        )
+    object_action.short_description = _("object action")
+
 
 class AnswerAdmin(nested_admin.NestedModelAdmin):
-    search_fields = ('author__user__username', )
-    list_filter = (filter_year, filter_semester, filter_assignment)
-    list_display = ('answer', 'author_link', 'question_link')
+    search_fields = (
+        'author__user__username',
+        'author__user__first_name',
+        'author__user__last_name')
+    list_filter = (filter_year, filter_semester, filter_assignment,
+                   ('student', admin.RelatedOnlyFieldListFilter))
+    list_display = ('student', 'assignment', 'question', 'score',
+                    'object_action')
+    list_display_links = None
     inlines = [AttachmentInline]
 
-    def answer(self, obj):
-        return str(obj)
-    answer.short_description = _("answer")
-    answer.admin_order_field = 'pk'
+    class Media:
+        css = {
+            'all': (
+                "font-awesome-4.7.0/css/font-awesome.min.css",
+            )
+        }
 
-    def author_link(self, obj):
+    def assignment(self, obj):
+        return obj.question.assignment
+
+    def object_action(self, obj):
         return format_html(
-            "<a href={}>{}</a>",
-            "".join((
-                reverse("admin:account_student_changelist", ),
-                "?q={}".format(str(obj.author).replace(" ", "+")))),
-            str(obj.author).title()
+            '<a href="{}" style="margin-right:10px">'
+            '<i class="fa fa-file-text-o" aria-hidden="true"></i> Jawaban'
+            '</a>',
+            reverse("admin:sis_answer_change", args=(obj.id, )),
         )
-    author_link.short_description = _("author")
-    author_link.admin_order_field = 'author'
-
-    def question_link(self, obj):
-        return format_html(
-            "<a href={}>{}</a>",
-            reverse(
-                "admin:sis_assignment_change",
-                args=(obj.question.assignment.pk, )),
-            str(obj.question))
-    question_link.short_description = _("question")
-    question_link.admin_order_field = 'question'
+    object_action.short_description = _("object action")
 
 
 admin.site.register(Module, ModuleAdmin)

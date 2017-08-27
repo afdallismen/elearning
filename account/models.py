@@ -15,14 +15,11 @@ class BaseAccountModel(models.Model):
         User,
         editable=False,
         on_delete=models.CASCADE,
-        primary_key=True,
-    )
-
+        primary_key=True,)
     avatar = models.ImageField(
         blank=True,
         default='',
-        upload_to=user_avatar_directory_path
-    )
+        upload_to=user_avatar_directory_path)
 
     class Meta:
         abstract = True
@@ -41,9 +38,7 @@ class BaseAccountModel(models.Model):
 
 class Student(BaseAccountModel):
     NOBPVALIDATOR = RegexValidator(
-        r'''^[01][0-9]
-             [01]0{2}
-             [0-9]{2}$''')  # ex: 1510099
+        r'^[01][0-9][01]0{2}[0-9]{2}$')  # ex: 1510099
     PROGRAM = {
         '0': _("computer system"),
         '1': _("information system")
@@ -53,8 +48,7 @@ class Student(BaseAccountModel):
         max_length=7,
         unique=True,
         validators=[NOBPVALIDATOR],
-        verbose_name="no. bp"
-    )
+        verbose_name="no. bp")
 
     class Meta:
         verbose_name = _('student')

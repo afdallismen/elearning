@@ -8,7 +8,7 @@ from sis.models import Answer, Report
 @receiver(post_save, sender=Answer)
 def create_report(sender, instance, created, **kwargs):
     report = {
-        'student': instance.author,
+        'student': instance.student,
         'assignments': instance.question.assignment
     }
     report, _ = Report.objects.get_or_create(**report)
@@ -25,7 +25,7 @@ def get_final_score(answer):
         try:
             answers.append(
                 Answer.objects.get(
-                    question=question.pk, author=answer.author.pk))
+                    question=question.pk, student=answer.student.pk))
         except ObjectDoesNotExist:
             pass
 
