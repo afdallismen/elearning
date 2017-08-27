@@ -2,21 +2,28 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from sis.models import Answer, Report
+from sis.models import Answer, AssignmentResult, FinalResult
 
 
 @receiver(post_save, sender=Answer)
 def create_report(sender, instance, created, **kwargs):
     report = {
         'student': instance.student,
-        'assignments': instance.question.assignment
+        'assignment': instance.question.assignment
     }
-    report, _ = Report.objects.get_or_create(**report)
-    report.final_score = get_final_score(instance)
+    report, _ = AssignmentResult.objects.get_or_create(**report)
+    report.score = get_assignment_score(instance)
+    report.save()
+
+    report, _ = FinalResult.objects.get_or_create(student=instance.student)
+    total_score = []
+    for rep in AssignmentResult.objects.filter(student=instance.student):
+        total_score.append(rep.score)
+    report.score = sum(total_score) / len(total_score)
     report.save()
 
 
-def get_final_score(answer):
+def get_assignment_score(answer):
     assignment = answer.question.assignment
     questions = assignment.question_set.all()
     answers = []

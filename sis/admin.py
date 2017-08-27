@@ -1,18 +1,31 @@
 import nested_admin
 
 from django.contrib import admin
-from django.core.urlresolvers import reverse
-from django.utils.html import format_html
 from django.utils.translation import ugettext as _
 from django.forms import modelformset_factory
 
 from sis.forms import BaseQuestionFormSet
 from sis.list_filters import (
-    AcademicYearListFilter as filter_year,
-    SemesterListFilter as filter_semester,
-    AssignmentTypeListFilter as filter_assignment,
+    AssignmentCategoryListFilter as filter_assignment,
     AssignmentActiveListFilter as filter_active)
-from sis.models import Module, Answer, Attachment, Assignment, Question, Report
+from sis.models import (
+    Module, Answer, Attachment, Assignment, Question, AssignmentResult,
+    FinalResult)
+from sis.utils import (
+    module_admin_object_action_link, assignment_admin_object_action_link,
+    answer_admin_object_action_link)
+
+
+class SisAdminMixin(object):
+    class Media:
+        css = {
+            'all': (
+                "font-awesome-4.7.0/css/font-awesome.min.css",
+            )
+        }
+
+    def object_action(self, obj):
+        pass
 
 
 class AttachmentInline(nested_admin.NestedGenericStackedInline):
@@ -28,119 +41,74 @@ class QuestionInline(nested_admin.NestedStackedInline):
         Question, fields=("__all__"), formset=BaseQuestionFormSet)
 
 
-class AssignmentAdmin(nested_admin.NestedModelAdmin):
-    list_display = ('assignment_type', 'academic_year', 'semester',
-                    'is_active', 'object_action')
-    list_display_links = None
-    list_filter = (filter_year, filter_semester, filter_active)
-    inlines = [QuestionInline]
-
-    class Media:
-        css = {
-            'all': (
-                "font-awesome-4.7.0/css/font-awesome.min.css",
-            )
-        }
-
-    def is_active(self, obj):
-        return obj.is_active
-    is_active.short_description = _("is active")
-    is_active.admin_order_field = 'due_date'
-    is_active.boolean = True
-
-    def academic_year(self, obj):
-        return obj.academic_year
-    academic_year.short_description = _("academic year")
-    academic_year.admin_order_field = 'created_date'
-
-    def semester(self, obj):
-        return (obj.semester).title()
-    semester.short_description = _("semester")
-    semester.admin_order_field = 'created_date'
-
-    def object_action(self, obj):
-        return format_html(
-            '<a href="{}" style="margin-right:10px">'
-            '<i class="fa fa-file-text-o" aria-hidden="true"></i> Tugas'
-            '</a>',
-            reverse("admin:sis_assignment_change", args=(obj.id, )),
-        )
-    object_action.short_description = _("object action")
-
-
-class ModuleAdmin(nested_admin.NestedModelAdmin):
-    list_display = ('the_title', 'academic_year', 'semester', 'updated_date',
+class ModuleAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
+    list_display = ('the_title', 'created_date', 'updated_date',
                     'object_action')
     list_display_links = None
-    list_filter = (filter_year, filter_semester)
     search_fields = ('title', )
     inlines = [AttachmentInline]
-
-    class Media:
-        css = {
-            'all': (
-                "font-awesome-4.7.0/css/font-awesome.min.css",
-            )
-        }
 
     def the_title(self, obj):
         return (obj.title).title()
     the_title.short_description = _("title")
     the_title.admin_order_field = 'title'
 
-    def academic_year(self, obj):
-        return obj.academic_year
-    academic_year.short_description = _("academic year")
-    academic_year.admin_order_field = 'created_date'
-
-    def semester(self, obj):
-        return (obj.semester).title()
-    semester.short_description = _("semester")
-    semester.admin_order_field = 'created_date'
-
     def object_action(self, obj):
-        return format_html(
-            '<a href="{}" style="margin-right:10px">'
-            '<i class="fa fa-file-text-o" aria-hidden="true"></i> Bahan kuliah'
-            '</a>',
-            reverse("admin:sis_module_change", args=(obj.id, )),
-        )
+        return module_admin_object_action_link(obj)
     object_action.short_description = _("object action")
 
 
-class AnswerAdmin(nested_admin.NestedModelAdmin):
-    search_fields = (
-        'author__user__username',
-        'author__user__first_name',
-        'author__user__last_name')
-    list_filter = (filter_year, filter_semester, filter_assignment,
-                   ('student', admin.RelatedOnlyFieldListFilter))
-    list_display = ('student', 'assignment', 'question', 'score',
+class AssignmentAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
+    list_display = ('category', 'created_date', 'number_of_questions',
                     'object_action')
     list_display_links = None
-    inlines = [AttachmentInline]
+    list_filter = (filter_assignment, )
+    inlines = [QuestionInline]
 
-    class Media:
-        css = {
-            'all': (
-                "font-awesome-4.7.0/css/font-awesome.min.css",
-            )
-        }
+    def number_of_questions(self, obj):
+        return obj.question_set.count()
+    number_of_questions.short_description = _("number of questions")
+
+    def object_action(self, obj):
+        return assignment_admin_object_action_link(obj)
+    object_action.short_description = _("object action")
+
+
+class AnswerAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
+    search_fields = (
+        'student__user__username',
+        'student__user__first_name',
+        'student__user__last_name')
+    list_filter = (filter_assignment,
+                   ('student', admin.RelatedOnlyFieldListFilter))
+    list_display = ('student', 'assignment', 'question', 'score_percentage',
+                    'score', 'object_action')
+    list_display_links = None
+    inlines = [AttachmentInline]
 
     def assignment(self, obj):
         return obj.question.assignment
 
+    def score_percentage(self, obj):
+        return obj.question.score_percentage
+
     def object_action(self, obj):
-        return format_html(
-            '<a href="{}" style="margin-right:10px">'
-            '<i class="fa fa-file-text-o" aria-hidden="true"></i> Jawaban'
-            '</a>',
-            reverse("admin:sis_answer_change", args=(obj.id, )),
-        )
+        return answer_admin_object_action_link(obj)
     object_action.short_description = _("object action")
+
+
+class AssignmentResultAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
+    search_fields = (
+        'student__user__username',
+        'student__user__first_name',
+        'student__user__last_name')
+    list_display = ('student', 'assignment', 'score')
+    list_display_links = None
+    list_filters = (('student', admin.RelatedOnlyFieldListFilter), )
 
 
 admin.site.register(Module, ModuleAdmin)
 admin.site.register(Assignment, AssignmentAdmin)
 admin.site.register(Answer, AnswerAdmin)
-admin.site.register(Report)
+admin.site.register(AssignmentResult, AssignmentResultAdmin)
+admin.site.register(FinalResult)

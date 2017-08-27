@@ -120,17 +120,17 @@ class ModuleTitleListFilter(admin.SimpleListFilter):
         return queryset
 
 
-class AssignmentTypeListFilter(admin.SimpleListFilter):
-    title = _("assignment type")
-    parameter_name = 'type'
+class AssignmentCategoryListFilter(admin.SimpleListFilter):
+    title = _("assignment cateory")
+    parameter_name = 'cat'
 
     def lookups(self, request, model_admin):
-        return Assignment.ASSIGNMENT_TYPE_CHOICES
+        return Assignment.ASSIGNMENT_CATEGORY_CHOICES
 
     def queryset(self, request, queryset):
         if self.value():
             return queryset.filter(
-                question__assignment__assignment_type=self.value()
+                question__assignment__category=self.value()
             )
         return queryset
 

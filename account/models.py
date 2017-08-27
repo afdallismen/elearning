@@ -73,7 +73,7 @@ class Student(BaseAccountModel):
         return '00'
 
     @property
-    def in_semester(self):
+    def semester(self):
         now = timezone.now()
         class_of = int(self.class_of)
         is_odd_semester = now.month >= 6

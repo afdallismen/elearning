@@ -14,32 +14,6 @@ from sis.utils import attachment_directory, nstrip_tags
 from sis.validators import MinDateValueValidator
 
 
-SEMESTER = {
-    'odd': _("odd"),
-    'even': _("even")
-}
-
-
-class TimedModelMixin(object):
-
-    @property
-    def semester(self):
-        if self.created_date.month <= 6:
-            return SEMESTER['even']
-        return SEMESTER['odd']
-
-    @property
-    def academic_year(self):
-        if self.semester == SEMESTER['even']:
-            return "{}/{}".format(
-                self.created_date.year - 1,
-                self.created_date.year)
-
-        return "{}/{}".format(
-            self.created_date.year,
-            self.created_date.year + 1)
-
-
 class Attachment(models.Model):
     file_upload = models.FileField(
         upload_to=attachment_directory,
@@ -56,7 +30,7 @@ class Attachment(models.Model):
         return self.file_upload.name
 
 
-class Module(models.Model, TimedModelMixin):
+class Module(models.Model):
     title = models.CharField(
         max_length=100,
         unique=True,
@@ -85,26 +59,23 @@ class Module(models.Model, TimedModelMixin):
         verbose_name_plural = _("modules")
 
     def __str__(self):
-        return "{} - {}".format(self.academic_year, self.title)
+        return "{} - {}".format(self.created_date, self.title)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
         super(Module, self).save(*args, **kwargs)
 
 
-class Assignment(models.Model, TimedModelMixin):
+class Assignment(models.Model):
     DUEDATEVALIDATOR = MinDateValueValidator(timezone.now().date())
-    ASSIGNMENT_TYPE_CHOICES = (
-        (0, _("Daily")),
+    ASSIGNMENT_CATEGORY_CHOICES = (
+        (0, _("Weekly")),
         (1, _("Mid semester")),
         (2, _("Final")))
 
-    assignment_type = models.PositiveIntegerField(
-        choices=ASSIGNMENT_TYPE_CHOICES,
-        verbose_name=_("assignment type"))
-    due_date = models.DateField(
-        validators=[DUEDATEVALIDATOR],
-        verbose_name=_("due date"))
+    category = models.PositiveIntegerField(
+        choices=ASSIGNMENT_CATEGORY_CHOICES,
+        verbose_name=_("category"))
     created_date = models.DateField(
         auto_now_add=True,
         verbose_name=_("created date"))
@@ -115,12 +86,8 @@ class Assignment(models.Model, TimedModelMixin):
 
     def __str__(self):
         return "{} - {} assignment".format(
-            self.academic_year,
-            self.get_assignment_type_display())
-
-    @property
-    def is_active(self):
-        return self.due_date >= timezone.now().date()
+            self.created_date,
+            self.get_category_display())
 
 
 class Question(models.Model):
@@ -166,6 +133,9 @@ class Answer(models.Model):
         default=0,
         validators=[MaxValueValidator(100)],
         verbose_name=_("score"))
+    correct = models.NullBooleanField(
+        blank=True,
+        verbose_name=_("correct"))
 
     class Meta:
         verbose_name = _("answer")
@@ -176,22 +146,51 @@ class Answer(models.Model):
             return nstrip_tags(30, self.text)
         return _("This object has no written text.")
 
+    def save(self, *args, **kwargs):
+        if self.correct is True:
+            self.score = 100
+        elif self.correct is False:
+            self.score = 0
+        super(Answer, self).save(*args, **kwargs)
 
-class Report(models.Model):
+
+class AssignmentResult(models.Model):
     student = models.ForeignKey(
         Student,
         on_delete=models.CASCADE,
         verbose_name=_("student"))
-    assignments = models.ForeignKey(
+    assignment = models.ForeignKey(
         Assignment,
         on_delete=models.CASCADE,
         verbose_name=_("assignment"))
-    final_score = models.PositiveIntegerField(
+    score = models.PositiveIntegerField(
         blank=True,
         default=0,
         validators=[MaxValueValidator(100)],
-        verbose_name=_("final score"))
+        verbose_name=_("score"))
 
     class Meta:
-        verbose_name = _("report")
-        verbose_name_plural = _("report")
+        verbose_name = _("assignment result")
+        verbose_name_plural = _("assignment result")
+
+    def __str__(self):
+        return _("{} result of {} assignment").format(
+            self.student,
+            self.assignment.category
+        )
+
+
+class FinalResult(models.Model):
+    student = models.ForeignKey(
+        Student,
+        on_delete=models.CASCADE,
+        verbose_name=_("student"))
+    score = models.PositiveIntegerField(
+        blank=True,
+        default=0,
+        validators=[MaxValueValidator(100)],
+        verbose_name=_("score"))
+
+    class Meta:
+        verbose_name = _("final result")
+        verbose_name_plural = _("final result")

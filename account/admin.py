@@ -92,7 +92,7 @@ class BaseAccountAdmin(admin.ModelAdmin):
 
 
 class StudentAdmin(BaseAccountAdmin):
-    list_display = ('nobp', 'name', 'class_of', 'in_semester',
+    list_display = ('nobp', 'name', 'class_of', 'semester',
                     'object_action')
     list_filter = (filter_program, )
 
@@ -101,10 +101,10 @@ class StudentAdmin(BaseAccountAdmin):
     class_of.short_description = _('class of')
     class_of.admin_order_field = 'nobp'
 
-    def in_semester(self, obj):
-        return obj.in_semester
-    in_semester.short_description = _('in semester')
-    in_semester.admin_order_field = 'nobp'
+    def semester(self, obj):
+        return obj.semester
+    semester.short_description = _('semester')
+    semester.admin_order_field = 'nobp'
 
     def object_action(self, obj):
         return format_html(

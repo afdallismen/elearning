@@ -10,8 +10,11 @@ class BaseQuestionFormSet(nested_admin.NestedInlineFormSet):
             return
 
         if self.forms and any([form.cleaned_data for form in self.forms]):
-            total = sum((
-                form.cleaned_data['score_percentage'] for form in self.forms if form.cleaned_data))
+            total = 0
+            for form in self.forms:
+                if form.cleaned_data:
+                    total += form.cleaned_data['score_percentage']
+
             if total < 100:
                 empty_score = []
                 for form in self.forms:

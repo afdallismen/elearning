@@ -14,11 +14,12 @@ def in_active_user(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=User)
 def create_student_or_lecturer(sender, instance, created, **kwargs):
-    if created and not instance.is_superuser:
-        instance.groups.add(Group.objects.get(name='student'))
-        instance.save()
-        Student.objects.get_or_create(user=instance)
-    elif created and instance.is_superuser:
-        instance.groups.add(Group.objects.get(name='lecturer'))
-        instance.save()
-        Lecturer.objects.get_or_create(user=instance)
+    if created:
+        if not instance.is_superuser:
+            instance.groups.add(Group.objects.get(name='student'))
+            instance.save()
+            Student.objects.get_or_create(user=instance)
+        elif instance.is_superuser:
+            instance.groups.add(Group.objects.get(name='lecturer'))
+            instance.save()
+            Lecturer.objects.get_or_create(user=instance)
