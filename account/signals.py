@@ -3,6 +3,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from account.models import Student, Lecturer
+from sis.models import FinalResult
 
 
 @receiver(post_save, sender=User)
@@ -18,7 +19,8 @@ def create_student_or_lecturer(sender, instance, created, **kwargs):
         if not instance.is_superuser:
             instance.groups.add(Group.objects.get(name='student'))
             instance.save()
-            Student.objects.get_or_create(user=instance)
+            student, _ = Student.objects.get_or_create(user=instance)
+            FinalResult.objects.get_or_create(student=student)
         elif instance.is_superuser:
             instance.groups.add(Group.objects.get(name='lecturer'))
             instance.save()

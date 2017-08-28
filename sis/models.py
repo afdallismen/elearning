@@ -5,7 +5,6 @@ from django.core.validators import MaxValueValidator
 from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
-from django.utils.translation import ugettext as _
 
 from tinymce import models as tinymce_models
 
@@ -17,14 +16,14 @@ from sis.validators import MinDateValueValidator
 class Attachment(models.Model):
     file_upload = models.FileField(
         upload_to=attachment_directory,
-        verbose_name=_("file upload"))
+        verbose_name="file upload")
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
 
     class Meta:
-        verbose_name = _("attachment")
-        verbose_name_plural = _("attachments")
+        verbose_name = "attachment"
+        verbose_name_plural = "attachments"
 
     def __str__(self):
         return self.file_upload.name
@@ -34,7 +33,7 @@ class Module(models.Model):
     title = models.CharField(
         max_length=100,
         unique=True,
-        verbose_name=_("title"))
+        verbose_name="title")
     slug = models.SlugField(
         blank=True,
         default="",
@@ -43,20 +42,20 @@ class Module(models.Model):
     text = tinymce_models.HTMLField(
         blank=True,
         default="",
-        verbose_name=_("text"))
+        verbose_name="text")
     created_date = models.DateField(
         auto_now_add=True,
-        verbose_name=_("created date"))
+        verbose_name="created date")
     updated_date = models.DateField(
         auto_now=True,
-        verbose_name=_("updated date"))
+        verbose_name="updated date")
     attachments = GenericRelation(
         Attachment,
-        verbose_name=_("attachments"))
+        verbose_name="attachments")
 
     class Meta:
-        verbose_name = _("module")
-        verbose_name_plural = _("modules")
+        verbose_name = "module"
+        verbose_name_plural = "modules"
 
     def __str__(self):
         return "{} - {}".format(self.created_date, self.title)
@@ -69,25 +68,24 @@ class Module(models.Model):
 class Assignment(models.Model):
     DUEDATEVALIDATOR = MinDateValueValidator(timezone.now().date())
     ASSIGNMENT_CATEGORY_CHOICES = (
-        (0, _("Weekly")),
-        (1, _("Mid semester")),
-        (2, _("Final")))
+        (0, "Weekly"),
+        (1, "Mid semester"),
+        (2, "Final"))
 
     category = models.PositiveIntegerField(
         choices=ASSIGNMENT_CATEGORY_CHOICES,
-        verbose_name=_("category"))
+        verbose_name="category")
     created_date = models.DateField(
         auto_now_add=True,
-        verbose_name=_("created date"))
+        verbose_name="created date")
 
     class Meta:
-        verbose_name = _("assignment")
-        verbose_name_plural = _("assignments")
+        verbose_name = "assignment"
+        verbose_name_plural = "assignments"
 
     def __str__(self):
         return "{} - {} assignment".format(
-            self.created_date,
-            self.get_category_display())
+            self.created_date, self.get_category_display())
 
 
 class Question(models.Model):
@@ -96,55 +94,55 @@ class Question(models.Model):
         blank=True,
         null=True,
         on_delete=models.CASCADE,
-        verbose_name=_("assignment"))
-    text = models.TextField(blank=True, default="", verbose_name=_("text"))
+        verbose_name="assignment")
+    text = models.TextField(blank=True, default="", verbose_name="text")
     score_percentage = models.PositiveIntegerField(
         blank=True,
         default=0,
         validators=[MaxValueValidator(100)],
-        verbose_name=_("score percentage"))
-    attachments = GenericRelation(Attachment, verbose_name=_("attachments"))
+        verbose_name="score percentage")
+    attachments = GenericRelation(Attachment, verbose_name="attachments")
 
     class Meta:
-        verbose_name = _("question")
-        verbose_name_plural = _("questions")
+        verbose_name = "question"
+        verbose_name_plural = "questions"
 
     def __str__(self):
         if self.text:
             return nstrip_tags(30, self.text)
-        return _("This object has no written text.")
+        return "This object has no written text."
 
 
 class Answer(models.Model):
     student = models.ForeignKey(
         Student,
         on_delete=models.CASCADE,
-        verbose_name=_("student"))
+        verbose_name="student")
     question = models.ForeignKey(
         Question,
         on_delete=models.CASCADE,
-        verbose_name=_("question"))
-    text = models.TextField(blank=True, default="", verbose_name=_("text"))
+        verbose_name="question")
+    text = models.TextField(blank=True, default="", verbose_name="text")
     attachments = GenericRelation(
         Attachment,
-        verbose_name=_("attachments"))
+        verbose_name="attachments")
     score = models.PositiveIntegerField(
         blank=True,
         default=0,
         validators=[MaxValueValidator(100)],
-        verbose_name=_("score"))
+        verbose_name="score")
     correct = models.NullBooleanField(
         blank=True,
-        verbose_name=_("correct"))
+        verbose_name="correct")
 
     class Meta:
-        verbose_name = _("answer")
-        verbose_name_plural = _("answers")
+        verbose_name = "answer"
+        verbose_name_plural = "answers"
 
     def __str__(self):
         if self.text:
             return nstrip_tags(30, self.text)
-        return _("This object has no written text.")
+        return "This object has no written text."
 
     def save(self, *args, **kwargs):
         if self.correct is True:
@@ -158,25 +156,25 @@ class AssignmentResult(models.Model):
     student = models.ForeignKey(
         Student,
         on_delete=models.CASCADE,
-        verbose_name=_("student"))
+        verbose_name="student")
     assignment = models.ForeignKey(
         Assignment,
         on_delete=models.CASCADE,
-        verbose_name=_("assignment"))
+        verbose_name="assignment")
     score = models.PositiveIntegerField(
         blank=True,
         default=0,
         validators=[MaxValueValidator(100)],
-        verbose_name=_("score"))
+        verbose_name="score")
 
     class Meta:
-        verbose_name = _("assignment result")
-        verbose_name_plural = _("assignment result")
+        verbose_name = "assignment result"
+        verbose_name_plural = "assignment result"
 
     def __str__(self):
-        return _("{} result of {} assignment").format(
+        return "{} result of {}".format(
             self.student,
-            self.assignment.category
+            self.assignment
         )
 
 
@@ -184,13 +182,29 @@ class FinalResult(models.Model):
     student = models.ForeignKey(
         Student,
         on_delete=models.CASCADE,
-        verbose_name=_("student"))
+        verbose_name="student")
     score = models.PositiveIntegerField(
         blank=True,
         default=0,
         validators=[MaxValueValidator(100)],
-        verbose_name=_("score"))
+        verbose_name="score")
 
     class Meta:
-        verbose_name = _("final result")
-        verbose_name_plural = _("final result")
+        verbose_name = "final result"
+        verbose_name_plural = "final result"
+
+    def __str__(self):
+        return "Final result of student {}".format(self.student)
+
+    @property
+    def letter_value(self):
+        if 85 <= self.score <= 100:
+            return 'A'
+        elif 75 <= self.score <= 84:
+            return 'B'
+        elif 60 <= self.score <= 74:
+            return 'C'
+        elif 50 <= self.score <= 59:
+            return 'D'
+        else:
+            return 'E'

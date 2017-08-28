@@ -3,7 +3,6 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User, Group
 from django.core.urlresolvers import reverse
 from django.utils.html import format_html
-from django.utils.translation import ugettext as _
 
 from account.forms import MyAdminAuthenticationForm
 from account.list_filter import (
@@ -19,12 +18,12 @@ from account.utils import (
 
 def activate_users(model_admin, request, queryset):
     queryset.update(is_active=True)
-activate_users.short_description = _("Make selected users as active") # noqa
+activate_users.short_description = "Make selected users as active" # noqa
 
 
 def deactivate_users(model_admin, request, queryset):
     queryset.update(is_active=False)
-deactivate_users.short_description = _("Make selected users as inactive") # noqa
+deactivate_users.short_description = "Make selected users as inactive" # noqa
 
 
 # Define a new User admin
@@ -55,24 +54,24 @@ class UserAdmin(BaseUserAdmin):
     def object_action(self, obj):
         return format_html(
             '<a href="{}" style="margin-right:10px">'
-            '<i class="fa fa-user-circle-o" aria-hidden="true"></i> Pengguna'
+            '<i class="fa fa-user-circle-o" aria-hidden="true"></i> User'
             '</a>',
             reverse("admin:auth_user_change", args=(obj.id, )),
         )
-    object_action.short_description = _("object action")
+    object_action.short_description = "object action"
 
     def full_name(self, obj):
         return " ".join((obj.first_name, obj.last_name)).title()
-    full_name.short_description = _("full name")
+    full_name.short_description = "full name"
     full_name.admin_order_field = 'first_name'
 
 
 class BaseAccountAdmin(admin.ModelAdmin):
     list_display_links = None
     search_fields = (
-        '=user__username',
-        '=user__first_name',
-        '=user__last_name'
+        'user__username',
+        'user__first_name',
+        'user__last_name'
     )
 
     class Media:
@@ -84,7 +83,7 @@ class BaseAccountAdmin(admin.ModelAdmin):
 
     def name(self, obj):
         return obj.name
-    name.short_description = _('name')
+    name.short_description = 'name'
     name.admin_order_field = 'user__fist_name'
 
     def has_add_permission(self, obj):
@@ -98,12 +97,12 @@ class StudentAdmin(BaseAccountAdmin):
 
     def class_of(self, obj):
         return obj.class_of
-    class_of.short_description = _('class of')
+    class_of.short_description = 'class of'
     class_of.admin_order_field = 'nobp'
 
     def semester(self, obj):
         return obj.semester
-    semester.short_description = _('semester')
+    semester.short_description = 'semester'
     semester.admin_order_field = 'nobp'
 
     def object_action(self, obj):
@@ -113,7 +112,7 @@ class StudentAdmin(BaseAccountAdmin):
             reverse("admin:auth_user_change", args=(obj.user.id, )),
             reverse("admin:auth_user_delete", args=(obj.user.id, )),
         )
-    object_action.short_description = _("object action")
+    object_action.short_description = "object action"
 
 
 class LecturerAdmin(BaseAccountAdmin):
@@ -126,7 +125,7 @@ class LecturerAdmin(BaseAccountAdmin):
             reverse("admin:auth_user_change", args=(obj.user.id, )),
             reverse("admin:auth_user_delete", args=(obj.user.id, ))
         )
-    object_action.short_description = _("object action")
+    object_action.short_description = "object action"
 
 
 admin.site.login_form = MyAdminAuthenticationForm

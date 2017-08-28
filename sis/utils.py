@@ -5,7 +5,7 @@ from django.utils.html import strip_tags, format_html
 def module_admin_object_action_link(obj):
     return format_html(
         '<a href="{}" style="margin-right:10px">'
-        '<i class="fa fa-file-text-o" aria-hidden="true"></i> Bahan kuliah'
+        '<i class="fa fa-file-text-o" aria-hidden="true"></i> Module'
         '</a>',
         reverse("admin:sis_module_change", args=(obj.id, )))
 
@@ -13,7 +13,7 @@ def module_admin_object_action_link(obj):
 def assignment_admin_object_action_link(obj):
     return format_html(
         '<a href="{}" style="margin-right:10px">'
-        '<i class="fa fa-file-text-o" aria-hidden="true"></i> Tugas'
+        '<i class="fa fa-file-text-o" aria-hidden="true"></i> Assignment'
         '</a>',
         reverse("admin:sis_assignment_change", args=(obj.id, )))
 
@@ -21,7 +21,7 @@ def assignment_admin_object_action_link(obj):
 def answer_admin_object_action_link(obj):
     return format_html(
         '<a href="{}" style="margin-right:10px">'
-        '<i class="fa fa-file-text-o" aria-hidden="true"></i> Jawaban'
+        '<i class="fa fa-file-text-o" aria-hidden="true"></i> Answer'
         '</a>',
         reverse("admin:sis_answer_change", args=(obj.id, )))
 

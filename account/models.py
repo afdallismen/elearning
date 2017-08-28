@@ -4,7 +4,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from django.utils import timezone
-from django.utils.translation import ugettext as _
 
 
 from account.utils import user_avatar_directory_path
@@ -40,8 +39,8 @@ class Student(BaseAccountModel):
     NOBPVALIDATOR = RegexValidator(
         r'^[01][0-9][01]0{2}[0-9]{2}$')  # ex: 1510099
     PROGRAM = {
-        '0': _("computer system"),
-        '1': _("information system")
+        '0': "computer system",
+        '1': "information system"
     }
 
     nobp = models.CharField(
@@ -51,8 +50,8 @@ class Student(BaseAccountModel):
         verbose_name="no. bp")
 
     class Meta:
-        verbose_name = _('student')
-        verbose_name_plural = _('students')
+        verbose_name = 'student'
+        verbose_name_plural = 'students'
 
     @property
     def class_of(self):
@@ -89,8 +88,8 @@ class Student(BaseAccountModel):
 
 class Lecturer(BaseAccountModel):
     GENDER = {
-        '1': _("male"),
-        '2': _("female")
+        '1': "male",
+        '2': "female"
     }
     NIPVALIDATOR = RegexValidator(
         r'''^[12][09][0-9]{2}[01][0-9][0-9]{2}
@@ -106,8 +105,8 @@ class Lecturer(BaseAccountModel):
     )
 
     class Meta:
-        verbose_name = _('lecturer')
-        verbose_name_plural = _('lecturers')
+        verbose_name = 'lecturer'
+        verbose_name_plural = 'lecturers'
 
     @property
     def birth_date(self):
