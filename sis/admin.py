@@ -40,33 +40,31 @@ class QuestionInline(nested_admin.NestedStackedInline):
 
 class ModuleAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
     list_display = ('the_title', 'created_date', 'updated_date',
-                    'object_action')
-    list_display_links = None
+                    'number_of_attachments')
     search_fields = ('title', )
     inlines = [AttachmentInline]
 
     def the_title(self, obj):
-        return (obj.title).title()
-    the_title.short_description = "title"
+        return obj.title
+    the_title.short_description = "module"
     the_title.admin_order_field = 'title'
 
-    def object_action(self, obj):
-        return module_admin_object_action_link(obj)
+    def number_of_attachments(self, obj):
+        return obj.attachments.count()
 
 
 class AssignmentAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
-    list_display = ('category', 'created_date', 'number_of_questions',
-                    'object_action')
-    list_display_links = None
+    list_display = ('cat', 'created_date', 'number_of_questions')
     list_filter = (filter_assignment, )
     inlines = [QuestionInline]
 
     def number_of_questions(self, obj):
         return obj.question_set.count()
-    number_of_questions.short_description = "number of questions"
 
-    def object_action(self, obj):
-        return assignment_admin_object_action_link(obj)
+    def cat(self, obj):
+        return obj.get_category_display()
+    cat.short_description = "assignment"
+    cat.admin_order_field = 'category'
 
 
 class AnswerAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
@@ -124,25 +122,23 @@ class FinalResultAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
         super(FinalResultAdmin, self).__init__(*args, **kwargs)
 
     def get_list_display(self, request):
-        self.weekly_assignments = Assignment.objects.filter(
-            category=0).order_by('created_date')
-
-        self.mid_assignments = Assignment.objects.filter(
-            category=1).order_by('created_date')
-
-        self.final_assignments = Assignment.objects.filter(
-            category=2).order_by('created_date')
-
+        self.assignments = {
+            'weekly': Assignment.objects.filter(category=0).order_by(
+                'created_date'),
+            'mid': Assignment.objects.filter(category=1).order_by(
+                'created_date'),
+            'final': Assignment.objects.filter(category=2).order_by(
+                'created_date')
+        }
         list_display = ['student', ]
-        if self.weekly_assignments:
-            list_display.extend(
-                ['weekly' for assignment in self.weekly_assignments])
-        if self.mid_assignments:
-            list_display.extend(
-                ['mid' for assignment in self.mid_assignments])
-        if self.final_assignments:
-            list_display.extend(
-                ['final' for assignment in self.final_assignments])
+        count = (
+            ('weekly', len(self.assignments['weekly'])),
+            ('mid', len(self.assignments['mid'])),
+            ('final', len(self.assignments['final']))
+        )
+        for ct in count:
+            for _ in range(0, ct[1]):
+                list_display.append(ct[0])
         list_display.append('score')
         list_display.append('letter_value')
 
@@ -152,52 +148,33 @@ class FinalResultAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
         return obj.letter_value
 
     def weekly(self, obj):
-        assignment_id = self.weekly_assignments[self.counters['weekly']].id
-        try:
-            score = AssignmentResult.objects.get(
-                student=obj.student, assignment=assignment_id
-            ).score
-        except AssignmentResult.DoesNotExist:
-            score = 0
-        if self.counters['weekly'] < len(self.weekly_assignments) - 1:
-            self.counters['weekly'] += 1
-        else:
-            self.counters['weekly'] = 0
-        return score
+        return self._get_score_display(cat='weekly', obj=obj)
 
     def mid(self, obj):
-        assignment_id = self.mid_assignments[self.counters['mid']].id
-        try:
-            score = AssignmentResult.objects.get(
-                student=obj.student, assignment=assignment_id
-            ).score
-        except AssignmentResult.DoesNotExist:
-            score = 0
-        if self.counters['mid'] < len(self.mid_assignments) - 1:
-            self.counters['mid'] += 1
-        else:
-            self.counters['mid'] = 0
-        return score
+        return self._get_score_display(cat='mid', obj=obj)
 
     def final(self, obj):
-        assignment_id = self.final_assignments[self.counters['final']].id
-        try:
-            score = AssignmentResult.objects.get(
-                student=obj.student, assignment=assignment_id
-            ).score
-        except AssignmentResult.DoesNotExist:
-            score = 0
-        if self.counters['final'] < len(self.final_assignments) - 1:
-            self.counters['final'] += 1
-        else:
-            self.counters['final'] = 0
-        return score
+        return self._get_score_display(cat='final', obj=obj)
 
     def has_add_permission(self, request):
         return False
 
     def has_delete_permission(self, request, obj=None):
         return False
+
+    def _get_score_display(self, cat, obj):
+        assignment_id = self.assignments[cat][self.counters[cat]].id
+        try:
+            score = AssignmentResult.objects.get(
+                student=obj.student, assignment=assignment_id
+            ).score
+        except AssignmentResult.DoesNotExist:
+            score = "-"
+        if self.counters[cat] < len(self.assignments[cat]) - 1:
+            self.counters[cat] += 1
+        else:
+            self.counters[cat] = 0
+        return score
 
 
 admin.site.register(Module, ModuleAdmin)

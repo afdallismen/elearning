@@ -179,7 +179,7 @@ class AssignmentResult(models.Model):
 
 
 class FinalResult(models.Model):
-    student = models.ForeignKey(
+    student = models.OneToOneField(
         Student,
         on_delete=models.CASCADE,
         verbose_name="student")

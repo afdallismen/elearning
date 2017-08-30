@@ -7,7 +7,7 @@ from sis.models import FinalResult
 
 
 @receiver(post_save, sender=User)
-def inactive_student_and_assign_groups(sender, instance, created, **kwargs):
+def assign_groups(sender, instance, created, **kwargs):
     if created:
         if instance.is_staff:
             group, _ = Group.objects.get_or_create(name='lecturer')

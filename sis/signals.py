@@ -2,7 +2,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
-from sis.models import Answer, AssignmentResult, FinalResult, Assignment
+from account.models import Student
+from sis.models import Answer, AssignmentResult, Assignment
 
 
 @receiver(post_save, sender=Answer)
@@ -11,16 +12,11 @@ def create_result(sender, instance, created, **kwargs):
         'student': instance.student,
         'assignment': instance.question.assignment
     }
-    report, _ = AssignmentResult.objects.get_or_create(**report)
-    report.score = get_assignment_score(instance)
-    report.save()
+    result, _ = AssignmentResult.objects.get_or_create(**report)
+    result.score = _get_assignment_result(instance)
+    result.save()
 
-    report, _ = FinalResult.objects.get_or_create(student=instance.student)
-    total_score = []
-    for rep in AssignmentResult.objects.filter(student=instance.student):
-        total_score.append(rep.score)
-    report.score = sum(total_score) / Assignment.objects.count()
-    report.save()
+    _update_final_result(instance.student)
 
 
 @receiver(post_delete, sender=Answer)
@@ -34,15 +30,25 @@ def delete_result(sender, instance, using, **kwargs):
             student=student, assignment=assignment
         ).delete()
 
-    report, _ = FinalResult.objects.get_or_create(student=instance.student)
-    total_score = []
-    for rep in AssignmentResult.objects.filter(student=instance.student):
-        total_score.append(rep.score)
-    report.score = sum(total_score) / Assignment.objects.count()
-    report.save()
+    _update_final_result(instance.student)
 
 
-def get_assignment_score(answer):
+@receiver([post_save, post_delete], sender=Assignment)
+def update_final_result(sender, instance, *args, **kwargs):
+    students = Student.objects.all()
+    for student in students:
+        _update_final_result(student)
+
+
+def _update_final_result(student):
+    total_score = sum(
+        AssignmentResult.objects.filter(student=student).values_list(
+            'score', flat=True))
+    student.finalresult.score = total_score / Assignment.objects.count()
+    student.finalresult.save()
+
+
+def _get_assignment_result(answer):
     assignment = answer.question.assignment
     questions = assignment.question_set.all()
     answers = []
