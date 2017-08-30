@@ -2,22 +2,16 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User, Group
 from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
 from django.utils.html import format_html
 
-from account.forms import MyAdminAuthenticationForm
-from account.list_filter import (
-    StudentProgramListFilter as filter_program,
-    CredentialListFilter as filter_credential)
-from account.models import Student, Lecturer
-from account.utils import (
-    MAHASISWA_CHANGE_LINK as link_mahasiswa,
-    DOSEN_CHANGE_LINK as link_dosen,
-    PENGGUNA_CHANGE_LINK as link_pengguna,
-    DELETE_LINK as link_delete)
+from account.models import Student, Lecturer, MyUser
 
 
 def activate_users(model_admin, request, queryset):
-    queryset.update(is_active=True)
+    for user in queryset:
+        if hasattr(user, 'student') or hasattr(user, 'lecturer'):
+            queryset.update(is_active=True)
 activate_users.short_description = "Make selected users as active" # noqa
 
 
@@ -28,6 +22,7 @@ deactivate_users.short_description = "Make selected users as inactive" # noqa
 
 # Define a new User admin
 class UserAdmin(BaseUserAdmin):
+    empty_value_display = "-"
     actions = (activate_users, deactivate_users)
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
@@ -38,102 +33,56 @@ class UserAdmin(BaseUserAdmin):
             'fields': ('username', 'password1', 'password2'),
         }),
     )
-    list_display = ('full_name', 'email', 'date_joined', 'is_active',
-                    'object_action')
-    list_display_links = None
-    list_filter = ('is_active', filter_credential)
-    readonly_fields = ('last_login', 'date_joined')
+    list_display = ('__str__', 'email', 'identity', 'is_active')
+    list_filter = ('is_active', 'groups')
 
-    class Media:
-        css = {
-            'all': (
-                "font-awesome-4.7.0/css/font-awesome.min.css",
-            )
-        }
-
-    def object_action(self, obj):
-        return format_html(
-            '<a href="{}" style="margin-right:10px">'
-            '<i class="fa fa-user-circle-o" aria-hidden="true"></i> User'
-            '</a>',
-            reverse("admin:auth_user_change", args=(obj.id, )),
-        )
-    object_action.short_description = "object action"
-
-    def full_name(self, obj):
-        return " ".join((obj.first_name, obj.last_name)).title()
-    full_name.short_description = "full name"
-    full_name.admin_order_field = 'first_name'
+    def identity(self, obj):
+        if not any([hasattr(obj, 'student'), hasattr(obj, 'lecturer')]):
+            return self.empty_value_display
+        if hasattr(obj, 'student') and obj.student is not None:
+            link = reverse("admin:account_student_change",
+                           args=(obj.student.id, ))
+            num = obj.student.nobp
+        elif hasattr(obj, 'lecturer') and obj.lecturer is not None:
+            link = reverse("admin:account_lecturer_change",
+                           args=(obj.lecturer.id, ))
+            num = obj.lecturer.nip
+        return format_html("<a href={}><b>{}</b></a>", link, num)
 
 
-class BaseAccountAdmin(admin.ModelAdmin):
-    list_display_links = None
-    search_fields = (
-        'user__username',
-        'user__first_name',
-        'user__last_name'
-    )
-
-    class Media:
-        css = {
-            'all': (
-                "font-awesome-4.7.0/css/font-awesome.min.css",
-            )
-        }
-
-    def name(self, obj):
-        return obj.name
-    name.short_description = 'name'
-    name.admin_order_field = 'user__fist_name'
-
-    def has_add_permission(self, obj):
+class NoModulePermissionAdmin(admin.ModelAdmin):
+    def has_module_permission(self, request):
         return False
 
+    def response_post_save_add(self, request, obj):
+        opts = MyUser._meta
 
-class StudentAdmin(BaseAccountAdmin):
-    list_display = ('nobp', 'name', 'class_of', 'semester',
-                    'object_action')
-    list_filter = (filter_program, )
+        if self.has_change_permission(request, None):
+            post_url = reverse('admin:%s_%s_changelist' %
+                               (opts.app_label, opts.model_name),
+                               current_app=self.admin_site.name)
+        else:
+            post_url = reverse('admin:index',
+                               current_app=self.admin_site.name)
+        return HttpResponseRedirect(post_url)
 
-    def class_of(self, obj):
-        return obj.class_of
-    class_of.short_description = 'class of'
-    class_of.admin_order_field = 'nobp'
+    def response_post_save_change(self, request, obj):
+        opts = MyUser._meta
 
-    def semester(self, obj):
-        return obj.semester
-    semester.short_description = 'semester'
-    semester.admin_order_field = 'nobp'
+        if self.has_change_permission(request, None):
+            post_url = reverse('admin:%s_%s_changelist' %
+                               (opts.app_label, opts.model_name),
+                               current_app=self.admin_site.name)
+        else:
+            post_url = reverse('admin:index',
+                               current_app=self.admin_site.name)
+        return HttpResponseRedirect(post_url)
 
-    def object_action(self, obj):
-        return format_html(
-            "".join((link_mahasiswa, link_pengguna, link_delete)),
-            reverse("admin:account_student_change", args=(obj.pk, )),
-            reverse("admin:auth_user_change", args=(obj.user.id, )),
-            reverse("admin:auth_user_delete", args=(obj.user.id, )),
-        )
-    object_action.short_description = "object action"
-
-
-class LecturerAdmin(BaseAccountAdmin):
-    list_display = ('nip', 'name', 'object_action')
-
-    def object_action(self, obj):
-        return format_html(
-            "".join((link_dosen, link_pengguna, link_delete)),
-            reverse("admin:account_lecturer_change", args=(obj.pk, )),
-            reverse("admin:auth_user_change", args=(obj.user.id, )),
-            reverse("admin:auth_user_delete", args=(obj.user.id, ))
-        )
-    object_action.short_description = "object action"
-
-
-admin.site.login_form = MyAdminAuthenticationForm
 
 # Re-register UserAdmin
 admin.site.unregister(User)
 admin.site.unregister(Group)
 
-admin.site.register(User, UserAdmin)
-admin.site.register(Student, StudentAdmin)
-admin.site.register(Lecturer, LecturerAdmin)
+admin.site.register(MyUser, UserAdmin)
+admin.site.register(Student, NoModulePermissionAdmin)
+admin.site.register(Lecturer, NoModulePermissionAdmin)

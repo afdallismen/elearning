@@ -5,16 +5,33 @@ from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from django.utils import timezone
 
-
 from account.utils import user_avatar_directory_path
+
+
+class MyUser(User):
+    class Meta:
+        proxy = True
+        get_latest_by = "date_joined"
+        verbose_name = "user"
+        verbose_name_plural = "users"
+
+    def __str__(self):
+        name = str(self.get_full_name() or
+                   self.get_short_name() or
+                   self.get_username())
+        return name
+
+    def save(self, *args, **kwargs):
+        if not self.is_staff:
+            self.is_active = False
+        super(MyUser, self).save(*args, **kwargs)
 
 
 class BaseAccountModel(models.Model):
     user = models.OneToOneField(
-        User,
+        MyUser,
         editable=False,
-        on_delete=models.CASCADE,
-        primary_key=True,)
+        on_delete=models.CASCADE)
     avatar = models.ImageField(
         blank=True,
         default='',
@@ -23,21 +40,15 @@ class BaseAccountModel(models.Model):
     class Meta:
         abstract = True
 
-    @property
-    def name(self):
-        return (
-            self.user.get_full_name() or
-            self.user.get_short_name() or
-            self.user.get_username()
-        ).title()
-
     def __str__(self):
-        return self.name
+        return str(self.user)
 
 
 class Student(BaseAccountModel):
     NOBPVALIDATOR = RegexValidator(
-        r'^[01][0-9][01]0{2}[0-9]{2}$')  # ex: 1510099
+        '^[01][0-9]'
+        '[01]0{2}'
+        '[0-9]{2}$')  # ex: 1510099
     PROGRAM = {
         '0': "computer system",
         '1': "information system"
@@ -92,10 +103,10 @@ class Lecturer(BaseAccountModel):
         '2': "female"
     }
     NIPVALIDATOR = RegexValidator(
-        r'''^[12][09][0-9]{2}[01][0-9][0-9]{2}
-            [12][09][0-9]{2}[01][0-9]
-            [12]
-            [0-9]{3}$''')  # ex: 198503302003121002
+        '^[12][09][0-9]{2}[01][0-9][0-9]{2}'
+        '[12][09][0-9]{2}[01][0-9]'
+        '[12]'
+        '[0-9]{3}$')  # ex: 198503302003121002
 
     nip = models.CharField(
         max_length=18,
