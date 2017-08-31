@@ -169,3 +169,9 @@ LOGGING = {
 TINYMCE_JS_URL = STATIC_URL + 'tinymce_4.6.5/js/tinymce/tinymce.min.js'
 TINYMCE_JS_ROOT = os.path.join(BASE_DIR, 'sis/static/tinymce_4.6.5/js/tinymce')
 TINYMCE_DEFAULT_CONFIG = {'theme': "modern", 'relative_urls': False}
+
+FINAL_RESULT_PERCENTAGE = {
+    'quiz': 20,
+    'mid': 30,
+    'final': 50
+}

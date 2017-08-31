@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.contenttypes.fields import (
     GenericForeignKey, GenericRelation)
 from django.contrib.contenttypes.models import ContentType
@@ -30,10 +31,7 @@ class Attachment(models.Model):
 
 
 class Module(models.Model):
-    title = models.CharField(
-        max_length=100,
-        unique=True,
-        verbose_name="title")
+    title = models.CharField(max_length=100, unique=True, verbose_name="title")
     slug = models.SlugField(
         blank=True,
         default="",
@@ -46,19 +44,15 @@ class Module(models.Model):
     created_date = models.DateField(
         auto_now_add=True,
         verbose_name="created date")
-    updated_date = models.DateField(
-        auto_now=True,
-        verbose_name="updated date")
-    attachments = GenericRelation(
-        Attachment,
-        verbose_name="attachments")
+    updated_date = models.DateField(auto_now=True, verbose_name="updated date")
+    attachments = GenericRelation(Attachment, verbose_name="attachments")
 
     class Meta:
         verbose_name = "module"
         verbose_name_plural = "modules"
 
     def __str__(self):
-        return "{} - {}".format(self.created_date, self.title)
+        return "{} / {}".format(self.created_date, self.title)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
@@ -68,9 +62,9 @@ class Module(models.Model):
 class Assignment(models.Model):
     DUEDATEVALIDATOR = MinDateValueValidator(timezone.now().date())
     ASSIGNMENT_CATEGORY_CHOICES = (
-        (0, "Weekly"),
-        (1, "Mid semester"),
-        (2, "Final"))
+        (0, "quiz"),
+        (1, "mid"),
+        (2, "final"))
 
     category = models.PositiveIntegerField(
         choices=ASSIGNMENT_CATEGORY_CHOICES,
@@ -84,7 +78,7 @@ class Assignment(models.Model):
         verbose_name_plural = "assignments"
 
     def __str__(self):
-        return "{} - {} assignment".format(
+        return "{} / {} assignment".format(
             self.created_date, self.get_category_display())
 
 
@@ -109,7 +103,8 @@ class Question(models.Model):
 
     def __str__(self):
         if self.text:
-            return nstrip_tags(30, self.text)
+            return "{} / Question {}".format(
+                self.assignment, nstrip_tags(30, self.text))
         return "This object has no written text."
 
 
@@ -123,17 +118,13 @@ class Answer(models.Model):
         on_delete=models.CASCADE,
         verbose_name="question")
     text = models.TextField(blank=True, default="", verbose_name="text")
-    attachments = GenericRelation(
-        Attachment,
-        verbose_name="attachments")
+    attachments = GenericRelation(Attachment, verbose_name="attachments")
     score = models.PositiveIntegerField(
         blank=True,
         default=0,
         validators=[MaxValueValidator(100)],
         verbose_name="score")
-    correct = models.NullBooleanField(
-        blank=True,
-        verbose_name="correct")
+    correct = models.NullBooleanField(blank=True, verbose_name="correct")
 
     class Meta:
         verbose_name = "answer"
@@ -174,8 +165,7 @@ class AssignmentResult(models.Model):
     def __str__(self):
         return "{} result of {}".format(
             self.student,
-            self.assignment
-        )
+            self.assignment)
 
 
 class FinalResult(models.Model):
@@ -194,7 +184,7 @@ class FinalResult(models.Model):
         verbose_name_plural = "final result"
 
     def __str__(self):
-        return "Final result of student {}".format(self.student)
+        return "Final result of {}".format(self.student)
 
     @property
     def letter_value(self):
@@ -208,3 +198,15 @@ class FinalResult(models.Model):
             return 'D'
         else:
             return 'E'
+
+
+class FinalResultPercentage(models.Model):
+    quiz = models.PositiveSmallIntegerField(
+        blank=True,
+        default=settings.FINAL_RESULT_PERCENTAGE['quiz'])
+    mid = models.PositiveSmallIntegerField(
+        blank=True,
+        default=settings.FINAL_RESULT_PERCENTAGE['mid'])
+    final = models.PositiveSmallIntegerField(
+        blank=True,
+        default=settings.FINAL_RESULT_PERCENTAGE['final'])

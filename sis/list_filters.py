@@ -1,5 +1,4 @@
 from django.contrib import admin
-from django.utils import timezone
 
 from sis.models import Assignment, Answer, AssignmentResult
 
@@ -27,24 +26,4 @@ class AssignmentCategoryListFilter(admin.SimpleListFilter):
             elif self.model == AssignmentResult:
                 queryset = queryset.filter(
                     assignment__category=self.value())
-        return queryset
-
-
-class AssignmentActiveListFilter(admin.SimpleListFilter):
-    title = "active"
-    parameter_name = 'active'
-
-    def lookups(self, request, model_admin):
-        return (
-            ("active", "active"),
-            ("not_active", "not active")
-        )
-
-    def queryset(self, request, queryset):
-        if self.value():
-            now = timezone.now().date()
-            if self.value() == 'active':
-                queryset = queryset.filter(due_date__gte=now)
-            elif self.value() == 'not_active':
-                queryset = queryset.filter(due_date__lte=now)
         return queryset

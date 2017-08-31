@@ -4,13 +4,11 @@ from django.contrib import admin
 from django.forms import modelformset_factory
 
 from sis.forms import BaseQuestionFormSet
-from sis.list_filters import AssignmentCategoryListFilter as filter_assignment
+from sis.list_filters import AssignmentCategoryListFilter as filter_category
 from sis.models import (
     Module, Answer, Attachment, Assignment, Question, AssignmentResult,
-    FinalResult)
-from sis.utils import (
-    module_admin_object_action_link, assignment_admin_object_action_link,
-    answer_admin_object_action_link)
+    FinalResult, FinalResultPercentage)
+from sis.utils import answer_admin_object_action_link
 
 
 class SisAdminMixin(object):
@@ -55,7 +53,7 @@ class ModuleAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
 
 class AssignmentAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
     list_display = ('cat', 'created_date', 'number_of_questions')
-    list_filter = (filter_assignment, )
+    list_filter = (filter_category, )
     inlines = [QuestionInline]
 
     def number_of_questions(self, obj):
@@ -72,7 +70,7 @@ class AnswerAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
         'student__user__username',
         'student__user__first_name',
         'student__user__last_name')
-    list_filter = (filter_assignment,
+    list_filter = (filter_category,
                    ('student', admin.RelatedOnlyFieldListFilter))
     list_display = ('student', 'assignment', 'question', 'score_percentage',
                     'score', 'object_action')
@@ -96,7 +94,7 @@ class AssignmentResultAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
         'student__user__last_name')
     list_display = ('student', 'assignment', 'score')
     list_display_links = None
-    list_filter = (filter_assignment,
+    list_filter = (filter_category,
                    ('student', admin.RelatedOnlyFieldListFilter), )
 
     def has_add_permission(self, request):
@@ -115,7 +113,7 @@ class FinalResultAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
 
     def __init__(self, *args, **kwargs):
         self.counters = {
-            'weekly': 0,
+            'quiz': 0,
             'mid': 0,
             'final': 0,
         }
@@ -123,7 +121,7 @@ class FinalResultAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
 
     def get_list_display(self, request):
         self.assignments = {
-            'weekly': Assignment.objects.filter(category=0).order_by(
+            'quiz': Assignment.objects.filter(category=0).order_by(
                 'created_date'),
             'mid': Assignment.objects.filter(category=1).order_by(
                 'created_date'),
@@ -132,7 +130,7 @@ class FinalResultAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
         }
         list_display = ['student', ]
         count = (
-            ('weekly', len(self.assignments['weekly'])),
+            ('quiz', len(self.assignments['quiz'])),
             ('mid', len(self.assignments['mid'])),
             ('final', len(self.assignments['final']))
         )
@@ -147,8 +145,8 @@ class FinalResultAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
     def letter_value(self, obj):
         return obj.letter_value
 
-    def weekly(self, obj):
-        return self._get_score_display(cat='weekly', obj=obj)
+    def quiz(self, obj):
+        return self._get_score_display(cat='quiz', obj=obj)
 
     def mid(self, obj):
         return self._get_score_display(cat='mid', obj=obj)
@@ -177,8 +175,22 @@ class FinalResultAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
         return score
 
 
+class FinalResultPercentageAdmin(nested_admin.NestedModelAdmin):
+    actions = None
+    list_display_links = None
+    list_display = ('quiz', 'mid', 'final')
+    list_editable = ['quiz', 'mid', 'final']
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
 admin.site.register(Module, ModuleAdmin)
 admin.site.register(Assignment, AssignmentAdmin)
 admin.site.register(Answer, AnswerAdmin)
 admin.site.register(AssignmentResult, AssignmentResultAdmin)
 admin.site.register(FinalResult, FinalResultAdmin)
+admin.site.register(FinalResultPercentage, FinalResultPercentageAdmin)

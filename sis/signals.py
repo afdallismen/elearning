@@ -3,7 +3,8 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
 from account.models import Student
-from sis.models import Answer, AssignmentResult, Assignment
+from sis.models import (
+    Answer, AssignmentResult, Assignment, FinalResultPercentage)
 
 
 @receiver(post_save, sender=Answer)
@@ -41,10 +42,24 @@ def update_final_result(sender, instance, *args, **kwargs):
 
 
 def _update_final_result(student):
-    total_score = sum(
-        AssignmentResult.objects.filter(student=student).values_list(
-            'score', flat=True))
-    student.finalresult.score = total_score / Assignment.objects.count()
+    results = {
+        'quiz': AssignmentResult.objects.filter(
+            student=student, assignment__category=0),
+        'mid': AssignmentResult.objects.filter(
+            student=student, assignment__category=1),
+        'final': AssignmentResult.objects.filter(
+            student=student, assignment__category=2)
+    }
+    score = {
+        'quiz': sum(ar.score for ar in results['quiz']),
+        'mid': sum(ar.score for ar in results['mid']),
+        'final': sum(ar.score for ar in results['final']),
+    }
+    percentage = FinalResultPercentage.objects.get()
+    total_score = 0
+    for key, value in score.items():
+        total_score += (value * getattr(percentage, key)) / 100
+    student.finalresult.score = total_score
     student.finalresult.save()
 
 
