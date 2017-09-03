@@ -4,6 +4,10 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from django.utils import timezone
+from django.utils.translation import ugettext as _
+
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFill
 
 from account.utils import user_avatar_directory_path
 
@@ -12,8 +16,8 @@ class MyUser(User):
     class Meta:
         proxy = True
         get_latest_by = "date_joined"
-        verbose_name = "user"
-        verbose_name_plural = "users"
+        verbose_name = _("user")
+        verbose_name_plural = _("users")
 
     def __str__(self):
         name = str(self.get_full_name() or
@@ -26,6 +30,14 @@ class MyUser(User):
             self.is_active = False
         super(MyUser, self).save(*args, **kwargs)
 
+    @property
+    def is_student(self):
+        return hasattr(self, 'student') and self.student is not None
+
+    @property
+    def is_lecturer(self):
+        return hasattr(self, 'lecturer') and self.lecturer is not None
+
 
 class BaseAccountModel(models.Model):
     user = models.OneToOneField(
@@ -36,6 +48,11 @@ class BaseAccountModel(models.Model):
         blank=True,
         default='',
         upload_to=user_avatar_directory_path)
+    avatar_thumbnail = ImageSpecField(
+        source='avatar',
+        processors=[ResizeToFill(200, 200)],
+        format='JPEG',
+        options={'quality': 100})
 
     class Meta:
         abstract = True
@@ -50,19 +67,19 @@ class Student(BaseAccountModel):
         '[01]0{2}'
         '[0-9]{2}$')  # ex: 1510099
     PROGRAM = {
-        '0': "computer system",
-        '1': "information system"
+        '0': _("computer system"),
+        '1': _("information system")
     }
 
     nobp = models.CharField(
         max_length=7,
         unique=True,
         validators=[NOBPVALIDATOR],
-        verbose_name="no. bp")
+        verbose_name=_("no. bp"))
 
     class Meta:
-        verbose_name = 'student'
-        verbose_name_plural = 'students'
+        verbose_name = _("student")
+        verbose_name_plural = _("students")
 
     @property
     def class_of(self):
@@ -99,8 +116,8 @@ class Student(BaseAccountModel):
 
 class Lecturer(BaseAccountModel):
     GENDER = {
-        '1': "male",
-        '2': "female"
+        '1': _("male"),
+        '2': _("female")
     }
     NIPVALIDATOR = RegexValidator(
         '^[12][09][0-9]{2}[01][0-9][0-9]{2}'
@@ -112,12 +129,12 @@ class Lecturer(BaseAccountModel):
         max_length=18,
         unique=True,
         validators=[NIPVALIDATOR],
-        verbose_name="no. nip"
+        verbose_name=_("no. nip")
     )
 
     class Meta:
-        verbose_name = 'lecturer'
-        verbose_name_plural = 'lecturers'
+        verbose_name = _("lecturer")
+        verbose_name_plural = _("lecturers")
 
     @property
     def birth_date(self):

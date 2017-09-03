@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.forms import modelformset_factory
 
 from sis.forms import BaseQuestionFormSet
-from sis.list_filters import AssignmentCategoryListFilter as filter_category
+from sis.filters import AssignmentCategoryListFilter as filter_category
 from sis.models import (
     Module, Answer, Attachment, Assignment, Question, AssignmentResult,
     FinalResult, FinalResultPercentage)

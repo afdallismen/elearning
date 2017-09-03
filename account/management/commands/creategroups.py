@@ -8,7 +8,7 @@ class Command(BaseCommand):
         self.create_group_if_not_exist(name="lecturer")
 
     def create_group_if_not_exist(self, name):
-        _, created = Group.objects.get_or_create(name=name)
+        ign, created = Group.objects.get_or_create(name=name)
         if created:
             self.stdout.write(
                 self.style.SUCCESS(

@@ -1,19 +1,18 @@
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from account.models import Student
+from account.models import Student, MyUser
 from sis.models import FinalResult
 
 
-@receiver(post_save, sender=User)
+@receiver(post_save, sender=MyUser)
 def assign_groups(sender, instance, created, **kwargs):
     if created:
         if instance.is_staff:
-            group, _ = Group.objects.get_or_create(name='lecturer')
+            group, ign = Group.objects.get_or_create(name="lecturer")
         else:
-            group, _ = Group.objects.get_or_create(name='student')
-
+            group, ign = Group.objects.get_or_create(name="student")
         instance.groups.add(group)
         instance.save()
 

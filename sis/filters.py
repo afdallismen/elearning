@@ -5,7 +5,7 @@ from sis.models import Assignment, Answer, AssignmentResult
 
 class AssignmentCategoryListFilter(admin.SimpleListFilter):
     title = "assignment cateory"
-    parameter_name = 'cat'
+    parameter_name = "cat"
 
     def __init__(self, request, params, model, model_admin):
         self.model = model
