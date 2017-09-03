@@ -2,6 +2,7 @@ import nested_admin
 
 from django.contrib import admin
 from django.forms import modelformset_factory
+from django.utils.translation import ugettext as _
 
 from sis.forms import BaseQuestionFormSet
 from sis.filters import AssignmentCategoryListFilter as filter_category
@@ -41,32 +42,24 @@ class QuestionInline(nested_admin.NestedStackedInline):
 
 
 class ModuleAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
-    list_display = ('the_title', 'created_date', 'updated_date',
+    list_display = ('title', 'created_date', 'updated_date',
                     'number_of_attachments')
     search_fields = ('title', )
     inlines = [AttachmentInline]
 
-    def the_title(self, obj):
-        return obj.title
-    the_title.short_description = "module"
-    the_title.admin_order_field = 'title'
-
     def number_of_attachments(self, obj):
         return obj.attachments.count()
+    number_of_attachments.short_description = _("number of attachments")
 
 
 class AssignmentAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
-    list_display = ('cat', 'created_date', 'number_of_questions')
+    list_display = ('category', 'created_date', 'number_of_questions')
     list_filter = (filter_category, )
     inlines = [QuestionInline]
 
     def number_of_questions(self, obj):
         return obj.question_set.count()
-
-    def cat(self, obj):
-        return obj.get_category_display()
-    cat.short_description = "assignment"
-    cat.admin_order_field = 'category'
+    number_of_questions.short_description = _("number of questions")
 
 
 class AnswerAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
@@ -83,12 +76,15 @@ class AnswerAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
 
     def assignment(self, obj):
         return obj.question.assignment
+    assignment.short_description = _("assignment")
 
     def score_percentage(self, obj):
         return obj.question.score_percentage
+    score_percentage.short_description = _("score percentage")
 
     def object_action(self, obj):
         return answer_admin_object_action_link(obj)
+    object_action.short_description = _("object action")
 
 
 class AssignmentResultAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
@@ -139,24 +135,28 @@ class FinalResultAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
             ('final', len(self.assignments['final']))
         )
         for ct in count:
-            for _ in range(0, ct[1]):
+            for ign in range(0, ct[1]):
                 list_display.append(ct[0])
-        list_display.append('score')
-        list_display.append('letter_value')
+        list_display.append("score")
+        list_display.append("letter_value")
 
         return list_display
 
     def letter_value(self, obj):
         return obj.letter_value
+    letter_value.short_description = _("letter value")
 
     def quiz(self, obj):
         return self._get_score_display(cat='quiz', obj=obj)
+    quiz.short_description = _("quiz")
 
     def mid(self, obj):
         return self._get_score_display(cat='mid', obj=obj)
+    mid.short_description = _("mid")
 
     def final(self, obj):
         return self._get_score_display(cat='final', obj=obj)
+    final.short_description = _("final")
 
     def has_add_permission(self, request):
         return False

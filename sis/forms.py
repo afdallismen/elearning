@@ -1,7 +1,7 @@
 import nested_admin
 
 from django.forms import ValidationError
-
+from django.utils.translation import ugettext as _
 
 class BaseQuestionFormSet(nested_admin.NestedInlineFormSet):
     def clean(self):
@@ -25,8 +25,8 @@ class BaseQuestionFormSet(nested_admin.NestedInlineFormSet):
                             obj.score_percentage = assigned_score
                             obj.save()
                 else:
-                    raise ValidationError("Make sure score percentage "
-                                          "add up to 100.")
+                    raise ValidationError(_("Make sure score percentage "
+                                          "add up to 100."))
             elif total > 100:
-                raise ValidationError("Make sure score percentage "
-                                      "add up to 100.")
+                raise ValidationError(_("Make sure score percentage "
+                                      "add up to 100."))

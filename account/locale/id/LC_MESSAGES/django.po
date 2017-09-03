@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-03 18:02+0700\n"
+"POT-Creation-Date: 2017-09-03 20:33+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,57 +27,61 @@ msgid "Make selected users as inactive"
 msgstr "Matikan akun user yang terpilih"
 
 #: .\account\admin.py:53
-msgid "identity"
-msgstr "identitas"
+msgid "identity number"
+msgstr "nomor identitas"
 
 #: .\account\filters.py:7
 msgid "group"
 msgstr "grup"
 
-#: .\account\models.py:16
+#: .\account\models.py:19
 msgid "user"
 msgstr "pengguna"
 
-#: .\account\models.py:17
+#: .\account\models.py:20
 msgid "users"
 msgstr "pengguna"
 
-#: .\account\models.py:54
+#: .\account\models.py:70
 msgid "computer system"
 msgstr "sistem komputer"
 
-#: .\account\models.py:55
+#: .\account\models.py:71
 msgid "information system"
 msgstr "sistem informasi"
 
-#: .\account\models.py:62
+#: .\account\models.py:78
 msgid "no. bp"
 msgstr "no. bp"
 
-#: .\account\models.py:65
+#: .\account\models.py:81
 msgid "student"
 msgstr "mahasiswa"
 
-#: .\account\models.py:66
+#: .\account\models.py:82
 msgid "students"
 msgstr "mahasiswa"
 
-#: .\account\models.py:103
+#: .\account\models.py:119
 msgid "male"
 msgstr "laki-laki"
 
-#: .\account\models.py:104
+#: .\account\models.py:120
 msgid "female"
 msgstr "perempuan"
 
-#: .\account\models.py:116
+#: .\account\models.py:132
 msgid "no. nip"
 msgstr "no. nip"
 
-#: .\account\models.py:120
+#: .\account\models.py:136
 msgid "lecturer"
 msgstr "dosen"
 
-#: .\account\models.py:121
+#: .\account\models.py:137
 msgid "lecturers"
 msgstr "dosen"
+
+#: .\account\apps.py:7
+msgid "authentication"
+msgstr "autentikasi"

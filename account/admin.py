@@ -50,7 +50,7 @@ class MyUserAdmin(BaseUserAdmin):
                            args=(obj.lecturer.id, ))
             num = obj.lecturer.nip
         return format_html("<a href={}><b>{}</b></a>", link, num)
-    identity.short_description = _("identity")
+    identity.short_description = _("identity number")
 
 
 class NoModulePermissionAdmin(admin.ModelAdmin):

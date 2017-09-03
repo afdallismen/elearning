@@ -3,6 +3,7 @@ import base64
 from django.core.urlresolvers import reverse
 from django.utils import timezone
 from django.utils.html import strip_tags, format_html
+from django.utils.translation import ugettext as _
 
 
 from imagekit import ImageSpec
@@ -51,7 +52,7 @@ def file_html_display(field_file, width, height):
     elif file_type in ['doc', 'xsl', 'docx', 'xlsx', 'pdf', 'ppt', 'pptx']:
         return _get_docs_html_display(field_file.url)
     else:
-        return "No preview available for this file type."
+        return _("No preview available for this file type.")
 
 
 def _get_swf_html_display(url, width, height):
@@ -97,7 +98,7 @@ def _get_docs_html_display(url):
     html_tag = '''
         <a target='_blank'
             href='https://view.officeapps.live.com/op/embed.aspx?src={}'
-            >View in new window
+            >View on new window
         </a>'''
     url = "http://localhost:8000{}".format(url)
     return format_html(html_tag, url)

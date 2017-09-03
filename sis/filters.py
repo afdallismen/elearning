@@ -1,10 +1,11 @@
 from django.contrib import admin
+from django.utils.translation import ugettext as _
 
 from sis.models import Assignment, Answer, AssignmentResult
 
 
 class AssignmentCategoryListFilter(admin.SimpleListFilter):
-    title = "assignment cateory"
+    title = _("assignment cateory")
     parameter_name = "cat"
 
     def __init__(self, request, params, model, model_admin):
