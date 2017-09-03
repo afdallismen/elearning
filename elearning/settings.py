@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'autofixture',
     'tinymce',
-    'nested_admin'
+    'nested_admin',
+    'imagekit'
 ]
 
 MIDDLEWARE = [

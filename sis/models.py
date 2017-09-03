@@ -10,7 +10,7 @@ from django.utils.text import slugify
 from tinymce import models as tinymce_models
 
 from account.models import Student
-from sis.utils import attachment_directory, nstrip_tags
+from sis.utils import attachment_directory, nstrip_tags, file_html_display
 from sis.validators import MinDateValueValidator
 
 
@@ -27,7 +27,11 @@ class Attachment(models.Model):
         verbose_name_plural = "attachments"
 
     def __str__(self):
-        return self.file_upload.name
+        return self.file_upload.name.split("/")[-1]
+
+    @property
+    def html_display(self):
+        return file_html_display(self.file_upload, 640, 480)
 
 
 class Module(models.Model):

@@ -26,6 +26,10 @@ class SisAdminMixin(object):
 class AttachmentInline(nested_admin.NestedGenericStackedInline):
     model = Attachment
     extra = 0
+    readonly_fields = ['preview']
+
+    def preview(self, instance):
+        return instance.html_display
 
 
 class QuestionInline(nested_admin.NestedStackedInline):
