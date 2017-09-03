@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="hero is-fullheight is-light">
+    <div class="hero-body">
+      <div class="container">
+        <div class="columns is-vcentered">
+          <div class="column is-4 is-offset-4">
+            <h1 class="title">
+              Student Learning System
+            </h1>
+            <h2 class="subtitle">
+              an undergraduate thesis by Devitri
+            </h2>
+            <div class="box has-text-centered">
+              <img src="{% static 'img/logo.jpg' %}" width=200 height=200>
+            </div>
+            <div class="field is-grouped">
+              <p class="control">
+                <a class="button is-primary" href="{% url 'auth_login' %}">Login</a>
+              </p>
+              <p class="control" style="border-left:1px solid #aaa">
+                <a class="button is-link" href="{% url 'registration_register' %}">Create an account</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+{% endblock %}

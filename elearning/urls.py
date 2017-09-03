@@ -19,6 +19,10 @@ from django.conf.urls.static import static
 from django.contrib import admin
 
 import debug_toolbar
+from registration.backends.hmac import views as regis_views
+
+from account.forms import StudentRegistrationForm
+from main import views as main_views
 
 
 urlpatterns = [
@@ -26,4 +30,9 @@ urlpatterns = [
     url(r'^__debug__/', include(debug_toolbar.urls)),
     url(r'^tinymce/', include('tinymce.urls')),
     url(r'^nested_admin/', include('nested_admin.urls')),
+    url(r'^account/register/$',
+        regis_views.RegistrationView.as_view(form_class=StudentRegistrationForm),
+        name='registration_register'),
+    url(r'^account/', include('registration.backends.hmac.urls')),
+    url(r'^$', main_views.index, name="index")
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

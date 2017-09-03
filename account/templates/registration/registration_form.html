@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="hero is-fullheight is-light">
+  <div class="hero-body">
+    <div class="container">
+      <div class="columns is-vcentered">
+        <div class="column is-8 is-offset-2">
+          <h1 class="title">
+            Student Learning System
+          </h1>
+          <h2 class="subtitle">
+            an undergraduate thesis by Devitri
+          </h2>
+          <div class="box">
+            <div class="field is-horizontal columns">
+              <div class="field-label column is-3">
+                <label class="label">{{ form.username.label }}</label>
+              </div>
+              <div class="field-body column">
+                <div class="field">
+                  <p class="control">
+                    <input class="input" type="text">
+                  </p>
+                  <p class="help">{{ form.username.help_text }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="field is-horizontal columns">
+              <div class="field-label column is-3">
+                <label class="label">{{ form.email.label }}</label>
+              </div>
+              <div class="field-body column">
+                <div class="field">
+                  <p class="control">
+                    <input class="input" type="email">
+                  </p>
+                  <p class="help">{{ form.email.help_text|capfirst }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="field is-horizontal columns">
+              <div class="field-label column is-3">
+                <label class="label">{{ form.nobp.label }}</label>
+              </div>
+              <div class="field-body column">
+                <div class="field">
+                  <p class="control">
+                    <input class="input" type="text">
+                  </p>
+                  <p class="help">{{ form.nobp.help_text }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="field is-horizontal columns">
+              <div class="field-label column is-3">
+                <label class="label">{{ form.password1.label }}</label>
+              </div>
+              <div class="field-body column">
+                <div class="field">
+                  <p class="control">
+                    <input class="input" type="password">
+                  </p>
+                  <div class="help">{{ form.password1.help_text|safe }}</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="field is-horizontal columns">
+              <div class="field-label column is-3">
+                <label class="label">{{ form.password2.label }}</label>
+              </div>
+              <div class="field-body column">
+                <div class="field">
+                  <p class="control">
+                    <input class="input" type="password">
+                  </p>
+                  <p class="help">{{ form.password2.help_text }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="field is-horizontal columns">
+              <div class="field-label column is-3">
+                <!-- Left empty for spacing -->
+              </div>
+              <div class="field-body column">
+                <div class="field">
+                  <div class="control">
+                    <a class="button is-primary">
+                      Register
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

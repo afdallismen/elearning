@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ['localhost']
 INSTALLED_APPS = [
     'account.apps.AccountConfig',
     'sis.apps.SisConfig',
+    'main.apps.MainConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -176,3 +177,5 @@ FINAL_RESULT_PERCENTAGE = {
     'mid': 30,
     'final': 50
 }
+
+ACCOUNT_ACTIVATION_DAYS = 7
