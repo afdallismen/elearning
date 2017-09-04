@@ -179,3 +179,9 @@ FINAL_RESULT_PERCENTAGE = {
 }
 
 ACCOUNT_ACTIVATION_DAYS = 7
+
+LOGIN_REDIRECT_URL = 'index'
+LOGIN_URL = 'auth_login'
+LOGOUT_REDIRECT_URL = 'index'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

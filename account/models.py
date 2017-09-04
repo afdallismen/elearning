@@ -25,11 +25,6 @@ class MyUser(User):
                    self.get_username())
         return name
 
-    def save(self, *args, **kwargs):
-        if not self.is_staff:
-            self.is_active = False
-        super(MyUser, self).save(*args, **kwargs)
-
     @property
     def is_student(self):
         return hasattr(self, 'student') and self.student is not None

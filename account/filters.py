@@ -13,5 +13,5 @@ class GroupListFilter(admin.SimpleListFilter):
 
     def queryset(self, request, queryset):
         if self.value():
-            queryset = queryset.filter(groups__name=self.value)
+            queryset = queryset.filter(groups__name=self.value())
         return queryset

@@ -1,14 +1,15 @@
 from django.contrib.auth.models import User
-
+from django.core.exceptions import ValidationError
 from registration.forms import RegistrationFormUniqueEmail as RegistrationForm
 
-from account.models import Student
+from account.models import MyUser, Student
 
 
 class StudentRegistrationForm(RegistrationForm):
     nobp = Student._meta.get_field('nobp').formfield()
 
     class Meta(RegistrationForm.Meta):
+        model = MyUser
         fields = [
             User.USERNAME_FIELD,
             'email',
@@ -18,10 +19,22 @@ class StudentRegistrationForm(RegistrationForm):
         ]
         required_css_class = 'required'
 
+    def clean(self):
+        super(StudentRegistrationForm, self).clean()
+        try:
+            Student.NOBPVALIDATOR(self.cleaned_data['nobp'])
+        except ValidationError as err:
+            raise ValidationError({'nobp': err.message})
+
+        if Student.objects.filter(nobp=self.cleaned_data['nobp']).exists():
+            raise ValidationError(
+                {'nobp': "Pengguna dengan no. bp yang sama sudah terdaftar."})
+
     def save(self, commit=True):
         user = super(StudentRegistrationForm, self).save(commit)
-        if commit:
-            Student.get_or_create(
-                user=user,
-                nobp=self.cleaned_data['nopb'])
+        user.save()
+        Student.objects.get_or_create(
+            user=user,
+            nobp=self.cleaned_data['nobp'])
+        print("student created")
         return user

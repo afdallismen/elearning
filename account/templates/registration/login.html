@@ -8,37 +8,80 @@
       <div class="columns is-vcentered">
         <div class="column is-4 is-offset-4">
           <h1 class="title">
-            Student Learning System
+            Sistem Pembelajaran Mahasiswa
           </h1>
           <h2 class="subtitle">
-            an undergraduate thesis by Devitri
+            tugas akhir strata I oleh Devitri
           </h2>
           <div class="box">
+          <form method="POST" action="{% url 'auth_login' %}">
+          {% csrf_token %}
+            {% if form.non_field_errors %}
+            <div class="notification is-danger">
+              <a class="button delete"></a>
+              <ul>
+                {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </div>
+            {% endif %}
             <div class="field">
               <p class="control has-icons-left">
-                <input class="input" type="text" placeholder="Username">
+                <input class="input {% if 'username' in form.errors or form.non_field_errors %}is-danger{% endif %}" type="text" name="username" placeholder="{{form.username.label}}" value="{% firstof form.username.value '' %}" required>
                 <span class="icon is-small is-left">
                   <i class="fa fa-user"></i>
                 </span>
               </p>
+              <div class="help {% if 'username' in form.errors or form.non_field_errors %}is-danger{% endif %}">
+                {{ form.username.help_text|safe|capfirst }}
+                {% if 'username' in form.errors %}
+                <ul class="has-text-danger">
+                  {% for error in form.errors.username %}
+                    <li>{{ error }}</li>
+                  {% endfor %}
+                </ul>
+                {% endif %}
+              </div>
             </div>
             <div class="field">
               <p class="control has-icons-left">
-                <input class="input" type="password" placeholder="Password">
+                <input class="input {% if 'password' in form.errors or form.non_field_errors %}is-danger{% endif %}" type="password" name="password" placeholder="{{form.password.label}}" required>
                 <span class="icon is-small is-left">
                   <i class="fa fa-lock"></i>
                 </span>
               </p>
+              <div class="help {% if 'password' in form.errors or form.non_field_errors %}is-danger{% endif %}">
+                {{ form.password.help_text|safe|capfirst }}
+                {% if 'password' in form.errors %}
+                <ul class="has-text-danger">
+                  {% for error in form.errors.password %}
+                    <li>{{ error }}</li>
+                  {% endfor %}
+                </ul>
+                {% endif %}
+              </div>
             </div>
             <hr>
-            <p class="control">
-              <a class="button is-primary">Login</a>
-              <a class="button is-default" href="{% url 'index' %}">Cancel</a>
-            </p>
+            <div class="field is-grouped">
+              <p class="control">
+                <button class="button is-primary" type="submit">Masuk</button>
+              </p>
+              <p class="control">
+                <a class="button is-default" href="{% url 'index' %}">Batalkan</a>
+              </p>
+            </div>
+          </form>
           </div>
         </div>
       </div>
     </div>
   </div>
 </section>
+<script type="text/javascript">
+    $(document).ready(function(e){
+      $('a.button.delete').on('click', function(e) {
+        $('div.notification.is-danger').remove()
+      })
+    })
+</script>
 {% endblock %}
