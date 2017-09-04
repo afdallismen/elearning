@@ -1,10 +1,3 @@
-{% extends 'base.html' %}
-
-{% block content %}
-<section class="section">
-  <div class="container">
-    <h1 class="title">Segera aktivasi akun anda</h1>
-    <h2 class="subtitle">Silahkan klik <a href="http://{{site}}/account/activate/{{activation_key}}">link berikut</a> untuk melakukan aktivasi. Link ini hanya dapat digunakan 7 hari setelah anda menerima email ini.</h2>
-  </div>
-</section>
-{% endblock %}
+Segera aktivasi akun anda
+Untuk melakukan aktivasi silahakn klik link berikut : http://{{site}}/account/activate/{{activation_key}}.
+Link ini hanya dapat digunakan 7 hari setelah anda menerima email ini.
