@@ -28,7 +28,7 @@ def attachment_directory(instance, filename):
     now = timezone.now()
     return "attachment/{0}/{1}/{2}".format(
         instance.content_type.name,
-        "".join((now.year, now.month, now.day)),
+        "".join((str(now.year), str(now.month), str(now.day))),
         filename)
 
 

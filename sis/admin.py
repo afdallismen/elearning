@@ -31,6 +31,7 @@ class AttachmentInline(nested_admin.NestedGenericStackedInline):
 
     def preview(self, instance):
         return instance.html_display
+    preview.short_description = ""
 
 
 class QuestionInline(nested_admin.NestedStackedInline):

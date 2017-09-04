@@ -1,0 +1,45 @@
+{% extends 'auth_base.html' %}
+{% load static %}
+
+{% block content %}
+<nav class="level">
+  <!-- Left side -->
+  <div class="level-left">
+    <div class="level-item">
+      <p class="subtitle is-3">
+        <strong>Bahan Kuliah</strong>
+      </p>
+    </div>
+  </div>
+  <div class="level-right">
+    <div class="level-item">
+      <div class="field has-addons">
+        <p class="control">
+          <input class="input" type="text" placeholder="Cari bahan kuliah">
+        </p>
+        <p class="control">
+          <button class="button">
+            Cari
+          </button>
+        </p>
+      </div>
+    </div>
+  </div>
+</nav>
+<table class="table is-fullwidth">
+  <thead>
+    <tr>
+      <th>Judul</th>
+      <th>Jumlah lampiran</th>
+      <th>Tanggal dibuat</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for module in modules %}
+      <td><a href="{% url 'sis:module_detail' slug=module.slug %}">{{module.title}}</a></td>
+      <td>{{module.attachments.count}}</td>
+      <td>{{module.created_date}}</td>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

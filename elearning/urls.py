@@ -34,5 +34,6 @@ urlpatterns = [
         regis_views.RegistrationView.as_view(form_class=StudentRegistrationForm),
         name='registration_register'),
     url(r'^account/', include('registration.backends.hmac.urls')),
+    url(r'^sis/', include('sis.urls')),
     url(r'^$', main_views.index, name="index")
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
