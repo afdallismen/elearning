@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
-from sis.views import index as modules_index
+from sis.views import module_index
 
 
 def auth_index(request):
-    return modules_index(request)
+    return module_index(request)
 
 
 def index(request):

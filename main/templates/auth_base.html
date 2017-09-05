@@ -13,31 +13,27 @@
   <body>
     <div class="columns">
       <div class="column is-narrow">
-        <div class="box is-borderless is-shadowless" style="width:256px">
+        <div class="box is-radiusless" style="width:256px">
           <aside class="menu">
             <p class="menu-label">
               {{user.username}}
             </p>
             <img class="has-text-centered" src="/media/account/stock_avatar.jpg" style="border:1px solid #aaa"/>
             <p class="menu-label">
+              NILAI ANDA SAAT INI : {{request.user.student.finalresult.letter_value}}
+            </p>
+            <p class="menu-label">
               TUGAS
             </p>
             <ul class="menu-list">
-              <li><a>Lihat tugas yang tersedia</a></li>
-              <li><a>Tugas yang diikuti</a></li>
-            </ul>
-            <p class="menu-label">
-              KARTU HASIL STUDI
-            </p>
-            <ul class="menu-list">
-              <li><a>Lihat Nilai</a></li>
-              <li><a>Print</a></li>
+              <li><a href="{% url 'sis:assignment_index' %}?finish=False">Lihat tugas yang tersedia</a></li>
+              <li><a href="{% url 'sis:assignment_index' %}?finish=True">Tugas yang diikuti</a></li>
             </ul>
             <p class="menu-label">
               AKUN
             </p>
             <ul class="menu-list">
-              <li><a>Edit Akun</a></li>
+              <li><a><strike>Edit Akun</strike></a></li>
               <li><a href="{% url 'auth_logout' %}">Keluar</a></li>
             </ul>
           </aside>
@@ -62,8 +58,7 @@
         <div class="tabs is-right">
           <ul>
             <li class="{% if active == 'module' %}is-active{% endif %}"><a href="{% url 'sis:module_index' %}">Bahan Kuliah</a></li>
-            <li><a>Tugas</a></li>
-            <li><a>Kartu Hasil Studi</a></li>
+            <li class="{% if active == 'assignment' %}is-active{% endif %}"><a href="{% url 'sis:assignment_index' %}">Tugas</a></li>
           </ul>
         </div>
         <div style="padding-right:30px">

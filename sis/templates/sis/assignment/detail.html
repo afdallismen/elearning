@@ -1,0 +1,82 @@
+{% extends 'auth_base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Main container -->
+<nav class="level">
+  <!-- Left side -->
+  <div class="level-left">
+    <div class="level-item">
+      <p class="subtitle is-3">
+        <strong>{{assignment.get_category_display|capfirst}}</strong>
+      </p>
+    </div>
+  </div>
+  <div class="level-reight">
+    <div class="level-item">
+      <p class="subtitle is-6">
+        Dibuat tanggal <em>{{assignment.created_date}}</em>
+      </p>
+    </div>
+  </div>
+</nav>
+
+<div class="content">
+  <ol>
+    {% for question in assignment.question_set.all %}
+    <li>
+      {{question.text|safe}}
+      {% if question.attachments.count %}
+        <ul>
+        {% for att in question.attachments.all %}
+          <li>{{att}} - [{{att.file_upload.size|filesizeformat|lower}}] -
+              {% if att.is_supported %}
+                <a class="{% if att.is_viewable %}modal-trigger{% endif %}"
+                  {% if att.is_doc %}target="_blank"
+                  href="https://view.officeapps.live.com/op/embed.aspx?src={{att.file_upload.url}}"{% endif %}
+                  data-id="{{att.id}}">Lihat</a> atau
+              {% endif %}
+              <a href="{{att.file_upload.url}}" target="_blank">Download</a>
+          </li>
+          {% if att.is_viewable %}
+          <div class="modal" id="modal{{att.id}}">
+            <div class="modal-background"></div>
+            <div class="modal-content">
+              {{att.html_display}}
+            </div>
+            <button class="modal-close is-large" aria-label="close"></button>
+          </div>
+          {% endif %}
+        {% endfor %}
+        </ul>
+      {% endif %}
+      <div style="padding-top:20px">
+        <form method="POST" action="#">
+          {% csrf_token %}
+          <input type="hidden" name="question" value="{{question.id}}"/>
+          {% if question.id in user_questions %}
+          <textarea name="text" class="textarea is-fullwidth">{{user_answers.question.text}}</textarea>
+          <button class="button is-link" type="submit">Ubah jawaban</button>
+          {% else %}
+          <textarea name="text" class="textarea is-fullwidth"></textarea>
+          <button class="button is-link" type="submit">Jawab</button>
+          {% endif %}
+        </form>
+      </div>
+    </li>
+    <hr />
+    {% endfor %}
+  </ol>
+</div>
+<script type="text/javascript">
+  $(document).ready(function(e) {
+    $('a.modal-trigger').on('click', function(e) {
+      var att = $(this).data('id')
+      $('div.modal#modal' + att).toggleClass('is-active')
+    })
+    $('button.modal-close').on('click', function(e) {
+      $(this).parent().toggleClass('is-active')
+    })
+  })
+</script>
+{% endblock %}

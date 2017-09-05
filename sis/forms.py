@@ -3,6 +3,7 @@ import nested_admin
 from django.forms import ValidationError
 from django.utils.translation import ugettext as _
 
+
 class BaseQuestionFormSet(nested_admin.NestedInlineFormSet):
     def clean(self):
         if any(self.errors):

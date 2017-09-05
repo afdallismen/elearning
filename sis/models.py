@@ -34,6 +34,38 @@ class Attachment(models.Model):
     def html_display(self):
         return file_html_display(self.file_upload, 640, 480)
 
+    @property
+    def is_supported(self):
+        file_type = self.file_upload.name.split(".")[-1].lower()
+        return file_type in ['jpg', 'png', 'swf', 'mp4', 'webm', 'doc', 'docx',
+                             'xls', 'xlsx', 'ppt', 'pptx', 'pdf']
+
+    @property
+    def is_viewable(self):
+        file_type = self.file_upload.name.split(".")[-1].lower()
+        return file_type in ['jpg', 'png', 'swf', 'mp4', 'webm']
+
+    @property
+    def is_image(self):
+        file_type = self.file_upload.name.split(".")[-1].lower()
+        return file_type in ['jpg', 'png']
+
+    @property
+    def is_swf(self):
+        file_type = self.file_upload.name.split(".")[-1].lower()
+        return file_type == 'swf'
+
+    @property
+    def is_video(self):
+        file_type = self.file_upload.name.split(".")[-1].lower()
+        return file_type in ['mp4', 'webm']
+
+    @property
+    def is_doc(self):
+        file_type = self.file_upload.name.split(".")[-1].lower()
+        return file_type in ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx',
+                             'pdf']
+
 
 class Module(models.Model):
     title = models.CharField(
