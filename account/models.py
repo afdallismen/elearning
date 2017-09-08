@@ -20,10 +20,16 @@ class MyUser(User):
         verbose_name_plural = _("users")
 
     def __str__(self):
-        name = str(self.get_full_name() or
-                   self.get_short_name() or
-                   self.get_username())
-        return name
+        return self.name
+
+    def __repr__(self):
+        return "MyUser(username=\"{username})\"".format(username=self.username)
+
+    @property
+    def name(self):
+        return (self.get_full_name() or
+                self.get_short_name() or
+                self.get_username())
 
     @property
     def is_student(self):
@@ -53,7 +59,11 @@ class BaseAccountModel(models.Model):
         abstract = True
 
     def __str__(self):
-        return str(self.user)
+        return self.user.name
+
+    def __repr__(self):
+        return ("{classname}(user={user})"
+                .format(self.__name__.title(), repr(self.user)))
 
 
 class Student(BaseAccountModel):

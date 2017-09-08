@@ -9,19 +9,14 @@ from sis.filters import AssignmentCategoryListFilter as filter_category
 from sis.models import (
     Module, Answer, Attachment, Assignment, Question, AssignmentResult,
     FinalResult, FinalResultPercentage)
-from sis.utils import answer_admin_object_action_link
+from sis.utils import answer_admin_change_link
 
 
 class SisAdminMixin(object):
     class Media:
         css = {
             'all': (
-                "font-awesome-4.7.0/css/font-awesome.min.css",
-            )
-        }
-
-    def object_action(self, obj):
-        pass
+                "css/font-awesome-4.7.0/css/font-awesome.min.css", )}
 
 
 class AttachmentInline(nested_admin.NestedGenericStackedInline):
@@ -38,11 +33,12 @@ class QuestionInline(nested_admin.NestedStackedInline):
     model = Question
     inlines = [AttachmentInline]
     extra = 0
-    formset = modelformset_factory(
-        Question, fields=("__all__"), formset=BaseQuestionFormSet)
+    formset = modelformset_factory(Question,
+                                   fields=("__all__"),
+                                   formset=BaseQuestionFormSet)
 
 
-class ModuleAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
+class ModuleAdmin(nested_admin.NestedModelAdmin):
     list_display = ('title', 'created_date', 'updated_date',
                     'number_of_attachments')
     search_fields = ('title', )
@@ -53,7 +49,7 @@ class ModuleAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
     number_of_attachments.short_description = _("number of attachments")
 
 
-class AssignmentAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
+class AssignmentAdmin(nested_admin.NestedModelAdmin):
     list_display = ('category', 'created_date', 'number_of_questions')
     list_filter = (filter_category, )
     inlines = [QuestionInline]
@@ -64,10 +60,9 @@ class AssignmentAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
 
 
 class AnswerAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
-    search_fields = (
-        'student__user__username',
-        'student__user__first_name',
-        'student__user__last_name')
+    search_fields = ('student__user__username',
+                     'student__user__first_name',
+                     'student__user__last_name')
     list_filter = (filter_category,
                    ('student', admin.RelatedOnlyFieldListFilter))
     list_display = ('student', 'assignment', 'question', 'score_percentage',
@@ -84,15 +79,14 @@ class AnswerAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
     score_percentage.short_description = _("score percentage")
 
     def object_action(self, obj):
-        return answer_admin_object_action_link(obj)
+        return answer_admin_change_link(pk=obj.pk)
     object_action.short_description = _("object action")
 
 
-class AssignmentResultAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
-    search_fields = (
-        'student__user__username',
-        'student__user__first_name',
-        'student__user__last_name')
+class AssignmentResultAdmin(nested_admin.NestedModelAdmin):
+    search_fields = ('student__user__username',
+                     'student__user__first_name',
+                     'student__user__last_name')
     list_display = ('student', 'assignment', 'score')
     list_display_links = None
     list_filter = (filter_category,
@@ -105,36 +99,31 @@ class AssignmentResultAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
         return False
 
 
-class FinalResultAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
-    search_fields = (
-        'student__user__username',
-        'student__user__first_name',
-        'student__user__last_name')
+class FinalResultAdmin(nested_admin.NestedModelAdmin):
+    search_fields = ('student__user__username',
+                     'student__user__first_name',
+                     'student__user__last_name')
     list_display_links = None
 
     def __init__(self, *args, **kwargs):
-        self.counters = {
-            'quiz': 0,
-            'mid': 0,
-            'final': 0,
-        }
+        self.counters = {'quiz': 0,
+                         'mid': 0,
+                         'final': 0}
         super(FinalResultAdmin, self).__init__(*args, **kwargs)
 
     def get_list_display(self, request):
         self.assignments = {
-            'quiz': Assignment.objects.filter(category=0).order_by(
-                'created_date'),
-            'mid': Assignment.objects.filter(category=1).order_by(
-                'created_date'),
-            'final': Assignment.objects.filter(category=2).order_by(
-                'created_date')
+            'quiz': (Assignment.objects
+                     .filter(category=0).order_by('created_date')),
+            'mid': (Assignment.objects
+                    .filter(category=1).order_by('created_date')),
+            'final': (Assignment.objects
+                      .filter(category=2).order_by('created_date'))
         }
         list_display = ['student', ]
-        count = (
-            ('quiz', len(self.assignments['quiz'])),
-            ('mid', len(self.assignments['mid'])),
-            ('final', len(self.assignments['final']))
-        )
+        count = (('quiz', len(self.assignments['quiz'])),
+                 ('mid', len(self.assignments['mid'])),
+                 ('final', len(self.assignments['final'])))
         for ct in count:
             for ign in range(0, ct[1]):
                 list_display.append(ct[0])
@@ -168,9 +157,9 @@ class FinalResultAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
     def _get_score_display(self, cat, obj):
         assignment_id = self.assignments[cat][self.counters[cat]].id
         try:
-            score = AssignmentResult.objects.get(
-                student=obj.student, assignment=assignment_id
-            ).score
+            score = (AssignmentResult.objects
+                     .get(student=obj.student,
+                          assignment=assignment_id).score)
         except AssignmentResult.DoesNotExist:
             score = "-"
         if self.counters[cat] < len(self.assignments[cat]) - 1:

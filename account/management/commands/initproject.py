@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.contrib.auth.models import Group
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 
@@ -30,11 +29,11 @@ def createuser():
 
     Lecturer.objects.get_or_create(user=admin, nip="198503302003121002")
 
-    # afdal, _ = MyUser.objects.get_or_create(**user['student'])
-    # afdal.set_password("qweasdzxc")
-    # afdal.save()
-    #
-    # Student.objects.get_or_create(user=afdal, nobp="1510099")
+    afdal, _ = MyUser.objects.get_or_create(**user['student'])
+    afdal.set_password("qweasdzxc")
+    afdal.save()
+
+    Student.objects.get_or_create(user=afdal, nobp="1510099")
 
 
 def create_final_result_percentage():

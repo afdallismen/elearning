@@ -28,7 +28,7 @@ class MyUserAdmin(BaseUserAdmin):
     actions = (activate_users, deactivate_users)
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
-        ('Personal info', {'fields': ('first_name', 'last_name', 'email')}),
+        (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
     )
     add_fieldsets = (
         (None, {
@@ -92,9 +92,7 @@ class NoModulePermissionAdmin(admin.ModelAdmin):
         if not avt:
             avt = "http://localhost:8000/media/account/stock_avatar.jpg"
 
-        return format_html(
-            '<img src={} />',
-            avt)
+        return format_html('<img src={} />', avt)
     avatar_thumbnail.short_description = ""
 
 

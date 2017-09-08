@@ -15,10 +15,22 @@ from sis.utils import attachment_directory, nstrip_tags, file_html_display
 from sis.validators import MinDateValueValidator
 
 
+SCORE_VALIDATOR = MaxValueValidator(100)
+
+
 class Attachment(models.Model):
-    file_upload = models.FileField(
-        upload_to=attachment_directory,
-        verbose_name=_("file upload"))
+    FILE_EXTENSION = {
+        'image': ['jpg', 'png'],
+        'animation': ['swf'],
+        'video': ['mp4', 'webm'],
+        'doc': ['doc', 'docx', 'xsl', 'xslx', 'ppt', 'pptx', 'pdf']
+    }
+    SUPPORTED_FILE_EXTENSION = [*FILE_EXTENSION['image'],
+                                *FILE_EXTENSION['animation'],
+                                *FILE_EXTENSION['video'],
+                                *FILE_EXTENSION['doc']]
+    file_upload = models.FileField(upload_to=attachment_directory,
+                                   verbose_name=_("file upload"))
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
@@ -28,65 +40,68 @@ class Attachment(models.Model):
         verbose_name_plural = "attachments"
 
     def __str__(self):
+        return self.file_name
+
+    def __repr__(self):
+        return "Attachment(file=\"{filename}\")".format(filename=self.filename)
+
+    @property
+    def file_name(self):
         return self.file_upload.name.split("/")[-1]
 
     @property
+    def file_extension(self):
+        return self.file_upload.name.split(".")[-1].lower()
+
+    @property
     def html_display(self):
-        return file_html_display(self.file_upload, 640, 480)
+        return file_html_display(self, 640, 480)
 
     @property
     def is_supported(self):
-        file_type = self.file_upload.name.split(".")[-1].lower()
-        return file_type in ['jpg', 'png', 'swf', 'mp4', 'webm', 'doc', 'docx',
-                             'xls', 'xlsx', 'ppt', 'pptx', 'pdf']
+        return self.file_extension in self.SUPPORTED_FILE_EXTENSION
 
     @property
     def is_viewable(self):
-        file_type = self.file_upload.name.split(".")[-1].lower()
-        return file_type in ['jpg', 'png', 'swf', 'mp4', 'webm']
+        is_viewable = self.is_image or self.is_animation or self.is_video
+        return viewable
 
     @property
     def is_image(self):
-        file_type = self.file_upload.name.split(".")[-1].lower()
-        return file_type in ['jpg', 'png']
+        is_image = self.file_extension in self.FILE_EXTENSION['image']
+        return self.is_supported and is_image
 
     @property
-    def is_swf(self):
-        file_type = self.file_upload.name.split(".")[-1].lower()
-        return file_type == 'swf'
+    def is_animation(self):
+        is_animation = self.file_extension in self.FILE_EXTENSION['animation']
+        return self.is_supported and is_animation
 
     @property
     def is_video(self):
-        file_type = self.file_upload.name.split(".")[-1].lower()
-        return file_type in ['mp4', 'webm']
+        is_video = self.file_extension in self.FILE_EXTENSION['video']
+        return self.is_supported and is_video
 
     @property
     def is_doc(self):
-        file_type = self.file_upload.name.split(".")[-1].lower()
-        return file_type in ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx',
-                             'pdf']
+        is_doc = self.file_extension in self.FILE_EXTENSION['doc']
+        return self.is_supported and is_doc
 
 
 class Module(models.Model):
-    title = models.CharField(
-        max_length=100,
-        unique=True,
-        verbose_name=_("title"))
-    slug = models.SlugField(
-        blank=True,
-        default="",
-        editable=False,
-        max_length=100)
-    text = tinymce_models.HTMLField(
-        blank=True,
-        default="",
-        verbose_name=_("text"))
-    created_date = models.DateField(
-        auto_now_add=True,
-        verbose_name=_("created date"))
-    updated_date = models.DateField(
-        auto_now=True,
-        verbose_name=_("updated date"))
+    title = models.CharField(max_length=100,
+                             unique=True,
+                             verbose_name=_("title"))
+    slug = models.SlugField(blank=True,
+                            default="",
+                            editable=False,
+                            max_length=100)
+    text = tinymce_models.HTMLField(blank=True,
+                                    default="",
+                                    verbose_name=_("text"))
+    created_date = models.DateField(auto_now_add=True,
+                                    verbose_name=_("created date"))
+    updated_date = models.DateField(auto_now=True,
+                                    verbose_name=_("updated date"))
     attachments = GenericRelation(Attachment, verbose_name=_("attachments"))
 
     class Meta:
@@ -94,7 +109,10 @@ class Module(models.Model):
         verbose_name_plural = _("modules")
 
     def __str__(self):
-        return "{} / {}".format(self.created_date, self.title)
+        return self.title
+
+    def __repr__(self):
+        return "Question(title=\"{title}\")".format(title=self.title)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
@@ -102,40 +120,44 @@ class Module(models.Model):
 
 
 class Assignment(models.Model):
-    DUEDATEVALIDATOR = MinDateValueValidator(timezone.now().date())
-    ASSIGNMENT_CATEGORY_CHOICES = (
-        (0, _("quiz")),
-        (1, _("mid")),
-        (2, _("final")))
+    CATEGORY_CHOICES = ((0, _("quiz")),
+                        (1, _("mid")),
+                        (2, _("final")))
 
-    category = models.PositiveIntegerField(
-        choices=ASSIGNMENT_CATEGORY_CHOICES,
-        verbose_name=_("category"))
-    created_date = models.DateField(
-        auto_now_add=True,
-        verbose_name=_("created date"))
+    short_description = models.CharField(max_length=100,
+                                         verbose_name=_("title"))
+    category = models.PositiveIntegerField(choices=CATEGORY_CHOICES,
+                                           verbose_name=_("category"))
+    created_date = models.DateField(auto_now_add=True,
+                                    verbose_name=_("created date"))
 
     class Meta:
         verbose_name = _("assignment")
         verbose_name_plural = _("assignments")
 
     def __str__(self):
-        return "{} / {} assignment".format(
-            self.created_date, self.get_category_display())
+        if self.short_description:
+            return nstrip_tags(30, self.short_description)
+        return "{cat} assignment".format(cat=self.get_category_display())
+
+    def __repr__(self):
+        if self.short_description:
+            return ("Assignment(\"{desc}\")"
+                    .format(desc=nstrip_tags(20, self.short_description)))
+        return "Assignment{category=\"{cat}\")".format(cat=self.category)
 
 
 class Question(models.Model):
-    assignment = models.ForeignKey(
-        Assignment,
-        blank=True,
-        null=True,
-        on_delete=models.CASCADE,
-        verbose_name=_("assignment"))
+    assignment = models.ForeignKey(Assignment,
+                                   blank=True,
+                                   null=True,
+                                   on_delete=models.CASCADE,
+                                   verbose_name=_("assignment"))
     text = models.TextField(blank=True, default="", verbose_name=_("text"))
     score_percentage = models.PositiveIntegerField(
         blank=True,
         default=0,
-        validators=[MaxValueValidator(100)],
+        validators=[SCORE_VALIDATOR],
         verbose_name=_("score percentage"))
     attachments = GenericRelation(Attachment, verbose_name=_("attachments"))
 
@@ -145,30 +167,29 @@ class Question(models.Model):
 
     def __str__(self):
         if self.text:
-            return "{} / Question {}".format(
-                self.assignment, nstrip_tags(30, self.text))
-        return _("This object has no written text.")
+            return nstrip_tags(30, self.text)
+        return _("This question has no written text")
+
+    def __repr__(self):
+        return ("Question(assignment={assignment})"
+                .format(assignment=str(self.assignment)))
 
 
 class Answer(models.Model):
-    student = models.ForeignKey(
-        Student,
-        on_delete=models.CASCADE,
-        verbose_name=_("student"))
-    question = models.ForeignKey(
-        Question,
-        on_delete=models.CASCADE,
-        verbose_name=_("question"))
+    student = models.ForeignKey(Student,
+                                on_delete=models.CASCADE,
+                                verbose_name=_("student"))
+    question = models.ForeignKey(Question,
+                                 on_delete=models.CASCADE,
+                                 verbose_name=_("question"))
     text = models.TextField(blank=True, default="", verbose_name=_("text"))
     attachments = GenericRelation(Attachment, verbose_name=_("attachments"))
-    score = models.PositiveIntegerField(
-        blank=True,
-        default=0,
-        validators=[MaxValueValidator(100)],
-        verbose_name=_("score"))
-    correct = models.NullBooleanField(
-        blank=True,
-        verbose_name=_("is it correct ?"))
+    score = models.PositiveIntegerField(blank=True,
+                                        default=0,
+                                        validators=[SCORE_VALIDATOR],
+                                        verbose_name=_("score"))
+    correct = models.NullBooleanField(blank=True,
+                                      verbose_name=_("is it correct ?"))
 
     class Meta:
         verbose_name = _("answer")
@@ -177,7 +198,13 @@ class Answer(models.Model):
     def __str__(self):
         if self.text:
             return nstrip_tags(30, self.text)
-        return _("This object has no written text.")
+        return _("This answer has no written text")
+
+    def __repr__(self):
+        return ("Answer(question={question}, assignment={assignment})"
+                .format(
+                    question=str(self.question),
+                    str(assignment=self.assignment)))
 
     def save(self, *args, **kwargs):
         if self.correct is True:
@@ -188,47 +215,51 @@ class Answer(models.Model):
 
 
 class AssignmentResult(models.Model):
-    student = models.ForeignKey(
-        Student,
-        on_delete=models.CASCADE,
-        verbose_name=_("student"))
-    assignment = models.ForeignKey(
-        Assignment,
-        on_delete=models.CASCADE,
-        verbose_name=_("assignment"))
-    score = models.PositiveIntegerField(
-        blank=True,
-        default=0,
-        validators=[MaxValueValidator(100)],
-        verbose_name=_("score"))
+    student = models.ForeignKey(Student,
+                                on_delete=models.CASCADE,
+                                verbose_name=_("student"))
+    assignment = models.ForeignKey(Assignment,
+                                   on_delete=models.CASCADE,
+                                   verbose_name=_("assignment"))
+    score = models.PositiveIntegerField(blank=True,
+                                        default=0,
+                                        validators=[SCORE_VALIDATOR],
+                                        verbose_name=_("score"))
 
     class Meta:
         verbose_name = _("assignment result")
         verbose_name_plural = _("assignment result")
 
     def __str__(self):
-        return _("{} result of {}".format(
-            self.student,
-            self.assignment))
+        return self.score
+
+    def __repr__(self):
+        return ("AssignmentResult(student={student}, assignment={assignment},"
+                "score={score}").format(
+                    student=str(self.student),
+                    assignment=str(self.assignment),
+                    score=self.score)
 
 
 class FinalResult(models.Model):
-    student = models.OneToOneField(
-        Student,
-        on_delete=models.CASCADE,
-        verbose_name=_("student"))
-    score = models.PositiveIntegerField(
-        blank=True,
-        default=0,
-        validators=[MaxValueValidator(100)],
-        verbose_name=_("score"))
+    student = models.OneToOneField(Student,
+                                   on_delete=models.CASCADE,
+                                   verbose_name=_("student"))
+    score = models.PositiveIntegerField(blank=True,
+                                        default=0,
+                                        validators=[SCORE_VALIDATOR],
+                                        verbose_name=_("score"))
 
     class Meta:
         verbose_name = _("final result")
         verbose_name_plural = _("final result")
 
     def __str__(self):
-        return _("Final result of {}".format(self.student))
+        return self.score
+
+    def __repr__(self):
+        return ("FinalResult(student={student}, score={score})"
+                .format(student=str(self.student), score=self.score))
 
     @property
     def letter_value(self):

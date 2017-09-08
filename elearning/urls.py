@@ -31,7 +31,8 @@ urlpatterns = [
     url(r'^tinymce/', include('tinymce.urls')),
     url(r'^nested_admin/', include('nested_admin.urls')),
     url(r'^account/register/$',
-        regis_views.RegistrationView.as_view(form_class=StudentRegistrationForm),
+        regis_views.RegistrationView.as_view(
+            form_class=StudentRegistrationForm),
         name='registration_register'),
     url(r'^account/', include('registration.backends.hmac.urls')),
     url(r'^sis/', include('sis.urls')),
