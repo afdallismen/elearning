@@ -4,7 +4,6 @@ from django.contrib.contenttypes.fields import (
 from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MaxValueValidator
 from django.db import models
-from django.utils import timezone
 from django.utils.text import slugify
 from django.utils.translation import ugettext as _
 
@@ -12,7 +11,6 @@ from tinymce import models as tinymce_models
 
 from account.models import Student
 from sis.utils import attachment_directory, nstrip_tags, file_html_display
-from sis.validators import MinDateValueValidator
 
 
 SCORE_VALIDATOR = MaxValueValidator(100)
@@ -43,7 +41,7 @@ class Attachment(models.Model):
         return self.file_name
 
     def __repr__(self):
-        return "Attachment(file=\"{filename}\")".format(filename=self.filename)
+        return "Attachment(file=\"{!s}\")".format(self.filename)
 
     @property
     def file_name(self):
@@ -64,7 +62,7 @@ class Attachment(models.Model):
     @property
     def is_viewable(self):
         is_viewable = self.is_image or self.is_animation or self.is_video
-        return viewable
+        return is_viewable
 
     @property
     def is_image(self):
@@ -112,7 +110,7 @@ class Module(models.Model):
         return self.title
 
     def __repr__(self):
-        return "Question(title=\"{title}\")".format(title=self.title)
+        return "Question(title=\"{}\")".format(self.title)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
@@ -125,6 +123,8 @@ class Assignment(models.Model):
                         (2, _("final")))
 
     short_description = models.CharField(max_length=100,
+                                         blank=True,
+                                         default="",
                                          verbose_name=_("title"))
     category = models.PositiveIntegerField(choices=CATEGORY_CHOICES,
                                            verbose_name=_("category"))
@@ -144,7 +144,7 @@ class Assignment(models.Model):
         if self.short_description:
             return ("Assignment(\"{desc}\")"
                     .format(desc=nstrip_tags(20, self.short_description)))
-        return "Assignment{category=\"{cat}\")".format(cat=self.category)
+        return "Assignment{category=\"{}\")".format(self.category)
 
 
 class Question(models.Model):
@@ -171,8 +171,8 @@ class Question(models.Model):
         return _("This question has no written text")
 
     def __repr__(self):
-        return ("Question(assignment={assignment})"
-                .format(assignment=str(self.assignment)))
+        return ("Question(assignment={!s})"
+                .format(self.assignment))
 
 
 class Answer(models.Model):
@@ -201,10 +201,8 @@ class Answer(models.Model):
         return _("This answer has no written text")
 
     def __repr__(self):
-        return ("Answer(question={question}, assignment={assignment})"
-                .format(
-                    question=str(self.question),
-                    str(assignment=self.assignment)))
+        return ("Answer(question={!s}, assignment={!s})"
+                .format(self.question, self.question.assignment))
 
     def save(self, *args, **kwargs):
         if self.correct is True:
@@ -212,6 +210,15 @@ class Answer(models.Model):
         elif self.correct is False:
             self.score = 0
         super(Answer, self).save(*args, **kwargs)
+
+
+class AssignmentResultManager(models.Manager):
+    def get_score(self, student, assignment):
+        try:
+            score = self.get(student=student, assignment=assignment).score
+        except self.DoesNotExist:
+            score = 0
+        return score
 
 
 class AssignmentResult(models.Model):
@@ -225,6 +232,7 @@ class AssignmentResult(models.Model):
                                         default=0,
                                         validators=[SCORE_VALIDATOR],
                                         verbose_name=_("score"))
+    objects = AssignmentResultManager()
 
     class Meta:
         verbose_name = _("assignment result")
@@ -258,36 +266,39 @@ class FinalResult(models.Model):
         return self.score
 
     def __repr__(self):
-        return ("FinalResult(student={student}, score={score})"
-                .format(student=str(self.student), score=self.score))
+        return ("FinalResult(student={!s}, score={!s})"
+                .format(self.student, self.score))
 
     @property
     def letter_value(self):
         if 85 <= self.score <= 100:
-            return 'A'
+            return "A"
         elif 75 <= self.score <= 84:
-            return 'B'
+            return "B"
         elif 60 <= self.score <= 74:
-            return 'C'
+            return "C"
         elif 50 <= self.score <= 59:
-            return 'D'
+            return "D"
         else:
-            return 'E'
+            return "E"
 
 
 class FinalResultPercentage(models.Model):
     quiz = models.PositiveSmallIntegerField(
         blank=True,
         default=settings.FINAL_RESULT_PERCENTAGE['quiz'],
-        verbose_name=_("quiz"))
+        verbose_name=_("quiz")
+    )
     mid = models.PositiveSmallIntegerField(
         blank=True,
         default=settings.FINAL_RESULT_PERCENTAGE['mid'],
-        verbose_name=_("mid"))
+        verbose_name=_("mid")
+    )
     final = models.PositiveSmallIntegerField(
         blank=True,
         default=settings.FINAL_RESULT_PERCENTAGE['final'],
-        verbose_name=_("final"))
+        verbose_name=_("final")
+    )
 
     class Meta:
         verbose_name = _("final result percentage")

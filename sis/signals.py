@@ -9,10 +9,8 @@ from sis.models import (
 
 @receiver(post_save, sender=Answer)
 def create_result(sender, instance, created, **kwargs):
-    report = {
-        'student': instance.student,
-        'assignment': instance.question.assignment
-    }
+    report = {'student': instance.student,
+              'assignment': instance.question.assignment}
     result, _ = AssignmentResult.objects.get_or_create(**report)
     result.score = _get_assignment_result(instance)
     result.save()
@@ -34,6 +32,7 @@ def delete_result(sender, instance, using, **kwargs):
     _update_final_result(instance.student)
 
 
+@receiver(post_save, sender=FinalResultPercentage)
 @receiver([post_save, post_delete], sender=Assignment)
 def update_final_result(sender, instance, *args, **kwargs):
     students = Student.objects.all()
@@ -42,19 +41,13 @@ def update_final_result(sender, instance, *args, **kwargs):
 
 
 def _update_final_result(student):
-    results = {
-        'quiz': AssignmentResult.objects.filter(
-            student=student, assignment__category=0),
-        'mid': AssignmentResult.objects.filter(
-            student=student, assignment__category=1),
-        'final': AssignmentResult.objects.filter(
-            student=student, assignment__category=2)
-    }
-    score = {
-        'quiz': sum(ar.score for ar in results['quiz']),
-        'mid': sum(ar.score for ar in results['mid']),
-        'final': sum(ar.score for ar in results['final']),
-    }
+    qs = AssignmentResult.objects.filter(student=student)
+    results = {'quiz': qs.filter(assignment__category=0),
+               'mid': qs.filter(assignment__category=1),
+               'final': qs.filter(assignment__category=2)}
+    score = {'quiz': sum(ar.score for ar in results['quiz']),
+             'mid': sum(ar.score for ar in results['mid']),
+             'final': sum(ar.score for ar in results['final'])}
     percentage = FinalResultPercentage.objects.get()
     total_score = 0
     for key, value in score.items():
@@ -72,7 +65,9 @@ def _get_assignment_result(answer):
         try:
             answers.append(
                 Answer.objects.get(
-                    question=question.pk, student=answer.student.pk))
+                    question=question.pk, student=answer.student.pk
+                )
+            )
         except ObjectDoesNotExist:
             pass
 

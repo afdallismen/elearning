@@ -13,7 +13,7 @@ from imagekit.processors import ResizeToFill
 class Thumbnail(ImageSpec):
     processors = [ResizeToFill(640, 480)]
     format = 'JPEG'
-    options = {'quality': 60}
+    options = {'quality': 100}
 
 
 def answer_admin_change_link(pk):
@@ -21,15 +21,15 @@ def answer_admin_change_link(pk):
         '<a href="{}" style="margin-right:10px">'
         '<i class="fa fa-file-text-o" aria-hidden="true"></i> Answer'
         '</a>',
-        reverse("admin:sis_answer_change", args=(pk, )))
+        reverse("admin:sis_answer_change", args=(pk, ))
+    )
 
 
 def attachment_directory(instance, filename):
     now = timezone.now()
-    return "attachment/{0}/{1:%Y%m%d}/{2}".format(
-        instance.content_type.name,
-        now,
-        filename)
+    return "attachment/{}/{:%Y%m%d}/{}".format(instance.content_type.name,
+                                               now,
+                                               filename)
 
 
 def nstrip_tags(n, text):
@@ -74,8 +74,7 @@ def _get_swf_html_display(url, width, height):
             <param name="menu" value="false" />
         </object>'''
 
-    return format_html(
-        html_tag, src=url, width=width, height=height)
+    return format_html(html_tag, src=url, width=width, height=height)
 
 
 def _get_video_html_display(url, width, height):
@@ -94,7 +93,7 @@ def _get_video_html_display(url, width, height):
 
 def _get_image_html_display(orig, img_bytes):
     html_tag = ('<a href="{orig}" target="_blank">'
-                '<img src="data:image/jpeg;base64,{thumb}"/></a>')
+                '<img src="data:image/jpeg;base64,{thumb}"></a>')
 
     return format_html(html_tag, orig=orig, thumb=img_bytes)
 
@@ -105,5 +104,5 @@ def _get_docs_html_display(url):
             href='https://view.officeapps.live.com/op/embed.aspx?src={}'
             >View on new window
         </a>'''
-    url = "http://localhost:8000{url}".format(url=url)
+    url = "http://localhost:8000{}".format(url)
     return format_html(html_tag, url)

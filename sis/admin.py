@@ -14,9 +14,7 @@ from sis.utils import answer_admin_change_link
 
 class SisAdminMixin(object):
     class Media:
-        css = {
-            'all': (
-                "css/font-awesome-4.7.0/css/font-awesome.min.css", )}
+        css = {'all': ("css/font-awesome-4.7.0/css/font-awesome.min.css", )}
 
 
 class AttachmentInline(nested_admin.NestedGenericStackedInline):
@@ -112,23 +110,27 @@ class FinalResultAdmin(nested_admin.NestedModelAdmin):
         super(FinalResultAdmin, self).__init__(*args, **kwargs)
 
     def get_list_display(self, request):
-        self.assignments = {
-            'quiz': (Assignment.objects
-                     .filter(category=0).order_by('created_date')),
-            'mid': (Assignment.objects
-                    .filter(category=1).order_by('created_date')),
-            'final': (Assignment.objects
-                      .filter(category=2).order_by('created_date'))
-        }
-        list_display = ['student', ]
+        # Get all assignments per category
+        assignment_objects = Assignment.objects.order_by('created_date')
+        self.assignments = {'quiz': assignment_objects.filter(category=0),
+                            'mid': assignment_objects.filter(category=1),
+                            'final': assignment_objects.filter(category=2)}
+
+        list_display = ['student', ]  # Initial list display
+
+        # Get count of each category
         count = (('quiz', len(self.assignments['quiz'])),
                  ('mid', len(self.assignments['mid'])),
                  ('final', len(self.assignments['final'])))
+
+        # Generate list display
         for ct in count:
+            # Append key to list display for each count
             for ign in range(0, ct[1]):
                 list_display.append(ct[0])
-        list_display.append("score")
-        list_display.append("letter_value")
+
+        # Rest of the list display
+        list_display.extend(["score", "letter_value"])
 
         return list_display
 
@@ -136,16 +138,34 @@ class FinalResultAdmin(nested_admin.NestedModelAdmin):
         return obj.letter_value
     letter_value.short_description = _("letter value")
 
+    def _raise_counter(self, cat):
+        if self.counters[cat] < len(self.assignments[cat]) - 1:
+            self.counters[cat] += 1
+        else:
+            self.counters[cat] = 0
+
     def quiz(self, obj):
-        return self._get_score_display(cat='quiz', obj=obj)
+        assignment = self.assignments['quiz'][self.counters['quiz']].pk
+        score = AssignmentResult.objects.get_score(student=obj.student,
+                                                   assignment=assignment)
+        self._raise_counter('quiz')
+        return score
     quiz.short_description = _("quiz")
 
     def mid(self, obj):
-        return self._get_score_display(cat='mid', obj=obj)
+        assignment = self.assignments['mid'][self.counters['mid']].pk
+        score = AssignmentResult.objects.get_score(student=obj.student,
+                                                   assignment=assignment)
+        self._raise_counter('mid')
+        return score
     mid.short_description = _("mid")
 
     def final(self, obj):
-        return self._get_score_display(cat='final', obj=obj)
+        assignment = self.assignments['final'][self.counters['final']].pk
+        score = AssignmentResult.objects.get_score(student=obj.student,
+                                                   assignment=assignment)
+        self._raise_counter('final')
+        return score
     final.short_description = _("final")
 
     def has_add_permission(self, request):
@@ -153,20 +173,6 @@ class FinalResultAdmin(nested_admin.NestedModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
-
-    def _get_score_display(self, cat, obj):
-        assignment_id = self.assignments[cat][self.counters[cat]].id
-        try:
-            score = (AssignmentResult.objects
-                     .get(student=obj.student,
-                          assignment=assignment_id).score)
-        except AssignmentResult.DoesNotExist:
-            score = "-"
-        if self.counters[cat] < len(self.assignments[cat]) - 1:
-            self.counters[cat] += 1
-        else:
-            self.counters[cat] = 0
-        return score
 
 
 class FinalResultPercentageAdmin(nested_admin.NestedModelAdmin):

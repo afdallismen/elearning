@@ -4,14 +4,17 @@ from django.contrib.auth.models import Group
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        self.create_group_if_not_exist(name="student")
-        self.create_group_if_not_exist(name="lecturer")
+        # Create student and lecturer group
+        proceed = []
+        proceed.append(Group.objects.get_or_create(name="student"))
+        proceed.append(Group.objects.get_or_create(name="lecturer"))
 
-    def create_group_if_not_exist(self, name):
-        ign, created = Group.objects.get_or_create(name=name)
-        if created:
-            self.stdout.write(
-                self.style.SUCCESS(
-                    'Successfully created {} group'.format(name)
+        for process in proceed:
+            group = process[0]
+            created = process[1]
+            if created:
+                self.stdout.write(
+                    self.style.SUCCESS(
+                        "Successfully created {} group".format(group)
+                    )
                 )
-            )

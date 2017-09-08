@@ -12,6 +12,13 @@ from imagekit.processors import ResizeToFill
 from account.utils import user_avatar_directory_path
 
 
+# Keys depends on other value, read where it's used
+GENDER = {'1': _("male"),
+          '2': _("female")}
+PROGRAM = {'0': _("computer system"),
+           '1': _("information system")}
+
+
 class MyUser(User):
     class Meta:
         proxy = True
@@ -23,7 +30,7 @@ class MyUser(User):
         return self.name
 
     def __repr__(self):
-        return "MyUser(username=\"{username})\"".format(username=self.username)
+        return "MyUser(username=\"{!s})\"".format(self.username)
 
     @property
     def name(self):
@@ -39,21 +46,25 @@ class MyUser(User):
     def is_lecturer(self):
         return hasattr(self, 'lecturer') and self.lecturer is not None
 
+    @property
+    def identity(self):
+        if self.is_student:
+            return ('student', self.student.nobp)
+        elif self.is_lecturer:
+            return ('lecturer', self.lecturer.nip)
+
 
 class BaseAccountModel(models.Model):
-    user = models.OneToOneField(
-        MyUser,
-        editable=False,
-        on_delete=models.CASCADE)
-    avatar = models.ImageField(
-        blank=True,
-        default='',
-        upload_to=user_avatar_directory_path)
-    avatar_thumbnail = ImageSpecField(
-        source='avatar',
-        processors=[ResizeToFill(200, 200)],
-        format='JPEG',
-        options={'quality': 100})
+    user = models.OneToOneField(MyUser,
+                                editable=False,
+                                on_delete=models.CASCADE)
+    avatar = models.ImageField(blank=True,
+                               default='',
+                               upload_to=user_avatar_directory_path)
+    avatar_thumbnail = ImageSpecField(source='avatar',
+                                      processors=[ResizeToFill(200, 200)],
+                                      format='JPEG',
+                                      options={'quality': 100})
 
     class Meta:
         abstract = True
@@ -62,25 +73,19 @@ class BaseAccountModel(models.Model):
         return self.user.name
 
     def __repr__(self):
-        return ("{classname}(user={user})"
-                .format(self.__name__.title(), repr(self.user)))
+        return ("{!s}(user={!s})"
+                .format(self.__class__.__name__.title(), self.user))
 
 
 class Student(BaseAccountModel):
-    NOBPVALIDATOR = RegexValidator(
-        '^[01][0-9]'
-        '[01]0{2}'
-        '[0-9]{2}$')  # ex: 1510099
-    PROGRAM = {
-        '0': _("computer system"),
-        '1': _("information system")
-    }
+    NOBPVALIDATOR = RegexValidator('^[01][0-9]'  # Class of: 00 - 19
+                                   '[01]0{2}'  # Program: 000/100
+                                   '[0-9]{2}$')  # Sequence: 00 - 99
 
-    nobp = models.CharField(
-        max_length=7,
-        unique=True,
-        validators=[NOBPVALIDATOR],
-        verbose_name=_("no. bp"))
+    nobp = models.CharField(max_length=7,
+                            unique=True,
+                            validators=[NOBPVALIDATOR],
+                            verbose_name=_("no. bp"))
 
     class Meta:
         verbose_name = _("student")
@@ -95,8 +100,8 @@ class Student(BaseAccountModel):
     @property
     def program(self):
         if self.nobp:
-            return (self.PROGRAM[self.nobp[2]]).title()
-        return (self.PROGRAM['0']).title()
+            return (PROGRAM[self.nobp[2]]).title()
+        return (PROGRAM['0']).title()
 
     @property
     def nobp_sequence(self):
@@ -120,22 +125,15 @@ class Student(BaseAccountModel):
 
 
 class Lecturer(BaseAccountModel):
-    GENDER = {
-        '1': _("male"),
-        '2': _("female")
-    }
-    NIPVALIDATOR = RegexValidator(
-        '^[12][09][0-9]{2}[01][0-9][0-9]{2}'
-        '[12][09][0-9]{2}[01][0-9]'
-        '[12]'
-        '[0-9]{3}$')  # ex: 198503302003121002
+    NIPVALIDATOR = RegexValidator('^[12][09][0-9]{2}[01][0-9][0-9]{2}'  # Birth date: yyyymmdd # noqa
+                                  '[12][09][0-9]{2}[01][0-9]'  # Advancedment date: yyyyymmdd  # noqa
+                                  '[12]'  # Gender: 1/2
+                                  '[0-9]{3}$')  # Sequence: 000 - 999
 
-    nip = models.CharField(
-        max_length=18,
-        unique=True,
-        validators=[NIPVALIDATOR],
-        verbose_name=_("no. nip")
-    )
+    nip = models.CharField(max_length=18,
+                           unique=True,
+                           validators=[NIPVALIDATOR],
+                           verbose_name=_("no. nip"))
 
     class Meta:
         verbose_name = _("lecturer")
@@ -156,8 +154,8 @@ class Lecturer(BaseAccountModel):
     @property
     def gender(self):
         if self.nip:
-            return (self.GENDER[self.nip[14]]).title()
-        return (self.GENDER['1']).title()
+            return (GENDER[self.nip[14]]).title()
+        return (GENDER['1']).title()
 
     @property
     def nip_sequence(self):

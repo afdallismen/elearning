@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-03 20:33+0700\n"
+"POT-Creation-Date: 2017-09-09 21:45+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,150 +17,146 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#: .\sis\admin.py:52
+#: .\sis\admin.py:47
 msgid "number of attachments"
 msgstr "jumlah lampiran"
 
-#: .\sis\admin.py:62
+#: .\sis\admin.py:57
 msgid "number of questions"
 msgstr "jumlah pertanyaan"
 
-#: .\sis\admin.py:79 .\sis\models.py:87 .\sis\models.py:101 .\sis\models.py:166
+#: .\sis\admin.py:73 .\sis\models.py:133 .\sis\models.py:153
+#: .\sis\models.py:228
 msgid "assignment"
 msgstr "tugas"
 
-#: .\sis\admin.py:83 .\sis\models.py:107
+#: .\sis\admin.py:77 .\sis\models.py:159
 msgid "score percentage"
 msgstr "persentase nilai"
 
-#: .\sis\admin.py:87
+#: .\sis\admin.py:81
 msgid "object action"
 msgstr "aksi objek"
 
-#: .\sis\admin.py:147
+#: .\sis\admin.py:139
 msgid "letter value"
 msgstr "nilai huruf"
 
-#: .\sis\admin.py:151 .\sis\models.py:75 .\sis\models.py:219
+#: .\sis\admin.py:153 .\sis\models.py:121 .\sis\models.py:288
 msgid "quiz"
 msgstr "kuis"
 
-#: .\sis\admin.py:155 .\sis\models.py:76 .\sis\models.py:223
+#: .\sis\admin.py:161 .\sis\models.py:122 .\sis\models.py:292
 msgid "mid"
 msgstr "mid semester"
 
-#: .\sis\admin.py:159 .\sis\models.py:77 .\sis\models.py:227
+#: .\sis\admin.py:169 .\sis\models.py:123 .\sis\models.py:296
 msgid "final"
 msgstr "akhir semester"
 
 #: .\sis\filters.py:8
 msgid "assignment cateory"
-msgstr "kategori tugas"
+msgstr "kategori"
 
-#: .\sis\forms.py:28 .\sis\forms.py:31
+#: .\sis\forms.py:29 .\sis\forms.py:32
 msgid "Make sure score percentage add up to 100."
-msgstr "Pastikan jumlah persentase skor sama dengan 100"
+msgstr "Pastikan jumlah persentase nilai sama dengan 100."
 
-#: .\sis\models.py:21
+#: .\sis\models.py:31
 msgid "file upload"
 msgstr "unggah berkas"
 
-#: .\sis\models.py:42
+#: .\sis\models.py:91 .\sis\models.py:126
 msgid "title"
 msgstr "judul"
 
-#: .\sis\models.py:51 .\sis\models.py:102 .\sis\models.py:130
+#: .\sis\models.py:98 .\sis\models.py:154 .\sis\models.py:183
 msgid "text"
 msgstr "teks"
 
-#: .\sis\models.py:54 .\sis\models.py:84
+#: .\sis\models.py:100 .\sis\models.py:130
 msgid "created date"
 msgstr "tanggal dibuat"
 
-#: .\sis\models.py:57
+#: .\sis\models.py:102
 msgid "updated date"
 msgstr "tanggal diubah"
 
-#: .\sis\models.py:58 .\sis\models.py:108 .\sis\models.py:131
+#: .\sis\models.py:103 .\sis\models.py:160 .\sis\models.py:184
 msgid "attachments"
 msgstr "lampiran"
 
-#: .\sis\models.py:61
+#: .\sis\models.py:106
 msgid "module"
 msgstr "bahan kuliah"
 
-#: .\sis\models.py:62
+#: .\sis\models.py:107
 msgid "modules"
 msgstr "bahan kuliah"
 
-#: .\sis\models.py:81
+#: .\sis\models.py:128
 msgid "category"
 msgstr "kategori"
 
-#: .\sis\models.py:88
+#: .\sis\models.py:134
 msgid "assignments"
 msgstr "tugas"
 
-#: .\sis\models.py:111 .\sis\models.py:129
+#: .\sis\models.py:163 .\sis\models.py:182
 msgid "question"
 msgstr "pertanyaan"
 
-#: .\sis\models.py:112
+#: .\sis\models.py:164
 msgid "questions"
 msgstr "pertanyaan"
 
-#: .\sis\models.py:118 .\sis\models.py:148
-msgid "This object has no written text."
-msgstr "Objek ini tidak memiliki teks tertulis."
+#: .\sis\models.py:169
+msgid "This question has no written text"
+msgstr "Pertanyaan ini tidak memiliki teks."
 
-#: .\sis\models.py:125 .\sis\models.py:162 .\sis\models.py:187
+#: .\sis\models.py:179 .\sis\models.py:225 .\sis\models.py:253
 msgid "student"
 msgstr "mahasiswa"
 
-#: .\sis\models.py:136 .\sis\models.py:171 .\sis\models.py:192
+#: .\sis\models.py:188 .\sis\models.py:232 .\sis\models.py:257
 msgid "score"
 msgstr "nilai"
 
-#: .\sis\models.py:139
+#: .\sis\models.py:190
 msgid "is it correct ?"
-msgstr "jawaban ini benar ?"
+msgstr "apakah ini benar ?"
 
-#: .\sis\models.py:142
+#: .\sis\models.py:193
 msgid "answer"
 msgstr "jawaban"
 
-#: .\sis\models.py:143
+#: .\sis\models.py:194
 msgid "answers"
 msgstr "jawaban"
 
-#: .\sis\models.py:174 .\sis\models.py:175
+#: .\sis\models.py:199
+msgid "This answer has no written text"
+msgstr "Jawaban ini tidak memiliki teks"
+
+#: .\sis\models.py:236 .\sis\models.py:237
 msgid "assignment result"
 msgstr "nilai tugas"
 
-#: .\sis\models.py:178
-msgid "{} result of {}"
-msgstr "{} hasil dari {}"
-
-#: .\sis\models.py:195 .\sis\models.py:196
+#: .\sis\models.py:260 .\sis\models.py:261
 msgid "final result"
 msgstr "nilai akhir"
 
-#: .\sis\models.py:199
-msgid "Final result of {}"
-msgstr "Nilai akhir dari {}"
-
-#: .\sis\models.py:230 .\sis\models.py:231
+#: .\sis\models.py:299 .\sis\models.py:300
 msgid "final result percentage"
 msgstr "persentase nilai akhir"
 
-#: .\sis\utils.py:55
+#: .\sis\utils.py:59
 msgid "No preview available for this file type."
-msgstr "Berkas dengan tipe ini tidak dapat ditampilkan."
+msgstr "File dengan extensi ini tidak bisa ditampilkan."
 
 #: .\sis\validators.py:6
 msgid "Ensure this value is greater than or equal to today's date."
-msgstr "Pastikan nilai field ini lebih besar atau sama dengan tanggal hari ini"
+msgstr "Pastikan nilai ini lebih besar atau sama dengan tanggal hari ini."
 
 #: .\sis\apps.py:7
 msgid "student learning system"

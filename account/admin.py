@@ -31,26 +31,22 @@ class MyUserAdmin(BaseUserAdmin):
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
     )
     add_fieldsets = (
-        (None, {
-            'fields': ('username', 'password1', 'password2'),
-        }),
+        (None, {'fields': ('username', 'password1', 'password2'), }),
     )
-    list_display = ('__str__', 'email', 'identity', 'is_active')
+    list_display = ('__str__', 'email', 'user_identity', 'is_active')
     list_filter = ('is_active', filter_group)
 
-    def identity(self, obj):
+    def user_identity(self, obj):
         if not obj.is_student and not obj.is_lecturer:
             return self.empty_value_display
-        if obj.is_student:
-            link = reverse("admin:account_student_change",
-                           args=(obj.student.id, ))
-            num = obj.student.nobp
-        elif obj.is_lecturer:
-            link = reverse("admin:account_lecturer_change",
-                           args=(obj.lecturer.id, ))
-            num = obj.lecturer.nip
-        return format_html("<a href={}><b>{}</b></a>", link, num)
-    identity.short_description = _("identity number")
+
+        classname, idt = obj.identity
+
+        link = reverse("admin:account_{}_change".format(classname),
+                       args=(getattr(obj, classname).pk, ))
+
+        return format_html("<a href={}><b>{}</b></a>", link, idt)
+    user_identity.short_description = _("identity number")
 
 
 class NoModulePermissionAdmin(admin.ModelAdmin):
@@ -60,39 +56,38 @@ class NoModulePermissionAdmin(admin.ModelAdmin):
         return False
 
     def response_post_save_add(self, request, obj):
-        opts = MyUser._meta
-
+        # Redirect user to MyUser changelist
         if self.has_change_permission(request, None):
-            post_url = reverse('admin:%s_%s_changelist' %
-                               (opts.app_label, opts.model_name),
-                               current_app=self.admin_site.name)
+            post_url = reverse(
+                'admin:{!s}_{!s}_changelist'.format(
+                    MyUser._meta.app_label, MyUser._meta.model_name
+                ), current_app=self.admin_site.name
+            )
         else:
             post_url = reverse('admin:index',
                                current_app=self.admin_site.name)
         return HttpResponseRedirect(post_url)
 
     def response_post_save_change(self, request, obj):
-        opts = MyUser._meta
-
+        # Redirect user to MyUser changelist
         if self.has_change_permission(request, None):
-            post_url = reverse('admin:%s_%s_changelist' %
-                               (opts.app_label, opts.model_name),
-                               current_app=self.admin_site.name)
+            post_url = reverse(
+                'admin:{!s}_{!s}_changelist'.format(
+                    MyUser._meta.app_label, MyUser._meta.model_name
+                ), current_app=self.admin_site.name
+            )
         else:
             post_url = reverse('admin:index',
                                current_app=self.admin_site.name)
         return HttpResponseRedirect(post_url)
 
     def avatar_thumbnail(self, obj):
-        avt = False
-
         if hasattr(obj, 'avatar_thumbnail') and obj.avatar:
-            avt = obj.avatar_thumbnail.url
+            url = obj.avatar_thumbnail.url
+        else:
+            url = "{% static 'img/stock_avatar.jpg' %}"
 
-        if not avt:
-            avt = "http://localhost:8000/media/account/stock_avatar.jpg"
-
-        return format_html('<img src={} />', avt)
+        return format_html('<img src={} />', url)
     avatar_thumbnail.short_description = ""
 
 

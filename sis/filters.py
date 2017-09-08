@@ -14,7 +14,7 @@ class AssignmentCategoryListFilter(admin.SimpleListFilter):
 
     def lookups(self, request, model_admin):
         if self.model.objects.count():
-            return Assignment.ASSIGNMENT_CATEGORY_CHOICES
+            return Assignment.CATEGORY_CHOICES
         return None
 
     def queryset(self, request, queryset):
@@ -23,8 +23,10 @@ class AssignmentCategoryListFilter(admin.SimpleListFilter):
                 queryset = queryset.filter(category=self.value())
             elif self.model == Answer:
                 queryset = queryset.filter(
-                    question__assignment__category=self.value())
+                    question__assignment__category=self.value()
+                )
             elif self.model == AssignmentResult:
                 queryset = queryset.filter(
-                    assignment__category=self.value())
+                    assignment__category=self.value()
+                )
         return queryset

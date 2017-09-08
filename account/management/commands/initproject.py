@@ -39,7 +39,8 @@ def createuser():
 def create_final_result_percentage():
     if not FinalResultPercentage.objects.exists():
         FinalResultPercentage.objects.get_or_create(
-            **settings.FINAL_RESULT_PERCENTAGE)
+            **settings.FINAL_RESULT_PERCENTAGE
+        )
 
 
 class Command(BaseCommand):

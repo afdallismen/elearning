@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-03 20:33+0700\n"
+"POT-Creation-Date: 2017-09-09 21:45+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,16 +17,19 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
 #: .\account\admin.py:17
 msgid "Make selected users as active"
-msgstr "Aktifkan akun user yang terpilih"
+msgstr "Aktifkan akun pengguna yang terpilih"
 
 #: .\account\admin.py:22
 msgid "Make selected users as inactive"
-msgstr "Matikan akun user yang terpilih"
+msgstr "Matikan akun pengguna yang terpilih"
 
-#: .\account\admin.py:53
+#: .\account\admin.py:31
+msgid "Personal info"
+msgstr "Informasi pribadi"
+
+#: .\account\admin.py:51
 msgid "identity number"
 msgstr "nomor identitas"
 
@@ -34,51 +37,55 @@ msgstr "nomor identitas"
 msgid "group"
 msgstr "grup"
 
-#: .\account\models.py:19
-msgid "user"
-msgstr "pengguna"
+#: .\account\forms.py:34
+msgid "User with with no bp you entered has regitered."
+msgstr "Pengguna dengan no bp yang sama telah terdaftar."
 
-#: .\account\models.py:20
-msgid "users"
-msgstr "pengguna"
-
-#: .\account\models.py:70
-msgid "computer system"
-msgstr "sistem komputer"
-
-#: .\account\models.py:71
-msgid "information system"
-msgstr "sistem informasi"
-
-#: .\account\models.py:78
-msgid "no. bp"
-msgstr "no. bp"
-
-#: .\account\models.py:81
-msgid "student"
-msgstr "mahasiswa"
-
-#: .\account\models.py:82
-msgid "students"
-msgstr "mahasiswa"
-
-#: .\account\models.py:119
+#: .\account\models.py:16
 msgid "male"
 msgstr "laki-laki"
 
-#: .\account\models.py:120
+#: .\account\models.py:17
 msgid "female"
 msgstr "perempuan"
 
-#: .\account\models.py:132
+#: .\account\models.py:18
+msgid "computer system"
+msgstr "sistem komputer"
+
+#: .\account\models.py:19
+msgid "information system"
+msgstr "sistem informasi"
+
+#: .\account\models.py:26
+msgid "user"
+msgstr "pengguna"
+
+#: .\account\models.py:27
+msgid "users"
+msgstr "pengguna"
+
+#: .\account\models.py:88
+msgid "no. bp"
+msgstr "no. bp"
+
+#: .\account\models.py:91
+msgid "student"
+msgstr "mahasiswa"
+
+#: .\account\models.py:92
+msgid "students"
+msgstr "mahasiswa"
+
+#: .\account\models.py:136
 msgid "no. nip"
 msgstr "no. nip"
 
-#: .\account\models.py:136
+#: .\account\models.py:139
 msgid "lecturer"
 msgstr "dosen"
 
-#: .\account\models.py:137
+#: .\account\models.py:140
 msgid "lecturers"
 msgstr "dosen"
 
