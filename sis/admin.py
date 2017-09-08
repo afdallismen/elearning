@@ -9,19 +9,16 @@ from sis.filters import AssignmentCategoryListFilter as filter_category
 from sis.models import (
     Module, Answer, Attachment, Assignment, Question, AssignmentResult,
     FinalResult, FinalResultPercentage)
-from sis.utils import answer_admin_object_action_link
+from sis.utils import answer_admin_change_link
 
 
 class SisAdminMixin(object):
     class Media:
         css = {
             'all': (
-                "font-awesome-4.7.0/css/font-awesome.min.css",
+                "css/font-awesome-4.7.0/css/font-awesome.min.css",
             )
         }
-
-    def object_action(self, obj):
-        pass
 
 
 class AttachmentInline(nested_admin.NestedGenericStackedInline):
@@ -84,7 +81,7 @@ class AnswerAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
     score_percentage.short_description = _("score percentage")
 
     def object_action(self, obj):
-        return answer_admin_object_action_link(obj)
+        return answer_admin_change_link(pk=obj.pk)
     object_action.short_description = _("object action")
 
 

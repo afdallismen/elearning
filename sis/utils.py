@@ -16,19 +16,19 @@ class Thumbnail(ImageSpec):
     options = {'quality': 60}
 
 
-def answer_admin_object_action_link(obj):
+def answer_admin_change_link(pk):
     return format_html(
         '<a href="{}" style="margin-right:10px">'
         '<i class="fa fa-file-text-o" aria-hidden="true"></i> Answer'
         '</a>',
-        reverse("admin:sis_answer_change", args=(obj.id, )))
+        reverse("admin:sis_answer_change", args=(pk, )))
 
 
 def attachment_directory(instance, filename):
     now = timezone.now()
-    return "attachment/{0}/{1}/{2}".format(
+    return "attachment/{0}/{1:%Y%m%d}/{2}".format(
         instance.content_type.name,
-        "".join((str(now.year), str(now.month), str(now.day))),
+        now,
         filename)
 
 
@@ -39,18 +39,22 @@ def nstrip_tags(n, text):
     return text
 
 
-def file_html_display(field_file, width, height):
-    file_type = field_file.name.split(".")[-1].lower()
-    if file_type == "swf":
-        return _get_swf_html_display(field_file.url, width, height)
-    elif file_type in ['mp4', 'webm']:
-        return _get_video_html_display(field_file.url, width, height)
-    elif file_type in ['jpeg', 'jpg', 'png']:
-        thumb = Thumbnail(source=field_file.file).generate()
+def file_html_display(attachment, width, height):
+    url = attachment.file_upload.url
+    if attachment.is_animation:
+        return _get_swf_html_display(url, width, height)
+
+    elif attachment.is_video:
+        return _get_video_html_display(url, width, height)
+
+    elif attachment.is_image:
+        thumb = Thumbnail(source=attachment.file_upload.file).generate()
         img_bytes = base64.b64encode(thumb.getvalue())
-        return _get_image_html_display(img_bytes)
-    elif file_type in ['doc', 'xsl', 'docx', 'xlsx', 'pdf', 'ppt', 'pptx']:
-        return _get_docs_html_display(field_file.url)
+        return _get_image_html_display(url, img_bytes)
+
+    elif attachment.is_doc:
+        return _get_docs_html_display(url)
+
     else:
         return _("No preview available for this file type.")
 
@@ -88,10 +92,11 @@ def _get_video_html_display(url, width, height):
         html_tag, src=url, width=width, height=height)
 
 
-def _get_image_html_display(img_bytes):
-    html_tag = '<img src="data:image/jpeg;base64,{}"/>'
+def _get_image_html_display(orig, img_bytes):
+    html_tag = ('<a href="{orig}" target="_blank">'
+                '<img src="data:image/jpeg;base64,{thumb}"/></a>')
 
-    return format_html(html_tag, img_bytes)
+    return format_html(html_tag, orig=orig, thumb=img_bytes)
 
 
 def _get_docs_html_display(url):
@@ -100,5 +105,5 @@ def _get_docs_html_display(url):
             href='https://view.officeapps.live.com/op/embed.aspx?src={}'
             >View on new window
         </a>'''
-    url = "http://localhost:8000{}".format(url)
+    url = "http://localhost:8000{url}".format(url=url)
     return format_html(html_tag, url)

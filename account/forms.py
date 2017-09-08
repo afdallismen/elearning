@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.utils.translation import ugettext as _
+
 from registration.forms import RegistrationFormUniqueEmail as RegistrationForm
 
 from account.models import MyUser, Student
@@ -28,7 +30,8 @@ class StudentRegistrationForm(RegistrationForm):
 
         if Student.objects.filter(nobp=self.cleaned_data['nobp']).exists():
             raise ValidationError(
-                {'nobp': "Pengguna dengan no. bp yang sama sudah terdaftar."})
+                {'nobp':
+                    _("User with with no .bp you entered has regitered.")})
 
     def save(self, commit=True):
         user = super(StudentRegistrationForm, self).save(commit)
@@ -36,5 +39,4 @@ class StudentRegistrationForm(RegistrationForm):
         Student.objects.get_or_create(
             user=user,
             nobp=self.cleaned_data['nobp'])
-        print("student created")
         return user
