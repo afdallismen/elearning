@@ -1,3 +1,3 @@
-Segera aktivasi akun anda
-Untuk melakukan aktivasi silahakn klik link berikut : http://{{site}}/account/activate/{{activation_key}}.
+Segera aktivasi akun anda.
+Untuk melakukan aktivasi silahkan klik link berikut : http://{{site}}/account/activate/{{activation_key}}.
 Link ini hanya dapat digunakan 7 hari setelah anda menerima email ini.
