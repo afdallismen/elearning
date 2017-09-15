@@ -1,3 +1,4 @@
-<p>site: {{site}}</p>
-<p>site_name: {{site_name}}</p>
-<p>form: {{form.as_p}}</p>
+{% extends 'registration/base.html' %}
+
+{% block subtitle %}<p class="lead">Masuk menggunakan akun anda</p>{% endblock %}
+{% block form %}{% include 'registration/form/login.html' %}{% endblock %}

@@ -1,1 +1,4 @@
-<p>form: {{form.as_p}}</p>
+{% extends 'registration/base.html' %}
+
+{% block subtitle %}<p class="lead">Membuat akun.</p>{% endblock %}
+{% block form %}{% include 'registration/form/registration.html' %}{% endblock %}

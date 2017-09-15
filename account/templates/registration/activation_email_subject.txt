@@ -1,1 +1,1 @@
-Aktivasi akun {{user.username}}
+Aktivasi akun - {{user.username}}

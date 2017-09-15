@@ -21,6 +21,7 @@ from django.contrib import admin
 import debug_toolbar
 from registration.backends.hmac import views as regis_views
 
+from account import views as account_views
 from account.forms import StudentRegistrationForm
 from main import views as main_views
 
@@ -30,6 +31,7 @@ urlpatterns = [
     url(r'^__debug__/', include(debug_toolbar.urls)),
     url(r'^tinymce/', include('tinymce.urls')),
     url(r'^nested_admin/', include('nested_admin.urls')),
+    url(r'^account/$', account_views.detail, name='account_detail'),
     url(r'^account/register/$',
         regis_views.RegistrationView.as_view(
             form_class=StudentRegistrationForm),

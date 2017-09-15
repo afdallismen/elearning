@@ -1,0 +1,93 @@
+<form class="form-auth-small" method="POST" action="">
+  {% csrf_token %}
+
+  {% if form.non_field_errors %}
+  <div class="alert alert-danger alert-dismissible" role="alert">
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+		{% for error in form.non_field_errors %}
+      {{error}}<br>
+    {% endfor %}
+	</div>
+  {% endif %}
+
+  <div class="form-group {% if form.errors.username %}has-error{% endif %}">
+    <label class="control-label sr-only">{{form.username.label}}</label>
+    <input type="text" class="form-control" name="{{form.username.name}}" value="{% firstof form.username.data '' %}" placeholder="{{form.username.label}}" required>
+    {% if form.errors.username %}
+    <div class="alert alert-danger">
+      {% for error in form.errors.username %}
+      {{error}}<br>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% if form.username.help_text %}
+    <div class="help-block">{{form.username.help_text|safe}}</div>
+    {% endif %}
+  </div>
+
+  <div class="form-group {% if form.errors.email %}has-error{% endif %}">
+    <label class="control-label sr-only">{{form.email.label}}</label>
+    <input type="text" class="form-control" name="{{form.email.name}}" value="{% firstof form.email.data '' %}" placeholder="{{form.email.label}}" required>
+    {% if form.errors.email %}
+    <div class="alert alert-danger">
+      {% for error in form.errors.email %}
+      {{error}}<br>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% if form.email.help_text %}
+    <div class="help-block">{{form.email.help_text|safe}}</div>
+    {% endif %}
+  </div>
+
+  <div class="form-group {% if form.errors.password1 %}has-error{% endif %}">
+    <label class="control-label sr-only">{{form.password1.label}}</label>
+    <input type="password" class="form-control" name="{{form.password1.name}}" placeholder="{{form.password1.label}}" required>
+    {% if form.errors.password1 %}
+    <div class="alert alert-danger">
+      {% for error in form.errors.password1 %}
+      {{error}}<br>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% if form.password1.help_text %}
+    <div class="help-block">{{form.password1.help_text|safe}}</div>
+    {% endif %}
+  </div>
+
+  <div class="form-group {% if form.errors.password2 %}has-error{% endif %}">
+    <label class="control-label sr-only">{{form.password2.label}}</label>
+    <input type="password" class="form-control" name="{{form.password2.name}}" placeholder="{{form.password2.label}}" required>
+    {% if form.errors.password2 %}
+    <div class="alert alert-danger">
+      {% for error in form.errors.password2 %}
+      {{error}}<br>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% if form.password2.help_text %}
+    <div class="help-block">{{form.password2.help_text|safe}}</div>
+    {% endif %}
+  </div>
+
+  <div class="form-group {% if form.errors.nobp %}has-error{% endif %}">
+    <label class="control-label sr-only">{{form.nobp.label}}</label>
+    <input type="text" class="form-control" name="{{form.nobp.name}}" value="{% firstof form.nobp.data '' %}" placeholder="{{form.nobp.label}}" required>
+    {% if form.errors.nobp %}
+    <div class="alert alert-danger">
+      {% for error in form.errors.nobp %}
+      {{error}}<br>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% if form.nobp.help_text %}
+    <div class="help-block">{{form.nobp.help_text|safe}}</div>
+    {% endif %}
+  </div>
+
+  <button type="submit" class="btn btn-primary btn-lg btn-block">DAFTAR</button>
+
+  <div class="bottom">
+    <span class="helper-text">Sudah memiliki akun? <a href="{% url 'auth_login' %}">Masuk</a></span>
+  </div>
+</form>

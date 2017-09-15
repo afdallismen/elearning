@@ -1,17 +1,18 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
-from sis.views import module_index
+from account.models import MyUser
 
 
-def auth_index(request):
-    return module_index(request)
+def dashboard(request):
+    request.user = MyUser.objects.get(pk=request.user.pk)
+    return render(request, 'main/dashboard.html')
 
 
+@login_required
 def index(request):
-    if request.user.is_authenticated:
-        if request.user.is_staff:
-            return redirect(reverse('admin:index'))
-        else:
-            return auth_index(request)
-    return render(request, 'main/index.html')
+    if request.user.is_staff:
+        return redirect(reverse('admin:index'))
+    else:
+        return dashboard(request)

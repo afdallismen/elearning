@@ -1,2 +1,3 @@
-<p>[FixMe] This template has no context variables of its own, and should simply
-  inform the user that an email containing account-activation information has been sent.</p>
+{% extends 'registration/base_info.html' %}
+
+{% block message %}Akun anda telah terdaftar. Email berisi instruksi untuk aktivasi akun telah dikirim ke alamat email anda.{% endblock %}
