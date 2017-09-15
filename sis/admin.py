@@ -14,7 +14,7 @@ from sis.utils import answer_admin_change_link
 
 class SisAdminMixin(object):
     class Media:
-        css = {'all': ("css/font-awesome-4.7.0/css/font-awesome.min.css", )}
+        css = {'all': ("font-awesome-4.7.0/css/font-awesome.min.css", )}
 
 
 class AttachmentInline(nested_admin.NestedGenericStackedInline):

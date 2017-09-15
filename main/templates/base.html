@@ -1,104 +1,22 @@
 {% load static %}
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
-	<title>{% block title %}E-Learning STMIK INDONESIA{% endblock %}</title>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-	<!-- VENDOR CSS -->
-	<link rel="stylesheet" href="{% static 'diffdash/assets/vendor/bootstrap/css/bootstrap.min.css' %}">
-	<link rel="stylesheet" href="{% static 'diffdash/assets/vendor/font-awesome/css/font-awesome.min.css' %}">
-	<link rel="stylesheet" href="{% static 'diffdash/assets/vendor/linearicons/style.css' %}">
-	<link rel="stylesheet" href="{% static 'diffdash/assets/vendor/metisMenu/metisMenu.css' %}">
-	<link rel="stylesheet" href="{% static 'diffdash/assets/vendor/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css' %}">
-	<link rel="stylesheet" href="{% static 'diffdash/assets/vendor/toastr/toastr.min.css' %}">
-	<!-- MAIN CSS -->
-	<link rel="stylesheet" href="{% static 'diffdash/assets/css/main.css' %}">
-	<!-- GOOGLE FONTS -->
-	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet">
-	<!-- ICONS -->
-	<link rel="apple-touch-icon" sizes="76x76" href="{% static 'diffdash/assets/img/apple-icon.png' %}">
-	<link rel="icon" type="image/png" sizes="96x96" href="{% static 'img/logo.png' %}">
-  {% block extra_head %}{% endblock %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <title>{% block title %}E-learning STMIK Indonesia Padang{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'materialize/css/materialize.min.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    {% block link %}{% endblock %}
 </head>
-
 <body>
-	<!-- WRAPPER -->
-	<div id="wrapper">
-		<!-- NAVBAR -->
-		<nav class="navbar navbar-default navbar-fixed-top">
-			<div class="container-fluid">
-				<div class="navbar-btn">
-					<button type="button" class="btn-toggle-offcanvas"><i class="lnr lnr-menu"></i></button>
-				</div>
-				<!-- logo -->
-				<div class="navbar-brand">
-					<a href="{% url 'index' %}"><span class="text-muted">E-Learning STMIK INDONESIA</span></a>
-				</div>
-				<!-- end logo -->
-				<div class="navbar-right">
-					<!-- search form -->
-					<form id="navbar-search" class="navbar-form search-form">
-						<input value="" class="form-control" placeholder="Search here..." type="text">
-						<button type="button" class="btn btn-default"><i class="fa fa-search"></i></button>
-					</form>
-					<!-- end search form -->
-				</div>
-			</div>
-		</nav>
-		<!-- END NAVBAR -->
-		<!-- LEFT SIDEBAR -->
-		<div id="left-sidebar" class="sidebar">
-			<button type="button" class="btn btn-xs btn-link btn-toggle-fullwidth">
-				<span class="sr-only">Toggle Fullwidth</span>
-				<i class="fa fa-angle-left"></i>
-			</button>
-			<div class="sidebar-scroll">
-				<div class="user-account">
-					<img src="{% static 'img/stock_avatar.jpg' %}" width=140 height=140 class="img-responsive img-circle user-photo" alt="User Profile Picture">
-					<div class="dropdown">
-						<a href="#" class="dropdown-toggle user-name" data-toggle="dropdown">Hai, <strong>{{request.user.name}}</strong> <i class="fa fa-caret-down"></i></a>
-						<ul class="dropdown-menu dropdown-menu-right account">
-							<li><a href="#">Profil saya</a></li>
-							<li class="divider"></li>
-							<li><a href="#">Keluar</a></li>
-						</ul>
-					</div>
-				</div>
-				<nav id="left-sidebar-nav" class="sidebar-nav">
-					<ul id="main-menu" class="metismenu">
-						<li class="active"><a href="{% url 'index' %}"><i class="lnr lnr-home"></i> <span>Dashboard</span></a></li>
-						<li><a href=""><i class="lnr lnr-book"></i> <span>Bahan kuliah</span></a></li>
-						<li><a href=""><i class="lnr lnr-file-empty"></i> <span>Tugas</span></a></li>
-					</ul>
-				</nav>
-			</div>
-		</div>
-		<!-- END LEFT SIDEBAR -->
-		<!-- MAIN CONTENT -->
-		<div id="main-content">
-			<div class="container-fluid">
-        {% block main_content %}{% endblock %}
-			</div>
-		</div>
-		<!-- END MAIN CONTENT -->
-		<div class="clearfix"></div>
-		<footer>
-			<p class="copyright">&copy; 2017. All Rights Reserved.</p>
-		</footer>
-	</div>
-	<!-- END WRAPPER -->
-	<!-- Javascript -->
-	<script src="{% static 'diffdash/assets/vendor/jquery/jquery.min.js' %}"></script>
-	<script src="{% static 'diffdash/assets/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
-	<script src="{% static 'diffdash/assets/vendor/metisMenu/metisMenu.js' %}"></script>
-	<script src="{% static 'diffdash/assets/vendor/jquery-slimscroll/jquery.slimscroll.min.js' %}"></script>
-	<script src="{% static 'diffdash/assets/vendor/bootstrap-progressbar/js/bootstrap-progressbar.min.js' %}"></script>
-	<script src="{% static 'diffdash/assets/vendor/toastr/toastr.js' %}"></script>
-	<script src="{% static 'diffdash/assets/scripts/common.js' %}"></script>
-  {% block extra_script %}{% endblock %}
-</body>
+    {% block content %}{% endblock %}
 
+    <script src="{% static 'jquery/jquery-3.2.1.min.js' %}"></script>
+    <script src="{% static 'materialize/js/materialize.min.js' %}"></script>
+    {% block script %}{% endblock %}
+</body>
 </html>

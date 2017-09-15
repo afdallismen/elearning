@@ -1,52 +1,14 @@
-<form class="form-auth-small" method="POST" action="">
-  {% csrf_token %}
-
-  {% if form.non_field_errors %}
-  <div class="alert alert-danger alert-dismissible" role="alert">
-		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-		{% for error in form.non_field_errors %}
-      {{error}}<br>
-    {% endfor %}
-	</div>
-  {% endif %}
-
-  <div class="form-group {% if form.errors.username %}has-error{% endif %}">
-    <label class="control-label sr-only">{{form.username.label}}</label>
-    <input type="text" class="form-control" name="{{form.username.name}}" value="{% firstof form.username.data '' %}" placeholder="{{form.username.label}}" required>
-    {% if form.errors.username %}
-    <div class="alert alert-danger">
-      {% for error in form.errors.username %}
-      {{error}}<br>
-      {% endfor %}
+<div class="row">
+  <form class="col s12" method="POST" action="{% url 'auth_login' %}">
+    <div class="row">
+      <div class="input-field col s12">
+        <input type="text" name="{{form.username.name}}" class="validate" required>
+        <label data-error="{% if 'username' in form.errors %}{{form.errors.username|striptags}}{% endif %}">{{form.username.label}}</label>
+      </div>
+      <div class="input-field col s12">
+        <input type="password" name="{{form.password.name}}" class="validate" required>
+        <label data-error="{% if 'password' in form.errors %}{{form.errors.password|striptags}}{% endif %}">{{form.password.label}}</label>
+      </div>
     </div>
-    {% endif %}
-    {% if form.username.help_text %}
-    <div class="help-block">{{form.username.help_text|safe}}</div>
-    {% endif %}
-  </div>
-
-  <div class="form-group {% if form.errors.password %}has-error{% endif %}">
-    <label class="control-label sr-only">{{form.password.label}}</label>
-    <input type="password" class="form-control" name="{{form.password.name}}" placeholder="{{form.password.label}}" required>
-    {% if form.errors.password %}
-    <div class="alert alert-danger">
-      {% for error in form.errors.password %}
-      {{error}}<br>
-      {% endfor %}
-    </div>
-    {% endif %}
-    {% if form.password.help_text %}
-    <div class="help-block">{{form.password.help_text|safe}}</div>
-    {% endif %}
-  </div>
-
-  <div class="form-group clearfix">
-    <span class="helper-text element-right">Belum memiliki akun? <a href="{% url 'registration_register' %}">Daftar</a></span>
-  </div>
-
-  <button type="submit" class="btn btn-primary btn-lg btn-block">MASUK</button>
-
-  <div class="bottom">
-    <span class="helper-text"><i class="fa fa-lock"></i> <a href="{% url 'auth_password_reset' %}">Lupa sandi?</a></span>
-  </div>
-</form>
+  </form>
+</div>
