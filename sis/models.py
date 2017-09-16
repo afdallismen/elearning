@@ -96,10 +96,8 @@ class Module(models.Model):
     text = tinymce_models.HTMLField(blank=True,
                                     default="",
                                     verbose_name=_("text"))
-    created_date = models.DateField(auto_now_add=True,
-                                    verbose_name=_("created date"))
-    updated_date = models.DateField(auto_now=True,
-                                    verbose_name=_("updated date"))
+    created_on = models.DateTimeField(auto_now_add=True,
+                                      verbose_name=_("created on"))
     attachments = GenericRelation(Attachment, verbose_name=_("attachments"))
 
     class Meta:
@@ -125,11 +123,11 @@ class Assignment(models.Model):
     short_description = models.CharField(max_length=100,
                                          blank=True,
                                          default="",
-                                         verbose_name=_("title"))
+                                         verbose_name=_("short description"))
     category = models.PositiveIntegerField(choices=CATEGORY_CHOICES,
                                            verbose_name=_("category"))
-    created_date = models.DateField(auto_now_add=True,
-                                    verbose_name=_("created date"))
+    created_on = models.DateTimeField(auto_now_add=True,
+                                      verbose_name=_("created on"))
 
     class Meta:
         verbose_name = _("assignment")
@@ -216,7 +214,7 @@ class AssignmentResultManager(models.Manager):
     def get_score(self, student, assignment):
         try:
             score = self.get(student=student, assignment=assignment).score
-        except self.DoesNotExist:
+        except AssignmentResult.DoesNotExist:
             score = 0
         return score
 

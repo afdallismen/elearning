@@ -1,0 +1,9 @@
+<form method="POST" action="{% block action %}{% endblock %}">
+  {% csrf_token %}
+
+  {% if form.non_field_errors %}{% include './partial/_form_errors.html' %}{% endif %}
+
+  {% block fields %}{% endblock %}
+
+  {% block submit %}<button type="submit" class="btn btn-primary">Submit</button>{% endblock %}
+</form>

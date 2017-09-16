@@ -1,4 +1,4 @@
-{% extends 'registration/base_info.html' %}
+{% extends 'base.html' %}
 
 {% block message %}Aktivasi akun anda berhasil. Anda dapat melakukan login.{% endblock %}
 {% block extra_content %}<a href="{% url 'auth_login' %}" class="btn btn-primary"><i class="fa fa-home"></i> <span>Masuk</span></a>{% endblock %}

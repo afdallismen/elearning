@@ -8,7 +8,8 @@ from sis.forms import BaseQuestionFormSet
 from sis.filters import AssignmentCategoryListFilter as filter_category
 from sis.models import (
     Module, Answer, Attachment, Assignment, Question, AssignmentResult,
-    FinalResult, FinalResultPercentage)
+    FinalResult, FinalResultPercentage
+)
 from sis.utils import answer_admin_change_link
 
 
@@ -37,8 +38,7 @@ class QuestionInline(nested_admin.NestedStackedInline):
 
 
 class ModuleAdmin(nested_admin.NestedModelAdmin):
-    list_display = ('title', 'created_date', 'updated_date',
-                    'number_of_attachments')
+    list_display = ('title', 'created_on', 'number_of_attachments')
     search_fields = ('title', )
     inlines = [AttachmentInline]
 
@@ -48,7 +48,7 @@ class ModuleAdmin(nested_admin.NestedModelAdmin):
 
 
 class AssignmentAdmin(nested_admin.NestedModelAdmin):
-    list_display = ('category', 'created_date', 'number_of_questions')
+    list_display = ('category', 'created_on', 'number_of_questions')
     list_filter = (filter_category, )
     inlines = [QuestionInline]
 
@@ -111,7 +111,7 @@ class FinalResultAdmin(nested_admin.NestedModelAdmin):
 
     def get_list_display(self, request):
         # Get all assignments per category
-        assignment_objects = Assignment.objects.order_by('created_date')
+        assignment_objects = Assignment.objects.order_by('created_on')
         self.assignments = {'quiz': assignment_objects.filter(category=0),
                             'mid': assignment_objects.filter(category=1),
                             'final': assignment_objects.filter(category=2)}

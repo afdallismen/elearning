@@ -1,14 +1,8 @@
-<div class="row">
-  <form class="col s12" method="POST" action="{% url 'auth_login' %}">
-    <div class="row">
-      <div class="input-field col s12">
-        <input type="text" name="{{form.username.name}}" class="validate" required>
-        <label data-error="{% if 'username' in form.errors %}{{form.errors.username|striptags}}{% endif %}">{{form.username.label}}</label>
-      </div>
-      <div class="input-field col s12">
-        <input type="password" name="{{form.password.name}}" class="validate" required>
-        <label data-error="{% if 'password' in form.errors %}{{form.errors.password|striptags}}{% endif %}">{{form.password.label}}</label>
-      </div>
-    </div>
-  </form>
-</div>
+{% extends 'registration/form/base.html' %}
+
+{% block action %}{% url 'auth_login' %}{% endblock %}
+{% block fields %}
+  {% include './partial/_text_field.html' with field=form.username errors=form.errors.username %}
+  {% include './partial/_password_field.html' with field=form.password errors=form.errors.password %}
+{% endblock %}
+{% block submit %}<button type="submit" class="btn btn-primary">Masuk</button>{% endblock %}

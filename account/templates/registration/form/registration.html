@@ -1,11 +1,11 @@
-<div class="row">
-  <form class="col s12" method="POST" action="{% url 'auth_login' %}">
-    <div class="row">
-      <div class="input-field col s12">
-        <input type="password" name="{{form.username.name}}" class="validate" required>
-        <label>{{form.username.label}}</label>
-        {{form.password1.help_text|striptags}}
-      </div>
-    </div>
-  </form>
-</div>
+{% extends 'registration/form/base.html' %}
+
+{% block action %}{% url 'registration_register' %}{% endblock %}
+{% block fields %}
+  {% include './partial/_text_field.html' with field=form.username errors=form.errors.username %}
+  {% include './partial/_email_field.html' with field=form.email errors=form.errors.email %}
+  {% include './partial/_password_field.html' with field=form.password1 errors=form.errors.password1 %}
+  {% include './partial/_password_field.html' with field=form.password2 errors=form.errors.password2 %}
+  {% include './partial/_text_field.html' with field=form.nobp errors=form.errors.nobp %}
+{% endblock %}
+{% block submit %}<button type="submit" class="btn btn-primary">Daftar</button>{% endblock %}

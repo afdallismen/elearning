@@ -1,0 +1,17 @@
+<div class="md-form">
+  <label>{{field.label}}</label>
+  <input
+    type="text"
+    name="{{field.name}}"
+    class="form-control validate{% if field.data and errors %} is-invalid{% elif field.data %} is-valid{% endif %}"
+    value="{% firstof field.data '' %}"
+    required>
+  {% if field.help_text %}<small class="form-text text-muted">{{field.help_text|striptags}}</small>{% endif %}
+  <div class="invalid-feedback">
+    <ul class="list-unstyled">
+    {% for error in errors %}
+      <li>{{error|striptags}}</li>
+    {% endfor %}
+    </ul>
+  </div>
+</div>
