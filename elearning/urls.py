@@ -21,9 +21,7 @@ from django.contrib import admin
 import debug_toolbar
 from registration.backends.hmac import views as regis_views
 
-from account import views as account_views
 from account.forms import StudentRegistrationForm
-from main import views as main_views
 
 
 urlpatterns = [
@@ -31,12 +29,12 @@ urlpatterns = [
     url(r'^__debug__/', include(debug_toolbar.urls)),
     url(r'^tinymce/', include('tinymce.urls')),
     url(r'^nested_admin/', include('nested_admin.urls')),
-    url(r'^account/$', account_views.detail, name='account_detail'),
     url(r'^account/register/$',
         regis_views.RegistrationView.as_view(
             form_class=StudentRegistrationForm),
         name='registration_register'),
     url(r'^account/', include('registration.backends.hmac.urls')),
+    url(r'^account/', include('account.urls')),
     url(r'^sis/', include('sis.urls')),
-    url(r'^$', main_views.index, name="index")
+    url(r'^', include('main.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

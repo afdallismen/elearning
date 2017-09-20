@@ -1,0 +1,20 @@
+{% load static %}
+
+<div class="md-form mb-0 animated zoomIn">
+  <label>{{field.label}}</label>
+  <div class="pt-3 border-right-1">
+    <img src="{% if request.user.avatar_thumbnail %}{{request.user.avatar_thumbnail.url}}{% else %}{% static 'img/stock_avatar.jpg' %}{% endif %}" class="img-fluid img-thumbnail mt-5 mb-3" alt="Responsive image">
+  </div>
+  <div class="custom-file">
+    <input type="file" name="{% if prefix %}{{prefix}}-{% endif %}{{field.name}}" class="custom-file-input">
+    <span class="custom-file-control control-{{field.name}}">Unggah photo</span>
+  </div>
+  {% if field.help_text %}<small class="form-text text-muted d-block">{{field.help_text|striptags}}</small>{% endif %}
+  <div class="invalid-feedback">
+    <ul class="list-unstyled">
+    {% for error in errors %}
+      <li>{{error|striptags}}</li>
+    {% endfor %}
+    </ul>
+  </div>
+</div>

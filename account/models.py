@@ -2,7 +2,7 @@ import datetime
 
 from django.db import models
 from django.contrib.auth.models import User
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator, MaxLengthValidator
 from django.utils import timezone
 from django.utils.translation import ugettext as _
 
@@ -53,6 +53,13 @@ class MyUser(User):
         elif self.is_lecturer:
             return ('lecturer', self.lecturer.nip)
 
+    @property
+    def avatar_thumbnail(self):
+        if self.is_student:
+            return self.student.avatar_thumbnail
+        elif self.is_lecturer:
+            return self.lecturer.avatar_thumbnail
+
 
 class BaseAccountModel(models.Model):
     user = models.OneToOneField(MyUser,
@@ -84,7 +91,7 @@ class Student(BaseAccountModel):
 
     nobp = models.CharField(max_length=7,
                             unique=True,
-                            validators=[NOBPVALIDATOR],
+                            validators=[MaxLengthValidator(9)],
                             verbose_name=_("no. bp"))
 
     class Meta:

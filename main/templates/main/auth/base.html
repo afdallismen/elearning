@@ -1,7 +1,7 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
   <meta charset="utf-8">
@@ -15,17 +15,22 @@
   <!-- Material Design Bootstrap -->
   <link href="{% static 'MDB/css/mdb.min.css' %}" rel="stylesheet">
 
-  {% block link %}{% endblock %}
+  <link href="{% static 'css/global.css' %}" rel="stylesheet">
 
+  <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}">
+
+  {% block link %}{% endblock %}
 </head>
 
-<body>
-  {% include './header.html' %}
+<body class="blue lighten-5">
+  {% block header %}{% include './header.html' %}{% endblock %}
   <!-- Start your project here-->
   <div class="container">
     {% block content %}{% endblock %}
   </div>
   <!-- /Start your project here-->
+
+  {% include './footer.html' %}
 
   <!-- SCRIPTS -->
   <!-- JQuery -->

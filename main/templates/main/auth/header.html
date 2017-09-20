@@ -1,0 +1,57 @@
+{% load static %}
+
+<div class="light-blue {% if not request.user.is_authenticated %}mb-5{% endif %}">
+  <div class="container px-0">
+    <div class="row align-items-center pt-5 pb-4">
+      <div class="col-auto">
+        <img width=150 height=150 src="{% static 'img/logo.png' %}">
+      </div>
+      <div class="col">
+        <h1 class="display-4 white-text"><strong>E-learning</strong></h1>
+        <small class="h5 font-weight-normal white-text" style="color: #212121"><em>Tugas akhir Strata I Stmik Indonesia Padang <br>oleh <strong>Devitri Chan</strong>.</em></small>
+      </div>
+    </div>
+    <div class="row justify-content-end">
+      <div class="col-auto">
+        {% if not request.user.is_authenticated %}
+        <p class="h6">
+          <a href="" class="h5 white-text font-weight-bold">Masuk </a>
+          <span class="text-lowercase black-text">atau</span>
+          <a href="" class="h5 white-text font-weight-bold">Daftar</a>
+        </p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% if request.user.is_authenticated %}
+<nav class="navbar navbar-expand sticky-top navbar-dark light-blue darken-2 z-depth-0 pb-0 pt-0 mb-5" style="border-radius: 0">
+  <div class="container rounded-top px-3 py-2">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item mr-2 {% if '/' == request.path and not request.GET.content %}z-depth-1 amber pr-2{% endif %}">
+        <a class="nav-link {% if '/' == request.path and not request.GET.content %}font-weight-bold black-text{% endif %}" href="{% url 'main:index' %}"><i class="fa fa-home"></i> Index</a>
+      </li>
+      <li class="nav-item mr-2 {% if 'module' == request.GET.content or 'module' in request.path %}z-depth-1 amber pr-2{% endif %}">
+        <a class="nav-link {% if 'module' == request.GET.content or 'module' in request.path %}font-weight-bold black-text{% endif %}" href="{% url 'main:index' %}?content=module"><i class="fa fa-newspaper-o"></i> Bahan Kuliah</a>
+      </li>
+      <li class="nav-item dropdown mr-2 {% if 'assignment' == request.GET.content or 'assignment' in request.path %}z-depth-1 amber pr-2{% endif %}">
+        <a class="nav-link dropdown-toggle {% if 'assignment' == request.GET.content or 'assignment' in request.path %}font-weight-bold black-text{% endif %}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-file-text"></i> Tugas</a>
+        <div class="dropdown-menu z-depth-2 rounded-0">
+          <a class="dropdown-item" href="{% url 'main:index' %}?content=assignment">Semua</a>
+          <a class="dropdown-item" href="{% url 'main:index' %}?content=assignment&assignment=followed">Yang diikuti</a>
+          <a class="dropdown-item" href="{% url 'main:index' %}?content=assignment&assignment=unfollwed">Yang belum diikuti</a>
+        </div>
+      </li>
+    </ul>
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img width=32 height=32 src="{% if request.user.avatar_thumbnail %}{{request.user.avatar_thumbnail.url}}{% else %}{% static 'img/stock_avatar.jpg' %}{% endif %}" class="d-inline-block align-middle rounded-circle z-depth-1 mr-2"> {{request.user.name|title}}</a>
+        <div class="dropdown-menu z-depth-2 rounded-0">
+          <a class="dropdown-item" href="{% url 'account:edit' %}">Edit Profil</a>
+          <a class="dropdown-item" href="{% url 'auth_logout' %}">Keluar</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+{% endif %}

@@ -1,0 +1,17 @@
+{% extends './base.html' %}
+
+{% block action %}{% url 'registration_register' %}{% endblock %}
+{% block fields %}
+<div class="row no-gutters">
+  <div class="col-6 pr-4 pl-2" style="border-right: 1px solid #bdbdbd">
+    {% include './partial/_text_field.html' with field=form.username errors=form.errors.username %}
+    {% include './partial/_email_field.html' with field=form.email errors=form.errors.email %}
+    {% include './partial/_text_field.html' with field=form.nobp errors=form.errors.nobp %}
+  </div>
+  <div class="col-6 pl-4 pr-2">
+    {% include './partial/_password_field.html' with field=form.password1 errors=form.errors.password1 %}
+    {% include './partial/_password_field.html' with field=form.password2 errors=form.errors.password2 %}
+  </div>
+</div>
+{% endblock %}
+{% block submit %}<button type="submit" class="btn btn-default btn-block mt-4">Daftar</button>{% endblock %}

@@ -1,43 +1,68 @@
 from operator import itemgetter
 
+from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render
 
-from registration.backends.hmac import views as regis_views
-
-from account.forms import StudentRegistrationForm
-from sis.models import Module, Assignment
+from sis.decorators import redirect_admin
+from sis.models import Module, Assignment, AssignmentResult
 
 
+@redirect_admin
 def index(request):
     if request.user.is_authenticated:
-        content = request.GET.get('c', False)
-        if content == "m":
+        get = {}
+        modules, assignments = [], []
+        get['content'] = request.GET.get('content', False)
+
+        pks = AssignmentResult.objects.filter(
+            student=request.user.student).values('assignment')
+        user_assignments = Assignment.objects.filter(pk__in=pks).values()
+
+        if get['content'] == "module":
             modules = Module.objects.values()
-        elif content == "a":
-            assignments = Assignment.objects.values()
+        elif get['content'] == "assignment":
+            get['assignment'] = request.GET.get('assignment', False)
+
+            if get['assignment'] == 'followed':
+                assignments = user_assignments
+            elif get['assignment'] == 'unfollwed':
+                assignments = Assignment.objects.exclude(
+                    pk__in=pks).values()
+            else:
+                assignments = Assignment.objects.values()
         else:
             modules = Module.objects.values()
             assignments = Assignment.objects.values()
+
         items = list(modules) + list(assignments)
         contents = []
         if items:
             for item in items:
+                instance_of = 'module'
+                if 'category' in list(item.keys()):
+                    instance_of = 'assignment'
+                if instance_of == 'module':
+                    attachments = Module.objects.get(
+                        pk=item['id']).attachments.all()
+                    item.update({'attachments': attachments})
+                else:
+                    category = Assignment.objects.get(
+                        pk=item['id']).get_category_display
+                    item.update({'category': category})
                 contents.append(
                     {
                         'created_on': item['created_on'],
-                        'class': item.__class__.__name__,
-                        'item': item
+                        'instance_of': instance_of,
+                        'item': item,
                     }
                 )
             contents = sorted(contents,
                               key=itemgetter('created_on'),
                               reverse=True)
+        contexts = {'contents': contents}
+        return render(request, 'main/auth/index.html', contexts)
 
-        return render(request, 'main/auth_index.html', {'contents': contents})
     else:
-        form = StudentRegistrationForm()
-        if request.method == "POST":
-            return regis_views.RegistrationView.as_view(
-                form_class=StudentRegistrationForm
-            )(request)
-        return render(request, 'main/index.html', {'form': form})
+        form = AuthenticationForm()
+        contexts = {'form': form}
+        return render(request, 'main/index.html', contexts)

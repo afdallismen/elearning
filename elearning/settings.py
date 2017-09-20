@@ -57,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'account.middleware.MyUserMiddleware.replace_user'
 ]
 
 ROOT_URLCONF = 'elearning.urls'
@@ -73,6 +74,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'builtins': ['main.templatetags.mytags', ]
         },
     },
 ]
@@ -168,7 +170,7 @@ FINAL_RESULT_PERCENTAGE = {'quiz': 20,
 
 ACCOUNT_ACTIVATION_DAYS = 7
 
-LOGIN_REDIRECT_URL = 'index'
+LOGIN_REDIRECT_URL = 'main:index'
 LOGIN_URL = 'auth_login'
 LOGOUT_REDIRECT_URL = 'auth_login'
 

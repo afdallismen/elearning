@@ -1,0 +1,105 @@
+{% extends 'main/auth/base.html' %}
+
+{% block content %}
+<div class="z-depth-1 white px-5 pt-5 pb-2">
+  <header>
+    <h2>{{module.title}}</h2>
+    <div class="row my-4 no-gutters justify-content-between">
+      <div id="blockquote" class="col-12">
+        <blockquote class="blockquote bq-warning grey lighten-5 text-muted">
+          <small><i class="fa fa-calendar"></i> {{module.created_on}}</small>
+          <br>
+          {% if module.attachments.exists %}<small>Lampiran:</small>{% endif %}
+          <ul>
+            {% for attachment in module.attachments.all %}
+              <li><small>{{attachment.file_name}}.{{attachment.file_extension}}<a target="blank_" href="{{attachment.file_upload.url}}"><i class="fa fa-download fa-lg mx-2"></i></a>
+                {% if attachment.is_viewable %}<a class="player-trigger" data-id="{{attachment.id}}" href=""><i class="fa fa-caret-square-o-right fa-lg"></i></a>
+                {% elif not attachment.file_extension == 'pdf' %}<a target="blank_" href="{{attachment.ext_link}}"><i class="fa fa-external-link"></i></a>{% endif %}</small></li>
+            {% endfor %}
+          </ul>
+        </blockquote>
+      </div>
+      {% for attachment in module.attachments.all %}
+        {% if attachment.is_viewable %}
+          <div data-id="{{attachment.id}}" class="col-8 text-right player invisible d-none">
+            <figure class="figure white z-depth-0 rounded px-3 pt-3 pb-3">
+              <button type="button" data-id="{{attachment.id}}" class="close player-close" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <figcaption class="figure-caption"><h6 class="text-left font-weight-bold">{{attachment.file_name}}.{{attachment.file_extension}}</h6></figcaption>
+
+              {% if attachment.is_video %}
+                <video controls>
+                  <source src="{{attachment.file_upload.url}}" type="video/{{attachment.file_extension}}">
+                  Your browser does not support the video tag.
+                </video>
+              {% elif attachment.is_image %}
+                <img class="img-fluid" src="{{attachment.file_upload.url}}">
+              {% elif attachment.is_animation %}
+                <object type="application/x-shockwave-flash" data="{{attachment.file_upload.url}}"
+                  style="border:1px solid #DCDCDC;">
+
+                  <param name="movie" value="{{attachment.file_upload.url}}" />
+                  <param name="play" value="true" />
+                  <param name="allowfullscreen" value="true" />
+                  <param name="allowscriptaccess" value="always" />
+                  <param name="wmode" value="opaque" />
+                  <param name="quality" value="high" />
+                  <param name="menu" value="false" />
+                </object>
+              {% endif %}
+            </figure>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+    <div>
+      {{module.text|safe}}
+    </div>
+  </header>
+</div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+$(document).ready(function () {
+  var prevId = ""
+  var blockquoteStatus
+
+  $("a.player-trigger").click(function (e) {
+    e.preventDefault()
+    var id = $(this).data('id')
+    if (prevId == id) {
+      toggleBlockquote()
+      togglePlayer(prevId)
+      prevId = ""
+    } else if (prevId == "") {
+      toggleBlockquote()
+      togglePlayer(id)
+      prevId = id
+    } else if (prevId != "" && prevId != id) {
+      togglePlayer(prevId)
+      togglePlayer(id)
+      prevId = id
+    }
+  })
+
+  $("button.player-close").click(function (e) {
+    var id = $(this).data('id')
+    toggleBlockquote()
+    togglePlayer(id)
+    prevId = ""
+  })
+
+  function toggleBlockquote() {
+    $('#blockquote').toggleClass('col-12')
+    $('#blockquote').toggleClass('col-4')
+  }
+
+  function togglePlayer(id) {
+    $('div.player[data-id="'+id+'"]').toggleClass('invisible')
+    $('div.player[data-id="'+id+'"]').toggleClass('d-none')
+  }
+})
+</script>
+{% endblock %}

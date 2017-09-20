@@ -1,0 +1,35 @@
+{% extends 'main/auth/base.html' %}
+
+{% block content %}
+<div class="z-depth-1 white px-5 pt-5 pb-2">
+  <header>
+    <h2>{% if assignment.short_description %}{{assignment.short_description}}{% else %}Tugas {{assignment.get_category_display}}{% endif %}</h2>
+    <div class="row my-4 no-gutters justify-content-between">
+      <div id="blockquote" class="col-12">
+        <blockquote class="blockquote bq-warning grey lighten-5 text-muted">
+          <small><i class="fa fa-calendar"></i> {{assignment.created_on}}</small>
+        </blockquote>
+      </div>
+    </div>
+  </header>
+  <div class="row">
+    {% for question in assignment.question_set.all %}
+      <div class="col-12 mb-3">
+        <div class="row no-gutters">
+          <div class="col-auto">
+            {{forloop.counter}}.
+          </div>
+          <div class="col-auto ml-2">
+            <div>{{question.text|safe}} ?</div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+</script>
+{% endblock %}

@@ -1,4 +1,8 @@
-{% extends 'base.html' %}
+{% extends 'registration/base.html' %}
 
-{% block message %}Aktivasi akun gagal. Kode aktivasi salah atau sudah tidak berlaku lagi.{% endblock %}
-{% block extra_content %}<a href="" class="btn btn-primary"><i class="fa fa-home"></i> <span>Home</span></a>{% endblock %}
+{% block content %}
+<blockquote class="blockquote bq-danger white col-12 z-depth-2">
+    <p class="bq-title">Gagal aktivasi akun.</p>
+    <p>Kode aktivasi salah atau sudah tidak berlaku lagi.</p>
+</blockquote>
+{% endblock %}

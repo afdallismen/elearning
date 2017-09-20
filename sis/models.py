@@ -1,3 +1,5 @@
+from urllib.parse import urlencode
+
 from django.conf import settings
 from django.contrib.contenttypes.fields import (
     GenericForeignKey, GenericRelation)
@@ -41,15 +43,21 @@ class Attachment(models.Model):
         return self.file_name
 
     def __repr__(self):
-        return "Attachment(file=\"{!s}\")".format(self.filename)
+        return "Attachment(file=\"{!s}\")".format(self.file_name)
 
     @property
     def file_name(self):
-        return self.file_upload.name.split("/")[-1]
+        return self.file_upload.name.split("/")[-1].split(".")[0]
 
     @property
     def file_extension(self):
         return self.file_upload.name.split(".")[-1].lower()
+
+    @property
+    def ext_link(self):
+        encode = urlencode({'': self.file_upload.url})[1:]
+        return "http://view.officeapps.live.com/op/view.aspx?src=http://localhost:8000{}".format(
+            encode)
 
     @property
     def html_display(self):
@@ -142,7 +150,7 @@ class Assignment(models.Model):
         if self.short_description:
             return ("Assignment(\"{desc}\")"
                     .format(desc=nstrip_tags(20, self.short_description)))
-        return "Assignment{category=\"{}\")".format(self.category)
+        return "Assignment(category=\"{}\")".format(self.category)
 
 
 class Question(models.Model):
@@ -266,19 +274,6 @@ class FinalResult(models.Model):
     def __repr__(self):
         return ("FinalResult(student={!s}, score={!s})"
                 .format(self.student, self.score))
-
-    @property
-    def letter_value(self):
-        if 85 <= self.score <= 100:
-            return "A"
-        elif 75 <= self.score <= 84:
-            return "B"
-        elif 60 <= self.score <= 74:
-            return "C"
-        elif 50 <= self.score <= 59:
-            return "D"
-        else:
-            return "E"
 
 
 class FinalResultPercentage(models.Model):

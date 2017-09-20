@@ -33,7 +33,7 @@ def createuser():
     afdal.set_password("qweasdzxc")
     afdal.save()
 
-    Student.objects.get_or_create(user=afdal, nobp="1510099")
+    Student.objects.get_or_create(user=afdal, nobp="123456789")
 
 
 def create_final_result_percentage():

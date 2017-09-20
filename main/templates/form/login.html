@@ -1,8 +1,8 @@
-{% extends 'registration/form/base.html' %}
+{% extends './base.html' %}
 
 {% block action %}{% url 'auth_login' %}{% endblock %}
 {% block fields %}
   {% include './partial/_text_field.html' with field=form.username errors=form.errors.username %}
   {% include './partial/_password_field.html' with field=form.password errors=form.errors.password %}
 {% endblock %}
-{% block submit %}<button type="submit" class="btn btn-primary">Masuk</button>{% endblock %}
+{% block submit %}<button type="submit" class="btn btn-default btn-block mt-5">Masuk</button>{% endblock %}

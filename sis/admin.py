@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.forms import modelformset_factory
 from django.utils.translation import ugettext as _
 
+from main.templatetags.mytags import letter
 from sis.forms import BaseQuestionFormSet
 from sis.filters import AssignmentCategoryListFilter as filter_category
 from sis.models import (
@@ -135,7 +136,7 @@ class FinalResultAdmin(nested_admin.NestedModelAdmin):
         return list_display
 
     def letter_value(self, obj):
-        return obj.letter_value
+        return letter(obj.score)
     letter_value.short_description = _("letter value")
 
     def _raise_counter(self, cat):

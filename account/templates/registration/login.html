@@ -1,3 +1,8 @@
-{% extends 'base.html' %}
+{% extends 'registration/base.html' %}
 
-{% block content %}{% include 'registration/form/login.html' %}{% endblock %}
+{% block content %}
+<div class="col-4 white z-depth-2 py-4 px-4">
+  {% include 'form/login.html' %}
+  <div class="mt-2 ml-1"><small> Lupa password? <a href="{% url 'auth_password_reset' %}">Reset</a></small></div>
+</div>
+{% endblock %}

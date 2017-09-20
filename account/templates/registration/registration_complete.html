@@ -1,3 +1,8 @@
-{% extends 'base.html' %}
+{% extends 'registration/base.html' %}
 
-{% block message %}Akun anda telah terdaftar. Email berisi instruksi untuk aktivasi akun telah dikirim ke alamat email anda.{% endblock %}
+{% block content %}
+<blockquote class="blockquote bq-success white col-12 z-depth-2">
+    <p class="bq-title">Akun anda telah terdaftar.</p>
+    <p>Email berisi instruksi untuk aktivasi akun telah dikirim ke alamat email anda.</p>
+</blockquote>
+{% endblock %}
