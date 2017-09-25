@@ -1,3 +1,10 @@
 a.dropdown-item:hover{
   background-color: #757575!important
 }
+
+footer.page-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0
+}
