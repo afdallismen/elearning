@@ -21,8 +21,9 @@ PROGRAM = {'0': _("computer system"),
 
 class MyUser(User):
     class Meta:
+        get_latest_by = 'date_joined'
+        ordering = ['first_name', 'username']
         proxy = True
-        get_latest_by = "date_joined"
         verbose_name = _("user")
         verbose_name_plural = _("users")
 
@@ -85,16 +86,25 @@ class BaseAccountModel(models.Model):
 
 
 class Student(BaseAccountModel):
-    NOBPVALIDATOR = RegexValidator('^[01][0-9]'  # Class of: 00 - 19
-                                   '[01]0{2}'  # Program: 000/100
-                                   '[0-9]{2}$')  # Sequence: 00 - 99
+    # NOBPVALIDATOR = RegexValidator('^[01][0-9]'  # Class of: 00 - 19
+    #                                '[01]0{2}'  # Program: 000/100
+    #                                '[0-9]{2}$')  # Sequence: 00 - 99
 
-    nobp = models.CharField(max_length=7,
+    nobp = models.CharField(max_length=9,
                             unique=True,
                             validators=[MaxLengthValidator(9)],
                             verbose_name=_("no. bp"))
 
+    belong_in = models.ForeignKey('sis.Course',
+                                  on_delete=models.CASCADE,
+                                  limit_choices_to={'is_filled': False},
+                                  blank=True,
+                                  null=True,
+                                  verbose_name=_("belong in"))
+
     class Meta:
+        get_latest_by = 'user__date_joined'
+        ordering = ['user__first_name', 'user__username']
         verbose_name = _("student")
         verbose_name_plural = _("students")
 
@@ -143,6 +153,8 @@ class Lecturer(BaseAccountModel):
                            verbose_name=_("no. nip"))
 
     class Meta:
+        get_latest_by = 'user__date_joined'
+        ordering = ['user__first_name', 'user__username']
         verbose_name = _("lecturer")
         verbose_name_plural = _("lecturers")
 

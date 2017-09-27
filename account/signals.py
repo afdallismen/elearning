@@ -21,3 +21,15 @@ def assign_groups(sender, instance, created, **kwargs):
 def create_final_report(sender, instance, created, **kwargs):
     if created:
         FinalResult.objects.get_or_create(student=instance)
+
+
+@receiver(post_save, sender=Student)
+def update_course(sender, instance, created, **kwargs):
+    course = instance.belong_in
+    if course:
+        student_count = course.student_set.count()
+        if student_count >= course.capacity:
+            course.is_filled = True
+        else:
+            course.is_filled = False
+        course.save()

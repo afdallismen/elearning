@@ -11,7 +11,7 @@ def edit(request):
         MyUser,
         fields=['username', 'first_name', 'last_name', 'email']
     )
-    BaseStudentForm = studentform = modelform_factory(
+    BaseStudentForm = modelform_factory(
         Student,
         fields=['nobp', 'avatar']
     )
@@ -19,10 +19,16 @@ def edit(request):
     studentform = BaseStudentForm(instance=request.user.student, prefix='std')
     if request.method == "POST":
         userform = BaseUserForm(
-            request.POST, instance=request.user, prefix='usr')
+            request.POST,
+            instance=request.user,
+            prefix='usr'
+        )
         studentform = BaseStudentForm(
             request.POST,
-            request.FILES, instance=request.user.student, prefix='std')
+            request.FILES,
+            instance=request.user.student,
+            prefix='std'
+        )
         if userform.is_valid() and studentform.is_valid():
             userform.save()
             studentform.save()

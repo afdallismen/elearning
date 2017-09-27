@@ -55,9 +55,9 @@ class Attachment(models.Model):
 
     @property
     def ext_link(self):
-        encode = urlencode({'': self.file_upload.url})[1:]
-        return "http://view.officeapps.live.com/op/view.aspx?src=http://localhost:8000{}".format(
-            encode)
+        encoded = urlencode({'': self.file_upload.url})[1:]
+        return ("http://view.officeapps.live.com/op/view.aspx"
+                "?src=http://localhost:8000{}").format(encoded)
 
     @property
     def html_display(self):
@@ -109,6 +109,7 @@ class Module(models.Model):
     attachments = GenericRelation(Attachment, verbose_name=_("attachments"))
 
     class Meta:
+        get_latest_by = 'created_on'
         verbose_name = _("module")
         verbose_name_plural = _("modules")
 
@@ -296,3 +297,22 @@ class FinalResultPercentage(models.Model):
     class Meta:
         verbose_name = _("final result percentage")
         verbose_name_plural = _("final result percentage")
+
+
+class Course(models.Model):
+    name = models.CharField(max_length=100,
+                            unique=True,
+                            verbose_name=_("class name"))
+    capacity = models.PositiveSmallIntegerField(verbose_name=_("capacity"))
+    is_filled = models.BooleanField(default=False,
+                                    verbose_name=_("class fullness"))
+
+    class Meta:
+        verbose_name = _("class")
+        verbose_name_plural = _("class")
+
+    def __repr__(self):
+        return "Course(name={})".format(self.name)
+
+    def __str__(self):
+        return self.name

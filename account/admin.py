@@ -34,7 +34,7 @@ class MyUserAdmin(BaseUserAdmin):
         (None, {'fields': ('username', 'password1', 'password2'), }),
     )
     list_display = ('__str__', 'email', 'user_identity', 'is_active')
-    list_filter = ('is_active', filter_group)
+    list_filter = ('is_active', filter_group, 'student__belong_in')
 
     def user_identity(self, obj):
         if not obj.is_student and not obj.is_lecturer:

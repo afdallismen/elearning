@@ -9,7 +9,7 @@ from sis.forms import BaseQuestionFormSet
 from sis.filters import AssignmentCategoryListFilter as filter_category
 from sis.models import (
     Module, Answer, Attachment, Assignment, Question, AssignmentResult,
-    FinalResult, FinalResultPercentage
+    FinalResult, FinalResultPercentage, Course
 )
 from sis.utils import answer_admin_change_link
 
@@ -195,3 +195,4 @@ admin.site.register(Answer, AnswerAdmin)
 admin.site.register(AssignmentResult, AssignmentResultAdmin)
 admin.site.register(FinalResult, FinalResultAdmin)
 admin.site.register(FinalResultPercentage, FinalResultPercentageAdmin)
+admin.site.register(Course)
