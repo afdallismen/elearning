@@ -6,23 +6,13 @@ from django.http import HttpResponseRedirect
 from django.utils.html import format_html
 from django.utils.translation import ugettext as _
 
-from account.filters import GroupListFilter as filter_group
+from account.actions import activate_users, deactivate_users
+from account.filters import (
+    GroupListFilter as filter_group,
+    StudentSemesterListFilter as filter_semester)
 from account.models import Student, Lecturer, MyUser
 
 
-def activate_users(model_admin, request, queryset):
-    for user in queryset:
-        if hasattr(user, 'student') or hasattr(user, 'lecturer'):
-            queryset.update(is_active=True)
-activate_users.short_description = _("Make selected users as active") # noqa
-
-
-def deactivate_users(model_admin, request, queryset):
-    queryset.update(is_active=False)
-deactivate_users.short_description = _("Make selected users as inactive") # noqa
-
-
-# Define a new User admin
 class MyUserAdmin(BaseUserAdmin):
     empty_value_display = "-"
     actions = (activate_users, deactivate_users)
@@ -33,10 +23,15 @@ class MyUserAdmin(BaseUserAdmin):
     add_fieldsets = (
         (None, {'fields': ('username', 'password1', 'password2'), }),
     )
-    list_display = ('__str__', 'email', 'user_identity', 'is_active')
-    list_filter = ('is_active', filter_group, 'student__belong_in')
+    list_display = ('name', 'email', 'identity', 'is_active')
+    list_filter = ('is_active', filter_group, 'student__belong_in',
+                   filter_semester)
 
-    def user_identity(self, obj):
+    def name(self, obj):
+        return obj.name
+    name.short_description = _("name")
+
+    def identity(self, obj):
         if not obj.is_student and not obj.is_lecturer:
             return self.empty_value_display
 
@@ -46,10 +41,11 @@ class MyUserAdmin(BaseUserAdmin):
                        args=(getattr(obj, classname).pk, ))
 
         return format_html("<a href={}><b>{}</b></a>", link, idt)
-    user_identity.short_description = _("identity number")
+    identity.short_description = _("identity")
 
 
 class NoModulePermissionAdmin(admin.ModelAdmin):
+    empty_value_display = "-"
     readonly_fields = ['avatar_thumbnail']
 
     def has_module_permission(self, request):
@@ -88,7 +84,7 @@ class NoModulePermissionAdmin(admin.ModelAdmin):
             url = "{% static 'img/stock_avatar.jpg' %}"
 
         return format_html('<img src={} />', url)
-    avatar_thumbnail.short_description = ""
+    avatar_thumbnail.short_description = _("profile picture")
 
 
 # Re-register UserAdmin

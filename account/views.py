@@ -13,7 +13,7 @@ def edit(request):
     )
     BaseStudentForm = modelform_factory(
         Student,
-        fields=['nobp', 'avatar']
+        fields=['nobp', 'belong_in', 'avatar']
     )
     userform = BaseUserForm(instance=request.user, prefix='usr')
     studentform = BaseStudentForm(instance=request.user.student, prefix='std')

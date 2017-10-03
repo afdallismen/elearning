@@ -1,30 +1,49 @@
 from urllib.parse import urlencode
 
 from django.conf import settings
+from django.contrib.admin.models import LogEntry,  CHANGE
 from django.contrib.contenttypes.fields import (
     GenericForeignKey, GenericRelation)
 from django.contrib.contenttypes.models import ContentType
-from django.core.validators import MaxValueValidator
+from django.core.exceptions import ValidationError
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.utils import timezone
 from django.utils.text import slugify
 from django.utils.translation import ugettext as _
 
 from tinymce import models as tinymce_models
 
 from account.models import Student
-from sis.utils import attachment_directory, nstrip_tags, file_html_display
+from sis.utils import (
+    attachment_directory, nstrip_tags, file_html_display, FILE_EXTENSION)
 
 
 SCORE_VALIDATOR = MaxValueValidator(100)
 
 
+class Course(models.Model):
+    name = models.CharField(max_length=100,
+                            unique=True,
+                            verbose_name=_("class name"))
+    capacity = models.PositiveSmallIntegerField(
+        default=1,
+        help_text=_("Class max capacity"),
+        verbose_name=_("capacity")
+    )
+
+    class Meta:
+        verbose_name = _("class")
+        verbose_name_plural = _("class")
+
+    def __repr__(self):
+        return "Course(name=\"{!s}\")".format(self.name)
+
+    def __str__(self):
+        return self.name
+
+
 class Attachment(models.Model):
-    FILE_EXTENSION = {
-        'image': ['jpg', 'png'],
-        'animation': ['swf'],
-        'video': ['mp4', 'webm'],
-        'doc': ['doc', 'docx', 'xsl', 'xslx', 'ppt', 'pptx', 'pdf']
-    }
     SUPPORTED_FILE_EXTENSION = [*FILE_EXTENSION['image'],
                                 *FILE_EXTENSION['animation'],
                                 *FILE_EXTENSION['video'],
@@ -55,9 +74,11 @@ class Attachment(models.Model):
 
     @property
     def ext_link(self):
-        encoded = urlencode({'': self.file_upload.url})[1:]
-        return ("http://view.officeapps.live.com/op/view.aspx"
-                "?src=http://localhost:8000{}").format(encoded)
+        encoded = urlencode(
+            {'': "http://localhost:8000" + self.file_upload.url}
+        )[1:]
+        return ("http://view.officeapps.live.com/op/view.aspx",
+                "?src={!s}").format(encoded)
 
     @property
     def html_display(self):
@@ -117,7 +138,7 @@ class Module(models.Model):
         return self.title
 
     def __repr__(self):
-        return "Question(title=\"{}\")".format(self.title)
+        return "Question(title=\"{!s}\")".format(self.title)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
@@ -125,9 +146,10 @@ class Module(models.Model):
 
 
 class Assignment(models.Model):
-    CATEGORY_CHOICES = ((0, _("quiz")),
-                        (1, _("mid")),
-                        (2, _("final")))
+    CATEGORY_CHOICES = ((0, _("exercise")),
+                        (1, _("quiz")),
+                        (2, _("mid")),
+                        (3, _("final")))
 
     short_description = models.CharField(max_length=100,
                                          blank=True,
@@ -137,6 +159,17 @@ class Assignment(models.Model):
                                            verbose_name=_("category"))
     created_on = models.DateTimeField(auto_now_add=True,
                                       verbose_name=_("created on"))
+    for_class = models.ManyToManyField(
+        Course,
+        help_text=_("Choose classes who can see this assignment"),
+        verbose_name=_("class")
+    )
+    due = models.DateTimeField(
+        validators=[MinValueValidator(timezone.now())],
+        help_text=_("Time limit on when student can still submit his/her",
+                    " answer for this assignment"),
+        verbose_name=_("due time")
+    )
 
     class Meta:
         verbose_name = _("assignment")
@@ -145,13 +178,17 @@ class Assignment(models.Model):
     def __str__(self):
         if self.short_description:
             return nstrip_tags(30, self.short_description)
-        return "{cat} assignment".format(cat=self.get_category_display())
+        return "{!s} assignment".format(self.get_category_display())
 
     def __repr__(self):
         if self.short_description:
-            return ("Assignment(\"{desc}\")"
-                    .format(desc=nstrip_tags(20, self.short_description)))
-        return "Assignment(category=\"{}\")".format(self.category)
+            return ("Assignment(short_description=\"{!s}\")"
+                    .format(nstrip_tags(20, self.short_description)))
+        return "Assignment(category=\"{!s}\")".format(self.category)
+
+    @property
+    def has_expired(self):
+        return timezone.now() > self.due
 
 
 class Question(models.Model):
@@ -178,8 +215,7 @@ class Question(models.Model):
         return _("This question has no written text")
 
     def __repr__(self):
-        return ("Question(assignment={!s})"
-                .format(self.assignment))
+        return ("Question(assignment={!s})".format(self.assignment))
 
 
 class Answer(models.Model):
@@ -195,12 +231,19 @@ class Answer(models.Model):
                                         default=0,
                                         validators=[SCORE_VALIDATOR],
                                         verbose_name=_("score"))
-    correct = models.NullBooleanField(blank=True,
-                                      verbose_name=_("is it correct ?"))
+    correct = models.NullBooleanField(
+        blank=True,
+        help_text=_("yes, mean its 100% true, false otherwise"),
+        verbose_name=_("is it correct ?")
+    )
 
     class Meta:
         verbose_name = _("answer")
         verbose_name_plural = _("answers")
+
+    def __init__(self, *args, **kwargs):
+        super(Answer, self).__init__(*args, **kwargs)
+        self.examined = False
 
     def __str__(self):
         if self.text:
@@ -211,12 +254,29 @@ class Answer(models.Model):
         return ("Answer(question={!s}, assignment={!s})"
                 .format(self.question, self.question.assignment))
 
+    def clean(self):
+        assignment = self.question.assignment
+        if assignment.has_expired:
+            raise ValidationError(_("You can't make an answer"
+                                  " for an assignment that already expired"))
+
     def save(self, *args, **kwargs):
         if self.correct is True:
             self.score = 100
         elif self.correct is False:
             self.score = 0
         super(Answer, self).save(*args, **kwargs)
+
+    @property
+    def has_examined(self):
+        if not self.examined:
+            ct = ContentType.objects.get_for_model(self)
+            self.examined = LogEntry.objects.filter(
+                user__is_staff=True,
+                content_type=ct,
+                object_id=self.id,
+                action_flag=CHANGE).exists()
+        return self.examined
 
 
 class AssignmentResultManager(models.Manager):
@@ -249,11 +309,11 @@ class AssignmentResult(models.Model):
         return self.score
 
     def __repr__(self):
-        return ("AssignmentResult(student={student}, assignment={assignment},"
-                "score={score}").format(
-                    student=str(self.student),
-                    assignment=str(self.assignment),
-                    score=self.score)
+        return ("AssignmentResult(student={!s}, assignment={!s},"
+                "score={!s}").format(
+                    self.student,
+                    self.assignment,
+                    self.score)
 
 
 class FinalResult(models.Model):
@@ -278,6 +338,11 @@ class FinalResult(models.Model):
 
 
 class FinalResultPercentage(models.Model):
+    exercise = models.PositiveSmallIntegerField(
+        blank=True,
+        default=settings.FINAL_RESULT_PERCENTAGE['exercise'],
+        verbose_name=_("exercise")
+    )
     quiz = models.PositiveSmallIntegerField(
         blank=True,
         default=settings.FINAL_RESULT_PERCENTAGE['quiz'],
@@ -297,22 +362,3 @@ class FinalResultPercentage(models.Model):
     class Meta:
         verbose_name = _("final result percentage")
         verbose_name_plural = _("final result percentage")
-
-
-class Course(models.Model):
-    name = models.CharField(max_length=100,
-                            unique=True,
-                            verbose_name=_("class name"))
-    capacity = models.PositiveSmallIntegerField(verbose_name=_("capacity"))
-    is_filled = models.BooleanField(default=False,
-                                    verbose_name=_("class fullness"))
-
-    class Meta:
-        verbose_name = _("class")
-        verbose_name_plural = _("class")
-
-    def __repr__(self):
-        return "Course(name={})".format(self.name)
-
-    def __str__(self):
-        return self.name

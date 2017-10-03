@@ -2,7 +2,8 @@ import datetime
 
 from django.db import models
 from django.contrib.auth.models import User
-from django.core.validators import RegexValidator, MaxLengthValidator
+from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator, MinLengthValidator
 from django.utils import timezone
 from django.utils.translation import ugettext as _
 
@@ -31,7 +32,7 @@ class MyUser(User):
         return self.name
 
     def __repr__(self):
-        return "MyUser(username=\"{!s})\"".format(self.username)
+        return "MyUser(username=\"{!s}\")".format(self.username)
 
     @property
     def name(self):
@@ -92,15 +93,15 @@ class Student(BaseAccountModel):
 
     nobp = models.CharField(max_length=9,
                             unique=True,
-                            validators=[MaxLengthValidator(9)],
+                            help_text=_("Minimal 9 digit"),
+                            validators=[MinLengthValidator(9)],
                             verbose_name=_("no. bp"))
 
     belong_in = models.ForeignKey('sis.Course',
                                   on_delete=models.CASCADE,
-                                  limit_choices_to={'is_filled': False},
                                   blank=True,
                                   null=True,
-                                  verbose_name=_("belong in"))
+                                  verbose_name=_("class"))
 
     class Meta:
         get_latest_by = 'user__date_joined'
@@ -108,22 +109,32 @@ class Student(BaseAccountModel):
         verbose_name = _("student")
         verbose_name_plural = _("students")
 
+    def clean(self):
+        if self.belong_in:
+            cap = self.belong_in.capacity
+            student_count = self.belong_in.student_set.count()
+            if student_count >= cap:
+                raise ValidationError(
+                    {'belong_in': _(("This class already full,"
+                                     "choose another class"))}
+                )
+
     @property
     def class_of(self):
         if self.nobp:
             return '20{!s}'.format(self.nobp[0:2])
         return str(timezone.now().year)
 
-    @property
-    def program(self):
-        if self.nobp:
-            return (PROGRAM[self.nobp[2]]).title()
-        return (PROGRAM['0']).title()
+    # @property
+    # def program(self):
+    #     if self.nobp:
+    #         return (PROGRAM[self.nobp[2]]).title()
+    #     return (PROGRAM['0']).title()
 
     @property
     def nobp_sequence(self):
         if self.nobp:
-            return self.nobp[5:7]
+            return self.nobp[-2]
         return '00'
 
     @property
@@ -149,6 +160,7 @@ class Lecturer(BaseAccountModel):
 
     nip = models.CharField(max_length=18,
                            unique=True,
+                           help_text=_("Minimal 18 digit"),
                            validators=[NIPVALIDATOR],
                            verbose_name=_("no. nip"))
 

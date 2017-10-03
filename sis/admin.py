@@ -65,7 +65,7 @@ class AnswerAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
     list_filter = (filter_category,
                    ('student', admin.RelatedOnlyFieldListFilter))
     list_display = ('student', 'assignment', 'question', 'score_percentage',
-                    'score', 'object_action')
+                    'score', 'examined', 'object_action')
     list_display_links = None
     inlines = [AttachmentInline]
 
@@ -76,6 +76,10 @@ class AnswerAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
     def score_percentage(self, obj):
         return obj.question.score_percentage
     score_percentage.short_description = _("score percentage")
+
+    def examined(self, obj):
+        return obj.has_examined
+    examined.short_description = _("examined")
 
     def object_action(self, obj):
         return answer_admin_change_link(pk=obj.pk)
@@ -105,7 +109,8 @@ class FinalResultAdmin(nested_admin.NestedModelAdmin):
     list_display_links = None
 
     def __init__(self, *args, **kwargs):
-        self.counters = {'quiz': 0,
+        self.counters = {'exercise': 0,
+                         'quiz': 0,
                          'mid': 0,
                          'final': 0}
         super(FinalResultAdmin, self).__init__(*args, **kwargs)
@@ -113,14 +118,16 @@ class FinalResultAdmin(nested_admin.NestedModelAdmin):
     def get_list_display(self, request):
         # Get all assignments per category
         assignment_objects = Assignment.objects.order_by('created_on')
-        self.assignments = {'quiz': assignment_objects.filter(category=0),
-                            'mid': assignment_objects.filter(category=1),
-                            'final': assignment_objects.filter(category=2)}
+        self.assignments = {'exercise': assignment_objects.filter(category=0),
+                            'quiz': assignment_objects.filter(category=1),
+                            'mid': assignment_objects.filter(category=2),
+                            'final': assignment_objects.filter(category=3)}
 
         list_display = ['student', ]  # Initial list display
 
         # Get count of each category
-        count = (('quiz', len(self.assignments['quiz'])),
+        count = (('exercise', len(self.assignments['exercise'])),
+                 ('quiz', len(self.assignments['quiz'])),
                  ('mid', len(self.assignments['mid'])),
                  ('final', len(self.assignments['final'])))
 
@@ -144,6 +151,14 @@ class FinalResultAdmin(nested_admin.NestedModelAdmin):
             self.counters[cat] += 1
         else:
             self.counters[cat] = 0
+
+    def exercise(self, obj):
+        assignment = self.assignments['exercise'][self.counters['exercise']].pk
+        score = AssignmentResult.objects.get_score(student=obj.student,
+                                                   assignment=assignment)
+        self._raise_counter('exercise')
+        return score
+    exercise.short_description = _("exercise")
 
     def quiz(self, obj):
         assignment = self.assignments['quiz'][self.counters['quiz']].pk
@@ -179,8 +194,8 @@ class FinalResultAdmin(nested_admin.NestedModelAdmin):
 class FinalResultPercentageAdmin(nested_admin.NestedModelAdmin):
     actions = None
     list_display_links = None
-    list_display = ('quiz', 'mid', 'final')
-    list_editable = ['quiz', 'mid', 'final']
+    list_display = ('exercise', 'quiz', 'mid', 'final')
+    list_editable = ['exercise', 'quiz', 'mid', 'final']
 
     def has_add_permission(self, request):
         return False

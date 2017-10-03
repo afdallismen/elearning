@@ -22,30 +22,28 @@
 </head>
 
 <body class="light-blue">
-  <div>
-    <div  style="height: 100px"></div>
-    <main class="container py-5">
-      <div class="row">
-        <section class="col-7 text-center">
-          <img width=150 height=150 src="{% static 'img/logo.png' %}">
-          <p class="display-3 font-weight-bold">E-learning</p>
-          <p class="h5">Tugas Akhir Strata I Stmik Indonesia Padang</p>
-          <p class="display-5 font-weight-bold"><small>oleh</small> Devitri Chan</p>
-        </section>
-        <section class="col-3 white lighten-4 z-depth-2 mx-4 px-4 py-4 animated fadeIn">
-          <form method="POST" action="{% url 'auth_login' %}">
-            {% csrf_token %}
-            {% if form.non_field_errors %}{% include './partial/_form_errors.html' %}{% endif %}
+  <div style="height: 9rem"></div>
+  <main class="container">
+    <div class="row">
+      <section class="col-7 text-center">
+        <img width=150 height=150 src="{% static 'img/logo.png' %}">
+        <p class="display-3 font-weight-bold">E-learning</p>
+        <p class="h5">Tugas Akhir Strata I Stmik Indonesia Padang</p>
+        <p class="display-5 font-weight-bold"><small>oleh</small> Devitri Chan</p>
+      </section>
+      <section class="col-3 white lighten-4 z-depth-2 mx-4 px-4 py-4 animated fadeIn">
+        <form method="POST" action="{% url 'auth_login' %}">
+          {% csrf_token %}
+          {% if form.non_field_errors %}{% include './partial/_form_errors.html' %}{% endif %}
 
-            {% include 'form/partial/_text_field.html' with field=form.username errors=form.errors.username %}
-            {% include 'form/partial/_password_field.html' with field=form.password errors=form.errors.password %}
-            <button type="submit" class="btn btn-default btn-block mt-5 animated zoomIn">Masuk</button>
-          </form>
-          <footer class="mt-2 ml-1 animated zoomIn"><small>Belum punya akun? <a href="{% url 'registration_register' %}">Daftar</a></small></footer>
-        </section>
-      </div>
-    </main>
-  </div>
+          {% include 'form/partial/_text_field.html' with field=form.username errors=form.errors.username %}
+          {% include 'form/partial/_password_field.html' with field=form.password errors=form.errors.password %}
+          <button type="submit" class="btn btn-default btn-block mt-5 animated zoomIn">Masuk</button>
+        </form>
+        <footer class="mt-2 ml-1 animated zoomIn"><small>Belum punya akun? <a href="{% url 'registration_register' %}">Daftar</a></small></footer>
+      </section>
+    </div>
+  </main>
   {% include './footer.html' %}
   <!-- SCRIPTS -->
   <!-- JQuery -->

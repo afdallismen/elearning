@@ -18,6 +18,7 @@
     {% include './partial/_text_field.html' with field=userform.last_name errors=userform.errors.lastname prefix=userform.prefix %}
     {% include './partial/_email_field.html' with field=userform.email errors=userform.errors.email prefix=userform.prefix %}
     {% include './partial/_text_field.html' with field=studentform.nobp errors=studentform.errors.nobp prefix=studentform.prefix %}
+    {% include './partial/_select_field.html' with field=studentform.belong_in errors=studentform.errors.belong_in prefix=studentform.prefix %}
   </div>
   <div class="col-4 text-center">
     {% include './partial/_file_field.html' with field=studentform.avatar errors=studentform.errors.avatar prefix=studentform.prefix %}

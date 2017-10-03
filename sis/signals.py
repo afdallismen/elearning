@@ -42,10 +42,12 @@ def update_final_result(sender, instance, *args, **kwargs):
 
 def _update_final_result(student):
     qs = AssignmentResult.objects.filter(student=student)
-    results = {'quiz': qs.filter(assignment__category=0),
-               'mid': qs.filter(assignment__category=1),
-               'final': qs.filter(assignment__category=2)}
-    score = {'quiz': sum(ar.score for ar in results['quiz']),
+    results = {'exercise': qs.filter(assignment__category=0),
+               'quiz': qs.filter(assignment__category=1),
+               'mid': qs.filter(assignment__category=2),
+               'final': qs.filter(assignment__category=3)}
+    score = {'exercise': sum(ar.score for ar in results['exercise']),
+             'quiz': sum(ar.score for ar in results['quiz']),
              'mid': sum(ar.score for ar in results['mid']),
              'final': sum(ar.score for ar in results['final'])}
     percentage = FinalResultPercentage.objects.get()

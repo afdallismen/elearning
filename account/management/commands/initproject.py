@@ -47,5 +47,5 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         call_command('refreshdb')
         call_command('creategroups')
-        createuser()
+        # createuser()
         create_final_result_percentage()

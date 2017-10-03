@@ -1,0 +1,18 @@
+<div class="md-form animated zoomIn">
+  <p class="mb-2" style="color: #757575">{{field.label}}</p>
+  <select
+    name="{% if prefix %}{{prefix}}-{% endif %}{{field.name}}"
+    class="col-12 form-control validate{% if field.data and errors %} is-invalid{% elif field.data %} is-valid{% endif %}">
+    {% for val, key in field.choices %}
+    <option value="{{val}}"{% if field.value == val %} selected{% endif %}>{{key}}</option>
+    {% endfor %}
+  </select>
+  {% if field.help_text %}<small class="form-text text-muted">{{field.help_text|striptags}}</small>{% endif %}
+  <div class="invalid-feedback">
+    <ul class="list-unstyled">
+    {% for error in errors %}
+      <li>{{error|striptags}}</li>
+    {% endfor %}
+    </ul>
+  </div>
+</div>

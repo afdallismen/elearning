@@ -1,13 +1,21 @@
 import base64
+from urllib.parse import urlencode
 
 from django.core.urlresolvers import reverse
 from django.utils import timezone
 from django.utils.html import strip_tags, format_html
 from django.utils.translation import ugettext as _
 
-
 from imagekit import ImageSpec
 from imagekit.processors import ResizeToFill
+
+
+FILE_EXTENSION = {
+    'image': ['jpg', 'png'],
+    'animation': ['swf'],
+    'video': ['mp4', 'webm'],
+    'doc': ['doc', 'docx', 'xsl', 'xslx', 'ppt', 'pptx', 'pdf']
+}
 
 
 class Thumbnail(ImageSpec):
@@ -101,8 +109,10 @@ def _get_image_html_display(orig, img_bytes):
 def _get_docs_html_display(url):
     html_tag = '''
         <a target='_blank'
-            href='https://view.officeapps.live.com/op/embed.aspx?src={}'
+            href='http://view.officeapps.live.com/op/view.aspx?src={}'
             >View on new window
         </a>'''
-    url = "http://localhost:8000{}".format(url)
-    return format_html(html_tag, url)
+    encoded = urlencode(
+        {'': "http://localhost:8000" + url}
+    )[1:]
+    return format_html(html_tag, encoded)
