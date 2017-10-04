@@ -15,19 +15,19 @@ def edit(request):
         Student,
         fields=['nobp', 'belong_in', 'avatar']
     )
-    userform = BaseUserForm(instance=request.user, prefix='usr')
-    studentform = BaseStudentForm(instance=request.user.student, prefix='std')
+    userform = BaseUserForm(instance=request.user, prefix="usr")
+    studentform = BaseStudentForm(instance=request.user.student, prefix="std")
     if request.method == "POST":
         userform = BaseUserForm(
             request.POST,
             instance=request.user,
-            prefix='usr'
+            prefix="usr"
         )
         studentform = BaseStudentForm(
             request.POST,
             request.FILES,
             instance=request.user.student,
-            prefix='std'
+            prefix="std"
         )
         if userform.is_valid() and studentform.is_valid():
             userform.save()

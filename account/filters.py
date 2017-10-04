@@ -4,20 +4,23 @@ from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.utils.translation import ugettext as _
 
-from account.models import Student
+from account.models import Student, Lecturer
 
 
-class GroupListFilter(admin.SimpleListFilter):
+class UserIdentityListFilter(admin.SimpleListFilter):
     title = _("group")
     parameter_name = "group"
 
     def lookups(self, request, model_admin):
-        objs = Group.objects.all()
-        return ((group.name, _(group.name).title()) for group in objs)
+        objs = [
+            (False, Student._meta.object_name),
+            (True, Lecturer._meta.object_name)
+        ]
+        return ((obj[0], _(obj[1]).title()) for obj in objs)
 
     def queryset(self, request, queryset):
         if self.value():
-            queryset = queryset.filter(groups__name=self.value())
+            queryset = queryset.filter(is_staff=self.value())
         return queryset
 
 

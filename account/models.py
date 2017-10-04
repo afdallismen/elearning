@@ -82,7 +82,7 @@ class BaseAccountModel(models.Model):
         return self.user.name
 
     def __repr__(self):
-        return ("{!s}(user={!s})"
+        return ("{!s}(user=\"{!s}\")"
                 .format(self.__class__.__name__.title(), self.user))
 
 
@@ -116,7 +116,7 @@ class Student(BaseAccountModel):
             if student_count >= cap:
                 raise ValidationError(
                     {'belong_in': _(("This class already full,"
-                                     "choose another class"))}
+                                     " choose another class"))}
                 )
 
     @property

@@ -8,7 +8,7 @@ from django.utils.translation import ugettext as _
 
 from account.actions import activate_users, deactivate_users
 from account.filters import (
-    GroupListFilter as filter_group,
+    UserIdentityListFilter as filter_identity,
     StudentSemesterListFilter as filter_semester)
 from account.models import Student, Lecturer, MyUser
 
@@ -24,7 +24,7 @@ class MyUserAdmin(BaseUserAdmin):
         (None, {'fields': ('username', 'password1', 'password2'), }),
     )
     list_display = ('name', 'email', 'identity', 'is_active')
-    list_filter = ('is_active', filter_group, 'student__belong_in',
+    list_filter = ('is_active', filter_identity, 'student__belong_in',
                    filter_semester)
 
     def name(self, obj):
@@ -41,7 +41,7 @@ class MyUserAdmin(BaseUserAdmin):
                        args=(getattr(obj, classname).pk, ))
 
         return format_html("<a href={}><b>{}</b></a>", link, idt)
-    identity.short_description = _("identity")
+    identity.short_description = _("id")
 
 
 class NoModulePermissionAdmin(admin.ModelAdmin):
@@ -81,7 +81,7 @@ class NoModulePermissionAdmin(admin.ModelAdmin):
         if hasattr(obj, 'avatar_thumbnail') and obj.avatar:
             url = obj.avatar_thumbnail.url
         else:
-            url = "{% static 'img/stock_avatar.jpg' %}"
+            url = "/static/img/stock_avatar.jpg"
 
         return format_html('<img src={} />', url)
     avatar_thumbnail.short_description = _("profile picture")

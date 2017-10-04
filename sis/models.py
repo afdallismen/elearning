@@ -55,14 +55,14 @@ class Attachment(models.Model):
     content_object = GenericForeignKey('content_type', 'object_id')
 
     class Meta:
-        verbose_name = "attachment"
-        verbose_name_plural = "attachments"
+        verbose_name = _("attachment")
+        verbose_name_plural = _("attachments")
 
     def __str__(self):
         return self.file_name
 
     def __repr__(self):
-        return "Attachment(file=\"{!s}\")".format(self.file_name)
+        return "Attachment(file_upload=\"{!s}\")".format(self.file_upload)
 
     @property
     def file_name(self):
@@ -74,11 +74,13 @@ class Attachment(models.Model):
 
     @property
     def ext_link(self):
-        encoded = urlencode(
-            {'': "http://localhost:8000" + self.file_upload.url}
-        )[1:]
-        return ("http://view.officeapps.live.com/op/view.aspx",
-                "?src={!s}").format(encoded)
+        if self.is_doc:
+            encoded = urlencode(
+                {'': "http://localhost:8000" + self.file_upload.url}
+            )[1:]
+            return ("http://view.officeapps.live.com/op/view.aspx",
+                    "?src={!s}").format(encoded)
+        return ""
 
     @property
     def html_display(self):
@@ -115,13 +117,13 @@ class Attachment(models.Model):
 
 
 class Module(models.Model):
-    title = models.CharField(max_length=100,
+    title = models.CharField(max_length=200,
                              unique=True,
                              verbose_name=_("title"))
     slug = models.SlugField(blank=True,
                             default="",
                             editable=False,
-                            max_length=100)
+                            max_length=200)
     text = tinymce_models.HTMLField(blank=True,
                                     default="",
                                     verbose_name=_("text"))
@@ -166,7 +168,7 @@ class Assignment(models.Model):
     )
     due = models.DateTimeField(
         validators=[MinValueValidator(timezone.now())],
-        help_text=_("Time limit on when student can still submit his/her",
+        help_text=_("Time limit on when student can still submit his/her"
                     " answer for this assignment"),
         verbose_name=_("due time")
     )
@@ -178,7 +180,7 @@ class Assignment(models.Model):
     def __str__(self):
         if self.short_description:
             return nstrip_tags(30, self.short_description)
-        return "{!s} assignment".format(self.get_category_display())
+        return _("{!s}").format(self.get_category_display())
 
     def __repr__(self):
         if self.short_description:
@@ -215,7 +217,8 @@ class Question(models.Model):
         return _("This question has no written text")
 
     def __repr__(self):
-        return ("Question(assignment={!s})".format(self.assignment))
+        return ("Question(id={!s}, assignment={!s})"
+                .format(self.id, self.assignment))
 
 
 class Answer(models.Model):
