@@ -83,7 +83,7 @@ class Attachment(models.Model):
         return ""
 
     @property
-    def html_display(self):
+    def admin_display(self):
         return file_html_display(self, 640, 480)
 
     @property
@@ -97,22 +97,22 @@ class Attachment(models.Model):
 
     @property
     def is_image(self):
-        is_image = self.file_extension in self.FILE_EXTENSION['image']
+        is_image = self.file_extension in FILE_EXTENSION['image']
         return self.is_supported and is_image
 
     @property
     def is_animation(self):
-        is_animation = self.file_extension in self.FILE_EXTENSION['animation']
+        is_animation = self.file_extension in FILE_EXTENSION['animation']
         return self.is_supported and is_animation
 
     @property
     def is_video(self):
-        is_video = self.file_extension in self.FILE_EXTENSION['video']
+        is_video = self.file_extension in FILE_EXTENSION['video']
         return self.is_supported and is_video
 
     @property
     def is_doc(self):
-        is_doc = self.file_extension in self.FILE_EXTENSION['doc']
+        is_doc = self.file_extension in FILE_EXTENSION['doc']
         return self.is_supported and is_doc
 
 
@@ -163,14 +163,19 @@ class Assignment(models.Model):
                                       verbose_name=_("created on"))
     for_class = models.ManyToManyField(
         Course,
-        help_text=_("Choose classes who can see this assignment"),
+        help_text=_("Which classes can see this assignment"),
         verbose_name=_("class")
+    )
+    publish = models.DateTimeField(
+        validators=[MinValueValidator(timezone.now())],
+        help_text=_("When this assignment should be visible"),
+        verbose_name=_("published from")
     )
     due = models.DateTimeField(
         validators=[MinValueValidator(timezone.now())],
-        help_text=_("Time limit on when student can still submit his/her"
+        help_text=_("Time limit on when student can still submit an"
                     " answer for this assignment"),
-        verbose_name=_("due time")
+        verbose_name=_("due at")
     )
 
     class Meta:

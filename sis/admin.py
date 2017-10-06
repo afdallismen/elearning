@@ -24,9 +24,9 @@ class AttachmentInline(nested_admin.NestedGenericStackedInline):
     extra = 0
     readonly_fields = ['preview']
 
-    def preview(self, instance):
-        return instance.html_display
-    preview.short_description = ""
+    def preview(self, obj):
+        return obj.admin_display
+    preview.short_description = _("Preview")
 
 
 class QuestionInline(nested_admin.NestedStackedInline):
@@ -49,8 +49,9 @@ class ModuleAdmin(nested_admin.NestedModelAdmin):
 
 
 class AssignmentAdmin(nested_admin.NestedModelAdmin):
-    list_display = ('category', 'created_on', 'number_of_questions')
-    list_filter = (filter_category, )
+    list_display = ('category', 'short_description', 'publish', 'due',
+                    'number_of_questions')
+    list_filter = (filter_category, 'due')
     inlines = [QuestionInline]
 
     def number_of_questions(self, obj):
@@ -204,10 +205,16 @@ class FinalResultPercentageAdmin(nested_admin.NestedModelAdmin):
         return False
 
 
+class CourseAdmin(nested_admin.NestedModelAdmin):
+    list_display_links = None
+    list_display = ('name', 'capacity')
+    list_editable = ['name', 'capacity']
+
+
 admin.site.register(Module, ModuleAdmin)
 admin.site.register(Assignment, AssignmentAdmin)
 admin.site.register(Answer, AnswerAdmin)
 admin.site.register(AssignmentResult, AssignmentResultAdmin)
 admin.site.register(FinalResult, FinalResultAdmin)
 admin.site.register(FinalResultPercentage, FinalResultPercentageAdmin)
-admin.site.register(Course)
+admin.site.register(Course, CourseAdmin)

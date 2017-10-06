@@ -14,7 +14,7 @@ FILE_EXTENSION = {
     'image': ['jpg', 'png'],
     'animation': ['swf'],
     'video': ['mp4', 'webm'],
-    'doc': ['doc', 'docx', 'xsl', 'xslx', 'ppt', 'pptx', 'pdf']
+    'doc': ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'pdf']
 }
 
 
@@ -50,24 +50,24 @@ def nstrip_tags(n, text):
 def file_html_display(attachment, width, height):
     url = attachment.file_upload.url
     if attachment.is_animation:
-        return _get_swf_html_display(url, width, height)
+        return _get_swf_display(url, width, height)
 
     elif attachment.is_video:
-        return _get_video_html_display(url, width, height)
+        return _get_video_display(url, width, height)
 
     elif attachment.is_image:
         thumb = Thumbnail(source=attachment.file_upload.file).generate()
         img_bytes = base64.b64encode(thumb.getvalue())
-        return _get_image_html_display(url, img_bytes)
+        return _get_image_display(url, img_bytes)
 
     elif attachment.is_doc:
-        return _get_docs_html_display(url)
+        return _get_docs_display(url)
 
     else:
         return _("No preview available for this file type.")
 
 
-def _get_swf_html_display(url, width, height):
+def _get_swf_display(url, width, height):
     html_tag = '''
         <object type="application/x-shockwave-flash" data="{src}"
             width="{width}" height="{height}"
@@ -85,7 +85,7 @@ def _get_swf_html_display(url, width, height):
     return format_html(html_tag, src=url, width=width, height=height)
 
 
-def _get_video_html_display(url, width, height):
+def _get_video_display(url, width, height):
     html_tag = '''
         <video controls width="{width}" height="{height}"
             style="border:1px solid #DCDCDC;">
@@ -99,14 +99,14 @@ def _get_video_html_display(url, width, height):
         html_tag, src=url, width=width, height=height)
 
 
-def _get_image_html_display(orig, img_bytes):
+def _get_image_display(orig, img_bytes):
     html_tag = ('<a href="{orig}" target="_blank">'
                 '<img src="data:image/jpeg;base64,{thumb}"></a>')
 
     return format_html(html_tag, orig=orig, thumb=img_bytes)
 
 
-def _get_docs_html_display(url):
+def _get_docs_display(url):
     html_tag = '''
         <a target='_blank'
             href='http://view.officeapps.live.com/op/view.aspx?src={}'
