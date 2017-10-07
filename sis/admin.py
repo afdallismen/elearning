@@ -6,7 +6,10 @@ from django.utils.translation import ugettext as _
 
 from main.templatetags.mytags import letter
 from sis.forms import BaseQuestionFormSet
-from sis.filters import AssignmentCategoryListFilter as filter_category
+from sis.filters import (
+    AssignmentCategoryListFilter as filter_category,
+    AnswerHasExaminedListFilter as filter_examined,
+)
 from sis.models import (
     Module, Answer, Attachment, Assignment, Question, AssignmentResult,
     FinalResult, FinalResultPercentage, Course
@@ -63,7 +66,7 @@ class AnswerAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
     search_fields = ('student__user__username',
                      'student__user__first_name',
                      'student__user__last_name')
-    list_filter = (filter_category,
+    list_filter = (filter_category, filter_examined,
                    ('student', admin.RelatedOnlyFieldListFilter))
     list_display = ('student', 'assignment', 'question', 'score_percentage',
                     'score', 'examined', 'object_action')
@@ -81,6 +84,7 @@ class AnswerAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
     def examined(self, obj):
         return obj.has_examined
     examined.short_description = _("examined")
+    examined.boolean = True
 
     def object_action(self, obj):
         return answer_admin_change_link(pk=obj.pk)
@@ -91,7 +95,7 @@ class AssignmentResultAdmin(nested_admin.NestedModelAdmin):
     search_fields = ('student__user__username',
                      'student__user__first_name',
                      'student__user__last_name')
-    list_display = ('student', 'assignment', 'score')
+    list_display = ('student', 'assignment', 'score', 'letter_score')
     list_display_links = None
     list_filter = (filter_category,
                    ('student', admin.RelatedOnlyFieldListFilter), )
@@ -101,6 +105,10 @@ class AssignmentResultAdmin(nested_admin.NestedModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
+
+    def letter_score(self, obj):
+        return letter(obj.score)
+    letter_score.short_description = _("letter score")
 
 
 class FinalResultAdmin(nested_admin.NestedModelAdmin):
@@ -139,13 +147,13 @@ class FinalResultAdmin(nested_admin.NestedModelAdmin):
                 list_display.append(ct[0])
 
         # Rest of the list display
-        list_display.extend(["score", "letter_value"])
+        list_display.extend(["score", "letter_score"])
 
         return list_display
 
-    def letter_value(self, obj):
+    def letter_score(self, obj):
         return letter(obj.score)
-    letter_value.short_description = _("letter value")
+    letter_score.short_description = _("letter score")
 
     def _raise_counter(self, cat):
         if self.counters[cat] < len(self.assignments[cat]) - 1:

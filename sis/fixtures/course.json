@@ -1,1 +1,0 @@
-[{"model": "sis.course", "pk": 1, "fields": {"name": "Kelas A", "capacity": 1}}, {"model": "sis.course", "pk": 2, "fields": {"name": "Kelas B", "capacity": 3}}]

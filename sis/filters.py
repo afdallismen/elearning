@@ -1,4 +1,7 @@
+import ast
+
 from django.contrib import admin
+from django.utils import timezone
 from django.utils.translation import ugettext as _
 
 from sis.models import Assignment, Answer, AssignmentResult
@@ -30,3 +33,26 @@ class AssignmentCategoryListFilter(admin.SimpleListFilter):
                     assignment__category=self.value()
                 )
         return queryset
+
+
+class AnswerHasExaminedListFilter(admin.SimpleListFilter):
+    title = _("has been examined")
+    parameter_name = "examined"
+
+    def lookups(self, request, model_admin):
+        objs = [
+            {'key': _("True"), 'value': True},
+            {'key': _("False"), 'value': False}
+        ]
+        return ((obj['value'], obj['key']) for obj in objs)
+
+    def queryset(self, request, queryset):
+        answers = Answer.objects.all()
+        examined = [answer for answer in answers if answer.has_examined]
+        examined_pks = [answer.pk for answer in examined]
+        if self.value() is not None and self.value() == "True":
+            return queryset.filter(pk__in=examined_pks)
+        elif self.value() is not None and self.value() == "False":
+            return queryset.exclude(pk__in=examined_pks)
+        elif self.value() is None: 
+            return queryset

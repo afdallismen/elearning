@@ -132,7 +132,6 @@ class Module(models.Model):
     attachments = GenericRelation(Attachment, verbose_name=_("attachments"))
 
     class Meta:
-        get_latest_by = 'created_on'
         verbose_name = _("module")
         verbose_name_plural = _("modules")
 
