@@ -27,7 +27,7 @@ class Thumbnail(ImageSpec):
 def answer_admin_change_link(pk):
     return format_html(
         '<a href="{}" style="margin-right:10px">'
-        '<i class="fa fa-file-text-o" aria-hidden="true"></i> Answer'
+        '<i class="fa fa-edit" aria-hidden="true"></i> Edit'
         '</a>',
         reverse("admin:sis_answer_change", args=(pk, ))
     )

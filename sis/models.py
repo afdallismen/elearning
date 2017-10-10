@@ -29,6 +29,7 @@ class Course(models.Model):
     capacity = models.PositiveSmallIntegerField(
         default=1,
         help_text=_("Class max capacity"),
+        validators=[MinValueValidator(1)],
         verbose_name=_("capacity")
     )
 
@@ -78,7 +79,7 @@ class Attachment(models.Model):
             encoded = urlencode(
                 {'': "http://localhost:8000" + self.file_upload.url}
             )[1:]
-            return ("http://view.officeapps.live.com/op/view.aspx",
+            return ("http://view.officeapps.live.com/op/view.aspx"
                     "?src={!s}").format(encoded)
         return ""
 
@@ -151,6 +152,8 @@ class Assignment(models.Model):
                         (1, _("quiz")),
                         (2, _("mid")),
                         (3, _("final")))
+    STATUS_CHOICES = ((0, _("draft")),
+                      (1, _("publish")))
 
     short_description = models.CharField(max_length=100,
                                          blank=True,
@@ -160,17 +163,11 @@ class Assignment(models.Model):
                                            verbose_name=_("category"))
     created_on = models.DateTimeField(auto_now_add=True,
                                       verbose_name=_("created on"))
-    for_class = models.ManyToManyField(
-        Course,
-        help_text=_("Which classes can see this assignment"),
-        verbose_name=_("class")
-    )
-    publish = models.DateTimeField(
-        validators=[MinValueValidator(timezone.now())],
-        help_text=_("When this assignment should be visible"),
-        verbose_name=_("published from")
-    )
+    status = models.PositiveSmallIntegerField(choices=STATUS_CHOICES,
+                                              default=0,
+                                              verbose_name=_("status"))
     due = models.DateTimeField(
+        default=timezone.now,
         validators=[MinValueValidator(timezone.now())],
         help_text=_("Time limit on when student can still submit an"
                     " answer for this assignment"),

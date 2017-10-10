@@ -1,1 +1,226 @@
-[{"model": "sis.course", "pk": 1, "fields": {"name": "Kelas A", "capacity": 1}}, {"model": "sis.course", "pk": 2, "fields": {"name": "Kelas B", "capacity": 3}}, {"model": "sis.attachment", "pk": 1, "fields": {"file_upload": "attachment/module/20171006/excel_k2lR2yb.xlsx", "content_type": 9, "object_id": 2}}, {"model": "sis.attachment", "pk": 2, "fields": {"file_upload": "attachment/module/20171006/mp4_YsNnc7N.MP4", "content_type": 9, "object_id": 2}}, {"model": "sis.attachment", "pk": 3, "fields": {"file_upload": "attachment/module/20171006/pdf_FPwfwse.pdf", "content_type": 9, "object_id": 2}}, {"model": "sis.attachment", "pk": 4, "fields": {"file_upload": "attachment/module/20171006/ppt_83wjOG1.pptx", "content_type": 9, "object_id": 2}}, {"model": "sis.attachment", "pk": 5, "fields": {"file_upload": "attachment/module/20171006/swf_fkZ38yP.swf", "content_type": 9, "object_id": 2}}, {"model": "sis.attachment", "pk": 6, "fields": {"file_upload": "attachment/module/20171006/webm_HGYUj8P.WEBM", "content_type": 9, "object_id": 2}}, {"model": "sis.attachment", "pk": 7, "fields": {"file_upload": "attachment/module/20171006/word_3N16m54.docx", "content_type": 9, "object_id": 2}}, {"model": "sis.attachment", "pk": 8, "fields": {"file_upload": "attachment/question/20171006/excel_v26J8DK.xlsx", "content_type": 6, "object_id": 2}}, {"model": "sis.attachment", "pk": 9, "fields": {"file_upload": "attachment/question/20171006/mp4_qBKbs61.MP4", "content_type": 6, "object_id": 2}}, {"model": "sis.attachment", "pk": 10, "fields": {"file_upload": "attachment/question/20171006/pdf_CXEkiEA.pdf", "content_type": 6, "object_id": 2}}, {"model": "sis.attachment", "pk": 11, "fields": {"file_upload": "attachment/question/20171006/ppt_27fn59c.pptx", "content_type": 6, "object_id": 2}}, {"model": "sis.attachment", "pk": 12, "fields": {"file_upload": "attachment/question/20171006/swf_O4HjmgV.swf", "content_type": 6, "object_id": 2}}, {"model": "sis.attachment", "pk": 13, "fields": {"file_upload": "attachment/question/20171006/webm_MvubrpN.WEBM", "content_type": 6, "object_id": 2}}, {"model": "sis.attachment", "pk": 14, "fields": {"file_upload": "attachment/question/20171006/word_hmAAUEX.docx", "content_type": 6, "object_id": 2}}, {"model": "sis.module", "pk": 1, "fields": {"title": "Dictum fusce ut placerat orci nulla pellentesque dignissim enim sit", "slug": "dictum-fusce-ut-placerat-orci-nulla-pellentesque-dignissim-enim-sit", "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lectus urna duis convallis convallis tellus id interdum. Platea dictumst quisque sagittis purus sit amet volutpat consequat. Dictum fusce ut placerat orci nulla pellentesque dignissim enim sit. Donec ac odio tempor orci dapibus ultrices in iaculis. In fermentum et sollicitudin ac orci. Eget dolor morbi non arcu risus quis. Sem et tortor consequat id porta nibh venenatis. Pretium vulputate sapien nec sagittis aliquam. Eget mauris pharetra et ultrices neque ornare aenean. Proin fermentum leo vel orci porta non pulvinar neque laoreet.</p>\r\n<p>A scelerisque purus semper eget duis at tellus. Metus aliquam eleifend mi in nulla posuere sollicitudin aliquam ultrices. Volutpat sed cras ornare arcu dui. Amet purus gravida quis blandit turpis cursus in. Nisi est sit amet facilisis magna etiam tempor orci. Sit amet consectetur adipiscing elit ut aliquam purus. Viverra aliquet eget sit amet tellus cras adipiscing. Vitae ultricies leo integer malesuada nunc vel risus commodo viverra. Sapien pellentesque habitant morbi tristique senectus. Purus sit amet volutpat consequat mauris nunc. Nulla pellentesque dignissim enim sit amet venenatis. Aliquam sem et tortor consequat. Libero nunc consequat interdum varius sit. Tempus quam pellentesque nec nam aliquam sem et tortor. Et netus et malesuada fames ac turpis. Lectus proin nibh nisl condimentum id venenatis a condimentum. Volutpat consequat mauris nunc congue. Erat nam at lectus urna duis convallis. Quam viverra orci sagittis eu volutpat.</p>\r\n<p>Erat nam at lectus urna duis convallis convallis tellus. Quis commodo odio aenean sed adipiscing diam donec adipiscing. Ultricies mi quis hendrerit dolor magna eget est lorem ipsum. Feugiat nisl pretium fusce id velit ut. Lobortis elementum nibh tellus molestie nunc non. Sed libero enim sed faucibus turpis. Sit amet volutpat consequat mauris nunc congue. Massa eget egestas purus viverra accumsan in. Purus in mollis nunc sed id semper risus in hendrerit. Proin sed libero enim sed faucibus turpis in.</p>\r\n<p>Velit ut tortor pretium viverra suspendisse potenti nullam ac. Lacus luctus accumsan tortor posuere ac ut consequat semper. Tellus mauris a diam maecenas. Id consectetur purus ut faucibus pulvinar elementum integer enim neque. Aliquam purus sit amet luctus venenatis lectus. Pharetra vel turpis nunc eget lorem dolor sed. Pharetra diam sit amet nisl suscipit adipiscing. Tempor orci dapibus ultrices in iaculis nunc sed augue lacus. Mollis aliquam ut porttitor leo. Sit amet consectetur adipiscing elit ut aliquam purus. Dignissim enim sit amet venenatis. Laoreet id donec ultrices tincidunt arcu non sodales neque sodales. Mattis aliquam faucibus purus in massa tempor. Sed egestas egestas fringilla phasellus.</p>\r\n<p>Aenean sed adipiscing diam donec adipiscing tristique risus. Ullamcorper dignissim cras tincidunt lobortis. Nunc congue nisi vitae suscipit tellus mauris a. Habitant morbi tristique senectus et netus et malesuada. Sed ullamcorper morbi tincidunt ornare massa eget egestas purus viverra. Ut morbi tincidunt augue interdum velit euismod. Sapien pellentesque habitant morbi tristique. Quisque egestas diam in arcu cursus euismod quis viverra nibh. Dolor morbi non arcu risus quis varius. Enim nec dui nunc mattis enim ut tellus elementum sagittis. Quis enim lobortis scelerisque fermentum dui faucibus in ornare quam. In hendrerit gravida rutrum quisque. Eu non diam phasellus vestibulum lorem sed. Egestas erat imperdiet sed euismod nisi porta lorem mollis. Tempus urna et pharetra pharetra. Urna id volutpat lacus laoreet non curabitur gravida arcu. Ipsum consequat nisl vel pretium lectus quam id leo. Risus at ultrices mi tempus imperdiet nulla malesuada. Elit scelerisque mauris pellentesque pulvinar. Accumsan sit amet nulla facilisi.</p>", "created_on": "2017-10-06T03:27:14.853Z"}}, {"model": "sis.module", "pk": 2, "fields": {"title": "Eget dolor morbi non arcu risus quis. Sem et tortor consequat id porta nibh venenatis", "slug": "eget-dolor-morbi-non-arcu-risus-quis-sem-et-tortor-consequat-id-porta-nibh-venenatis", "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lectus urna duis convallis convallis tellus id interdum. Platea dictumst quisque sagittis purus sit amet volutpat consequat. Dictum fusce ut placerat orci nulla pellentesque dignissim enim sit. Donec ac odio tempor orci dapibus ultrices in iaculis. In fermentum et sollicitudin ac orci. Eget dolor morbi non arcu risus quis. Sem et tortor consequat id porta nibh venenatis. Pretium vulputate sapien nec sagittis aliquam. Eget mauris pharetra et ultrices neque ornare aenean. Proin fermentum leo vel orci porta non pulvinar neque laoreet.</p>\r\n<p>A scelerisque purus semper eget duis at tellus. Metus aliquam eleifend mi in nulla posuere sollicitudin aliquam ultrices. Volutpat sed cras ornare arcu dui. Amet purus gravida quis blandit turpis cursus in. Nisi est sit amet facilisis magna etiam tempor orci. Sit amet consectetur adipiscing elit ut aliquam purus. Viverra aliquet eget sit amet tellus cras adipiscing. Vitae ultricies leo integer malesuada nunc vel risus commodo viverra. Sapien pellentesque habitant morbi tristique senectus. Purus sit amet volutpat consequat mauris nunc. Nulla pellentesque dignissim enim sit amet venenatis. Aliquam sem et tortor consequat. Libero nunc consequat interdum varius sit. Tempus quam pellentesque nec nam aliquam sem et tortor. Et netus et malesuada fames ac turpis. Lectus proin nibh nisl condimentum id venenatis a condimentum. Volutpat consequat mauris nunc congue. Erat nam at lectus urna duis convallis. Quam viverra orci sagittis eu volutpat.</p>\r\n<p>Erat nam at lectus urna duis convallis convallis tellus. Quis commodo odio aenean sed adipiscing diam donec adipiscing. Ultricies mi quis hendrerit dolor magna eget est lorem ipsum. Feugiat nisl pretium fusce id velit ut. Lobortis elementum nibh tellus molestie nunc non. Sed libero enim sed faucibus turpis. Sit amet volutpat consequat mauris nunc congue. Massa eget egestas purus viverra accumsan in. Purus in mollis nunc sed id semper risus in hendrerit. Proin sed libero enim sed faucibus turpis in.</p>\r\n<p>Velit ut tortor pretium viverra suspendisse potenti nullam ac. Lacus luctus accumsan tortor posuere ac ut consequat semper. Tellus mauris a diam maecenas. Id consectetur purus ut faucibus pulvinar elementum integer enim neque. Aliquam purus sit amet luctus venenatis lectus. Pharetra vel turpis nunc eget lorem dolor sed. Pharetra diam sit amet nisl suscipit adipiscing. Tempor orci dapibus ultrices in iaculis nunc sed augue lacus. Mollis aliquam ut porttitor leo. Sit amet consectetur adipiscing elit ut aliquam purus. Dignissim enim sit amet venenatis. Laoreet id donec ultrices tincidunt arcu non sodales neque sodales. Mattis aliquam faucibus purus in massa tempor. Sed egestas egestas fringilla phasellus.</p>\r\n<p>Aenean sed adipiscing diam donec adipiscing tristique risus. Ullamcorper dignissim cras tincidunt lobortis. Nunc congue nisi vitae suscipit tellus mauris a. Habitant morbi tristique senectus et netus et malesuada. Sed ullamcorper morbi tincidunt ornare massa eget egestas purus viverra. Ut morbi tincidunt augue interdum velit euismod. Sapien pellentesque habitant morbi tristique. Quisque egestas diam in arcu cursus euismod quis viverra nibh. Dolor morbi non arcu risus quis varius. Enim nec dui nunc mattis enim ut tellus elementum sagittis. Quis enim lobortis scelerisque fermentum dui faucibus in ornare quam. In hendrerit gravida rutrum quisque. Eu non diam phasellus vestibulum lorem sed. Egestas erat imperdiet sed euismod nisi porta lorem mollis. Tempus urna et pharetra pharetra. Urna id volutpat lacus laoreet non curabitur gravida arcu. Ipsum consequat nisl vel pretium lectus quam id leo. Risus at ultrices mi tempus imperdiet nulla malesuada. Elit scelerisque mauris pellentesque pulvinar. Accumsan sit amet nulla facilisi.</p>", "created_on": "2017-10-06T03:27:49.776Z"}}, {"model": "sis.assignment", "pk": 1, "fields": {"short_description": "Kuis 1", "category": 1, "created_on": "2017-10-06T03:31:24.629Z", "publish": "2017-10-06T03:35:35Z", "due": "2017-10-06T11:00:00Z", "for_class": [1]}}, {"model": "sis.assignment", "pk": 2, "fields": {"short_description": "", "category": 0, "created_on": "2017-10-06T03:35:06.748Z", "publish": "2017-10-06T03:34:15Z", "due": "2017-10-12T17:00:00Z", "for_class": [1, 2]}}, {"model": "sis.question", "pk": 1, "fields": {"assignment": 2, "text": "Donec ac odio tempor orci dapibus ultrices in iaculis. In fermentum et sollicitudin ac orci", "score_percentage": 30}}, {"model": "sis.question", "pk": 2, "fields": {"assignment": 2, "text": "Proin fermentum leo vel orci porta non pulvinar neque laoreet", "score_percentage": 70}}, {"model": "sis.question", "pk": 3, "fields": {"assignment": 1, "text": "Metus aliquam eleifend mi in nulla posuere sollicitudin aliquam ultrices", "score_percentage": 100}}, {"model": "sis.finalresult", "pk": 1, "fields": {"student": 1, "score": 0}}, {"model": "sis.finalresult", "pk": 2, "fields": {"student": 2, "score": 0}}, {"model": "sis.finalresultpercentage", "pk": 1, "fields": {"exercise": 20, "quiz": 10, "mid": 30, "final": 40}}]
+[{
+  "model": "sis.course",
+  "pk": 1,
+  "fields": {
+    "name": "Kelas A",
+    "capacity": 1
+  }
+}, {
+  "model": "sis.course",
+  "pk": 2,
+  "fields": {
+    "name": "Kelas B",
+    "capacity": 2
+  }
+}, {
+  "model": "sis.module",
+  "pk": 1,
+  "fields": {
+    "title": "Scaevola tribunus plebis ferret ad plebem vellentne de ea re quaeri",
+    "slug": "scaevola-tribunus-plebis-ferret-ad-plebem-vellentne-de-ea-re-quaeri",
+    "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Plane idem, inquit, et maxima quidem, qua fieri nulla maior potest. Quo modo autem optimum, si bonum praeterea nullum est? Duo Reges: constructio interrete. Scaevola tribunus plebis ferret ad plebem vellentne de ea re quaeri. Idem fecisset Epicurus, si sententiam hanc, quae nunc Hieronymi est, coniunxisset cum Aristippi vetere sententia. Iam in altera philosophiae parte. Etsi qui potest intellegi aut cogitari esse aliquod animal, quod se oderit? Portenta haec esse dicit, neque ea ratione ullo modo posse vivi; Ego vero isti, inquam, permitto. Atque hoc loco similitudines eas, quibus illi uti solent, dissimillimas proferebas.</p>\r\n<p>Polemoni et iam ante Aristoteli ea prima visa sunt, quae paulo ante dixi. Non quaeritur autem quid naturae tuae consentaneum sit, sed quid disciplinae. Quid, quod res alia tota est? Rhetorice igitur, inquam, nos mavis quam dialectice disputare?</p>\r\n<p>Si enim non fuit eorum iudicii, nihilo magis hoc non addito illud est iudicatum-. Explanetur igitur. Philosophi autem in suis lectulis plerumque moriuntur. Sed fortuna fortis; Fatebuntur Stoici haec omnia dicta esse praeclare, neque eam causam Zenoni desciscendi fuisse.</p>\r\n<p>Nos vero, inquit ille; Quamquam te quidem video minime esse deterritum. Quamquam tu hanc copiosiorem etiam soles dicere. Quamvis enim depravatae non sint, pravae tamen esse possunt. Qualem igitur hominem natura inchoavit? An vero, inquit, quisquam potest probare, quod perceptfum, quod. Cum praesertim illa perdiscere ludus esset. Non est enim vitium in oratione solum, sed etiam in moribus. Tu quidem reddes; Negat enim summo bono afferre incrementum diem. Quamquam te quidem video minime esse deterritum.</p>\r\n<p>&nbsp;</p>\r\n<p>Quo tandem modo? Ita prorsus, inquam; Quid de Platone aut de Democrito loquar? Apud ceteros autem philosophos, qui quaesivit aliquid, tacet; Sed haec omittamus; Graece donan, Latine voluptatem vocant. Et quidem iure fortasse, sed tamen non gravissimum est testimonium multitudinis. Satisne vobis videor pro meo iure in vestris auribus commentatus? Odium autem et invidiam facile vitabis. Multoque hoc melius nos veriusque quam Stoici. Si longus, levis.&nbsp;</p>",
+    "created_on": "2017-10-08T04:56:28.121Z"
+  }
+}, {
+  "model": "sis.module",
+  "pk": 2,
+  "fields": {
+    "title": "Sed fortuna fortis",
+    "slug": "sed-fortuna-fortis",
+    "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. An potest cupiditas finiri? Non est igitur voluptas bonum. Aliter enim explicari, quod quaeritur, non potest. Primum cur ista res digna odio est, nisi quod est turpis? Claudii libidini, qui tum erat summo ne imperio, dederetur. Duo Reges: constructio interrete. Itaque primos congressus copulationesque et consuetudinum instituendarum voluntates fieri propter voluptatem;</p>\r\n<p>Eiuro, inquit adridens, iniquum, hac quidem de re; Age, inquies, ista parva sunt. Mihi enim satis est, ipsis non satis. Utilitatis causa amicitia est quaesita. Summum a vobis bonum voluptas dicitur. Cum audissem Antiochum, Brute, ut solebam, cum M. Nunc vides, quid faciat. Et quidem iure fortasse, sed tamen non gravissimum est testimonium multitudinis.</p>\r\n<p>Multoque hoc melius nos veriusque quam Stoici. Quibusnam praeteritis? Quis est, qui non oderit libidinosam, protervam adolescentiam? Si verbum sequimur, primum longius verbum praepositum quam bonum. Aperiendum est igitur, quid sit voluptas; Ego vero volo in virtute vim esse quam maximam; Cupiditates non Epicuri divisione finiebat, sed sua satietate. Traditur, inquit, ab Epicuro ratio neglegendi doloris.</p>\r\n<p>Et ille ridens: Video, inquit, quid agas; Perge porro; Hoc loco tenere se Triarius non potuit. Dulce amarum, leve asperum, prope longe, stare movere, quadratum rotundum. Terram, mihi crede, ea lanx et maria deprimet. At iam decimum annum in spelunca iacet. Quid enim tanto opus est instrumento in optimis artibus comparandis? Quae cum ita sint, effectum est nihil esse malum, quod turpe non sit. Animi enim quoque dolores percipiet omnibus partibus maiores quam corporis. Quicquid porro animo cernimus, id omne oritur a sensibus;</p>\r\n<p>&nbsp;</p>\r\n<p>Sic enim censent, oportunitatis esse beate vivere. Illi enim inter se dissentiunt. Atqui, inquam, Cato, si istud optinueris, traducas me ad te totum licebit. Graecum enim hunc versum nostis omnes-: Suavis laborum est praeteritorum memoria. Quae fere omnia appellantur uno ingenii nomine, easque virtutes qui habent, ingeniosi vocantur. Nam et complectitur verbis, quod vult, et dicit plane, quod intellegam; Quid de Platone aut de Democrito loquar? Qui-vere falsone, quaerere mittimus-dicitur oculis se privasse;&nbsp;</p>",
+    "created_on": "2017-10-08T04:57:02.997Z"
+  }
+}, {
+  "model": "sis.assignment",
+  "pk": 2,
+  "fields": {
+    "short_description": "Kuis 1",
+    "category": 1,
+    "created_on": "2017-10-08T04:58:46.378Z",
+    "status": 1,
+    "due": "2017-10-08T11:00:00Z"
+  }
+}, {
+  "model": "sis.assignment",
+  "pk": 3,
+  "fields": {
+    "short_description": "",
+    "category": 0,
+    "created_on": "2017-10-08T05:00:30.109Z",
+    "status": 1,
+    "due": "2017-10-14T17:00:00Z"
+  }
+}, {
+  "model": "sis.assignment",
+  "pk": 4,
+  "fields": {
+    "short_description": "",
+    "category": 2,
+    "created_on": "2017-10-08T05:01:38.154Z",
+    "status": 1,
+    "due": "2017-10-08T09:00:51Z"
+  }
+}, {
+  "model": "sis.question",
+  "pk": 1,
+  "fields": {
+    "assignment": null,
+    "text": "Illi enim inter se dissentiunt",
+    "score_percentage": 100
+  }
+}, {
+  "model": "sis.question",
+  "pk": 2,
+  "fields": {
+    "assignment": 2,
+    "text": "Illi enim inter se dissentiunt",
+    "score_percentage": 100
+  }
+}, {
+  "model": "sis.question",
+  "pk": 3,
+  "fields": {
+    "assignment": 3,
+    "text": "At iam decimum annum in spelunca iacet",
+    "score_percentage": 60
+  }
+}, {
+  "model": "sis.question",
+  "pk": 4,
+  "fields": {
+    "assignment": 3,
+    "text": "Quicquid porro animo cernimus, id omne oritur a sensibus",
+    "score_percentage": 40
+  }
+}, {
+  "model": "sis.question",
+  "pk": 5,
+  "fields": {
+    "assignment": 4,
+    "text": "Graecum enim hunc versum nostis omnes",
+    "score_percentage": 100
+  }
+}, {
+  "model": "sis.answer",
+  "pk": 1,
+  "fields": {
+    "student": 1,
+    "question": 2,
+    "text": "Nam et complectitur verbis",
+    "score": 0,
+    "correct": null
+  }
+}, {
+  "model": "sis.answer",
+  "pk": 2,
+  "fields": {
+    "student": 1,
+    "question": 3,
+    "text": "bum sequimur, primum longius",
+    "score": 100,
+    "correct": true
+  }
+}, {
+  "model": "sis.answer",
+  "pk": 3,
+  "fields": {
+    "student": 2,
+    "question": 2,
+    "text": "bum sequimur, primum longius",
+    "score": 100,
+    "correct": true
+  }
+}, {
+  "model": "sis.answer",
+  "pk": 4,
+  "fields": {
+    "student": 2,
+    "question": 3,
+    "text": "bum sequimur, primum longius",
+    "score": 100,
+    "correct": true
+  }
+}, {
+  "model": "sis.answer",
+  "pk": 5,
+  "fields": {
+    "student": 2,
+    "question": 4,
+    "text": "bum sequimur, primum longius",
+    "score": 70,
+    "correct": null
+  }
+}, {
+  "model": "sis.answer",
+  "pk": 6,
+  "fields": {
+    "student": 2,
+    "question": 5,
+    "text": "bum sequimur, primum longius",
+    "score": 0,
+    "correct": false
+  }
+}, {
+  "model": "sis.assignmentresult",
+  "pk": 1,
+  "fields": {
+    "student": 1,
+    "assignment": 2,
+    "score": 0
+  }
+}, {
+  "model": "sis.assignmentresult",
+  "pk": 2,
+  "fields": {
+    "student": 1,
+    "assignment": 3,
+    "score": 60
+  }
+}, {
+  "model": "sis.assignmentresult",
+  "pk": 3,
+  "fields": {
+    "student": 2,
+    "assignment": 2,
+    "score": 100
+  }
+}, {
+  "model": "sis.assignmentresult",
+  "pk": 4,
+  "fields": {
+    "student": 2,
+    "assignment": 3,
+    "score": 88
+  }
+}, {
+  "model": "sis.assignmentresult",
+  "pk": 5,
+  "fields": {
+    "student": 2,
+    "assignment": 4,
+    "score": 0
+  }
+}, {
+  "model": "sis.finalresult",
+  "pk": 1,
+  "fields": {
+    "student": 1,
+    "score": 12
+  }
+}, {
+  "model": "sis.finalresult",
+  "pk": 2,
+  "fields": {
+    "student": 2,
+    "score": 27
+  }
+}, {
+  "model": "sis.finalresultpercentage",
+  "pk": 1,
+  "fields": {
+    "exercise": 20,
+    "quiz": 10,
+    "mid": 30,
+    "final": 40
+  }
+}]

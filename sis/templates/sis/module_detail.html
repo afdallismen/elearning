@@ -1,7 +1,7 @@
 {% extends 'main/auth/base.html' %}
 
 {% block content %}
-<div class="z-depth-1 white px-5 pt-5 pb-2">
+<div class="z-depth-1 white px-5 py-5 mb-5">
   <header>
     <h2>{{module.title}}</h2>
     <div class="row my-4 no-gutters justify-content-between">
@@ -9,7 +9,7 @@
         <blockquote class="blockquote bq-warning grey lighten-5 text-muted">
           <small><i class="fa fa-calendar"></i> {{module.created_on}}</small>
           <br>
-          {% if module.attachments.exists %}<small>Lampiran:</small>{% endif %}
+          {% if module.attachments.exists %}<small>Lampiran:</small>
           <ul>
             {% for attachment in module.attachments.all %}
               <li><small>{{attachment.file_name}}.{{attachment.file_extension}}<a target="blank_" href="{{attachment.file_upload.url}}"><i class="fa fa-download fa-lg mx-2"></i></a>
@@ -17,6 +17,7 @@
                 {% elif not attachment.file_extension == 'pdf' %}<a target="blank_" href="{{attachment.ext_link}}"><i class="fa fa-external-link"></i></a>{% endif %}</small></li>
             {% endfor %}
           </ul>
+          {% endif %}
         </blockquote>
       </div>
       {% for attachment in module.attachments.all %}
@@ -53,10 +54,10 @@
         {% endif %}
       {% endfor %}
     </div>
-    <div>
-      {{module.text|safe}}
-    </div>
   </header>
+  <div>
+    {{module.text|safe}}
+  </div>
 </div>
 {% endblock %}
 

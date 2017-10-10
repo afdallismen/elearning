@@ -6,7 +6,7 @@
     {% for content in contents %}
       <div class="mb-4 img-thumbnail px-3 py-3 wow slideInLeft">
         {% if content.instance_of == 'module' %}
-          <p class="h5"><a href="{% url 'sis:module_detail' slug=content.item.slug %}" class="teal-text"><i class="fa fa-newspaper-o"></i> {{content.item.title}}</a><p/>
+          <p class="h6"><a href="{% url 'sis:module_detail' slug=content.item.slug %}" class="teal-text"><i class="fa fa-newspaper-o mr-1"></i> {{content.item.title}}</a><p/>
           <small class="font-weight-normal text-muted">{{content.created_on}}</small>
           <hr>
           {% if content.item.text %}<div class="mt-3">{{content.item.text|striptags|truncatewords:50}}</div>{% endif %}
@@ -28,21 +28,32 @@
             {% endif %}
           </div>
         {% else %}
-          <p class="h5"><a class="teal-text" href="{% url 'sis:assignment_detail' pk=content.item.id %}"><i class="fa fa-file-text-o"></i>{% if content.item.short_description %} {{content.item.short_description}}{% else %} Tugas {{content.item.category}}{% endif %}</a></p>
+          <p class="h6"><a class="teal-text" href="{% url 'sis:assignment_detail' pk=content.item.id %}"><i class="fa fa-file-text-o mr-1"></i>{% if content.item.short_description %} {{content.item.short_description|title}}{% else %}{{content.item.category|title}}{% endif %}</a></p>
           <small class="font-weight-normal text-muted">{{content.created_on}}</small>
         {% endif %}
       </div>
     {% endfor %}
   </div>
   <div class="col-4">
-    <div class="mb-4 img-thumbnail px-3 py-2">
+    <div class="mb-4">
       <div class="row">
-        <div class="col-12">
+        {% if exams %}
+        <div class="col-12 px-0 pt-2 amber lighten-4 mb-3 z-depth-1">
+          <i class="fa fa-info-circle fa-2x ml-3 float-left d-block"></i>
+          <p class="mb-0 text-muted font-weight-bold px-5 ml-3 py-2">Ujian yang sedang berlangsung :</p>
+          <ul class="ml-5">
+            {% for exam in exams %}
+            <li><a class="font-weight-bold" href="{% url 'sis:assignment_detail' pk=exam.id %}">{{exam|title}} <i class="fa fa-external-link"></i></a></li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+        <div class="col-12 img-thumbnail px-3 py-2">
           <table class="table table-sm">
             <thead>
               <tr>
-                <th>Tugas yang anda ikuti</th>
-                <th>Nilai</th>
+                <th><b class="text-muted">Tugas yang anda ikuti</b></th>
+                <th><b class="text-muted">Nilai</b></th>
               </tr>
             </thead>
             <tbody>

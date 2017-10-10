@@ -54,5 +54,5 @@ class AnswerHasExaminedListFilter(admin.SimpleListFilter):
             return queryset.filter(pk__in=examined_pks)
         elif self.value() is not None and self.value() == "False":
             return queryset.exclude(pk__in=examined_pks)
-        elif self.value() is None: 
+        elif self.value() is None:
             return queryset

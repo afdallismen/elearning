@@ -1,0 +1,70 @@
+{% extends 'main/auth/base.html' %}
+
+{% block content %}
+<div class="z-depth-1 white px-5 pt-5 pb-5 mb-5">
+  <div class="mb-5">
+    <p class="h6 text-muted">Jawaban akan otomatis di submit dalam waktu: <span class="px-2" id="counter"></span></p>
+    <hr>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <p class="h6 text-muted">Pertanyaan :</p>
+      <p class="ml-3 mt-3 mb-0" style="font-size: 1.3rem">{{question.text}} ?</p>
+      {% if question.attachments.count %}
+      <div class="row align-items-start no-gutters ml-3">
+        <div class="col-auto">
+          <small class="font-weight-bold mr-3 text-muted">Lampiran : </small>
+        </div>
+        {% for attachment in question.attachments.all %}
+          <div class="col-auto mx-1">
+            <a target="blank_" href="{{ attachment.file_upload.url }}" class="badge z-depth-0 teal-text font-weight-normal"><i class="fa fa-download"></i> {{attachment.file_name}}</a>
+          </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      <hr>
+      <p class="h6 text-muted mb-4">Jawaban :</p>
+      <form id="form_answer" method="POST" class="ml-3" action="#">
+        {% csrf_token %}
+        <textarea class="mb-3" type="text" name="text">{% if answer %}{{answer.text}}{% endif %}</textarea>
+        <input type="submit" class="btn btn-success ml-auto" value="Submit">
+        <a class="btn btn-flat btn-default" href="{% url 'sis:assignment_detail' pk=question.assignment_id %}">Kembali</a>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+  function msToTime(duration) {
+    var milliseconds = parseInt((duration%1000)/100)
+        , seconds = parseInt((duration/1000)%60)
+        , minutes = parseInt((duration/(1000*60))%60)
+        , hours = parseInt((duration/(1000*60*60))%24);
+
+    hours = (hours > 0) ? hours + " jam " : "";
+    minutes = (minutes > 0) ? minutes + " menit " : "";
+    seconds = (seconds > 0) ? seconds + " detik " : "";
+    return hours + minutes + seconds;
+  }
+  $(document).ready(function () {
+    var due = "{{question.assignment.due|date:'c'}}"
+    var int;
+    due = new Date(due)
+    now = new Date()
+
+    if (due - now < 7200000) {
+      var int = setInterval(function () {
+        if (due - new Date() <= 0) {
+          clearInterval(int)
+          $("#form_answer").submit()
+        }
+        $('#counter').html(msToTime(due - new Date()))
+      }, 1000)
+    } else {
+      $('#counter').html("Waktu habis.")
+    }
+  })
+</script>
+{% endblock %}

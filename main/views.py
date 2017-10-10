@@ -2,6 +2,7 @@ from operator import itemgetter
 
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render
+from django.utils import timezone
 
 from sis.decorators import redirect_admin
 from sis.models import Module, Assignment, AssignmentResult
@@ -29,10 +30,10 @@ def index(request):
                 assignments = Assignment.objects.exclude(
                     pk__in=pks).values()
             else:
-                assignments = Assignment.objects.values()
+                assignments = Assignment.objects.filter(status=1).values()
         else:
             modules = Module.objects.values()
-            assignments = Assignment.objects.values()
+            assignments = Assignment.objects.filter(status=1).values()
 
         items = list(modules) + list(assignments)
         contents = []
@@ -59,7 +60,12 @@ def index(request):
             contents = sorted(contents,
                               key=itemgetter('created_on'),
                               reverse=True)
-        contexts = {'contents': contents}
+        now = timezone.now()
+        exams = Assignment.objects.filter(
+            status=1,
+            due__range=(now, now + timezone.timedelta(hours=2))
+        )
+        contexts = {'contents': contents, 'exams': exams}
         return render(request, 'main/auth/index.html', contexts)
 
     else:

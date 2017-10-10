@@ -5,6 +5,7 @@ from django.forms import modelformset_factory
 from django.utils.translation import ugettext as _
 
 from main.templatetags.mytags import letter
+from sis.actions import print_students_result
 from sis.forms import BaseQuestionFormSet
 from sis.filters import (
     AssignmentCategoryListFilter as filter_category,
@@ -43,6 +44,7 @@ class QuestionInline(nested_admin.NestedStackedInline):
 
 class ModuleAdmin(nested_admin.NestedModelAdmin):
     list_display = ('title', 'created_on', 'number_of_attachments')
+    list_filter = ('created_on', )
     search_fields = ('title', )
     inlines = [AttachmentInline]
 
@@ -52,14 +54,17 @@ class ModuleAdmin(nested_admin.NestedModelAdmin):
 
 
 class AssignmentAdmin(nested_admin.NestedModelAdmin):
-    list_display = ('category', 'short_description', 'publish', 'due',
-                    'number_of_questions')
+    list_display = ('status', 'category', 'short_description', 'due',
+                    'active')
+    list_display_links = ['category']
+    list_editable = ['status']
     list_filter = (filter_category, 'due')
     inlines = [QuestionInline]
 
-    def number_of_questions(self, obj):
-        return obj.question_set.count()
-    number_of_questions.short_description = _("number of questions")
+    def active(self, obj):
+        return not obj.has_expired
+    active.short_description = _("active")
+    active.boolean = True
 
 
 class AnswerAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
@@ -69,7 +74,7 @@ class AnswerAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
     list_filter = (filter_category, filter_examined,
                    ('student', admin.RelatedOnlyFieldListFilter))
     list_display = ('student', 'assignment', 'question', 'score_percentage',
-                    'score', 'examined', 'object_action')
+                    'score', 'has_examined', 'object_action')
     list_display_links = None
     inlines = [AttachmentInline]
 
@@ -79,12 +84,12 @@ class AnswerAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
 
     def score_percentage(self, obj):
         return obj.question.score_percentage
-    score_percentage.short_description = _("score percentage")
+    score_percentage.short_description = _("score percentage (%)")
 
-    def examined(self, obj):
+    def has_examined(self, obj):
         return obj.has_examined
-    examined.short_description = _("examined")
-    examined.boolean = True
+    has_examined.short_description = _("has examined")
+    has_examined.boolean = True
 
     def object_action(self, obj):
         return answer_admin_change_link(pk=obj.pk)
@@ -112,6 +117,7 @@ class AssignmentResultAdmin(nested_admin.NestedModelAdmin):
 
 
 class FinalResultAdmin(nested_admin.NestedModelAdmin):
+    actions = (print_students_result, )
     search_fields = ('student__user__username',
                      'student__user__first_name',
                      'student__user__last_name')
@@ -215,8 +221,12 @@ class FinalResultPercentageAdmin(nested_admin.NestedModelAdmin):
 
 class CourseAdmin(nested_admin.NestedModelAdmin):
     list_display_links = None
-    list_display = ('name', 'capacity')
+    list_display = ('name', 'student_count', 'capacity')
     list_editable = ['name', 'capacity']
+
+    def student_count(self, obj):
+        return obj.student_set.count()
+    student_count.short_description = _("current student count")
 
 
 admin.site.register(Module, ModuleAdmin)
