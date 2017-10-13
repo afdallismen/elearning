@@ -2,8 +2,8 @@
   <p class="mb-2" style="color: #757575">{{field.label}}</p>
   <select
     name="{% if prefix %}{{prefix}}-{% endif %}{{field.name}}"
-    class="col-12 form-control validate{% if field.data and errors %} is-invalid{% elif field.data %} is-valid{% endif %}">
-    {% for val, key in field.choices %}
+    class="col-12 form-control validate{% if field.value and errors %} is-invalid{% elif field.value %} is-valid{% endif %}">
+    {% for val, key in field.field.choices %}
     <option value="{{val}}"{% if field.value == val %} selected{% endif %}>{{key}}</option>
     {% endfor %}
   </select>

@@ -1,7 +1,7 @@
 from operator import itemgetter
 
 from django.contrib import admin
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext as _, ugettext_lazy as _lazy
 
 from account.models import Student, Lecturer
 
@@ -12,10 +12,10 @@ class UserIdentityListFilter(admin.SimpleListFilter):
 
     def lookups(self, request, model_admin):
         objs = [
-            (Student._meta.object_name, Student._meta.object_name),
-            (Lecturer._meta.object_name, Lecturer._meta.object_name)
+            (Student._meta.object_name, _lazy(Student._meta.object_name)),
+            (Lecturer._meta.object_name, _lazy(Lecturer._meta.object_name))
         ]
-        return ((obj[0], _(obj[1]).title()) for obj in objs)
+        return ((obj[0], obj[1].title()) for obj in objs)
 
     def queryset(self, request, queryset):
         if self.value():

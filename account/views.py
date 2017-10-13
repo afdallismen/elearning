@@ -33,6 +33,8 @@ def edit(request):
         if userform.is_valid() and studentform.is_valid():
             userform.save()
             studentform.save()
+            userform = BaseUserForm(instance=request.user, prefix="usr")
+            studentform = BaseStudentForm(instance=request.user.student, prefix="std")
     contexts = {
         'userform': userform,
         'studentform': studentform

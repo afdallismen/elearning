@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-11 21:52+0700\n"
+"POT-Creation-Date: 2017-10-14 00:32+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,231 +18,233 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: .\actions.py:85
+#: sis/actions.py:85
 msgid "Print selected users score"
 msgstr "Print nilai mahasiswa yang terpilih"
 
-#: .\admin.py:33
+#: sis/admin.py:33
 msgid "Preview"
 msgstr "Preview"
 
-#: .\admin.py:53
+#: sis/admin.py:53
 msgid "number of attachments"
 msgstr "jumlah lampiran"
 
-#: .\admin.py:66
+#: sis/admin.py:66
 msgid "active"
 msgstr "aktif"
 
-#: .\admin.py:83 .\models.py:178 .\models.py:202 .\models.py:301
+#: sis/admin.py:83 sis/models.py:178 sis/models.py:202 sis/models.py:301
 msgid "assignment"
 msgstr "tugas"
 
-#: .\admin.py:87
+#: sis/admin.py:87
 msgid "score percentage (%)"
 msgstr "persentase nilai (%)"
 
-#: .\admin.py:91
+#: sis/admin.py:91
 msgid "has examined"
 msgstr "telah diperiksa"
 
-#: .\admin.py:96
+#: sis/admin.py:96
 msgid "object action"
 msgstr "aksi objek"
 
-#: .\admin.py:116 .\admin.py:162
+#: sis/admin.py:116 sis/admin.py:162
 msgid "letter score"
 msgstr "nilai huruf"
 
-#: .\admin.py:176 .\models.py:151 .\models.py:348
+#: sis/admin.py:176 sis/models.py:151 sis/models.py:348
 msgid "exercise"
 msgstr "tugas rumah"
 
-#: .\admin.py:184 .\models.py:152 .\models.py:353
+#: sis/admin.py:184 sis/models.py:152 sis/models.py:353
 msgid "quiz"
 msgstr "kuis"
 
-#: .\admin.py:192 .\models.py:153 .\models.py:358
+#: sis/admin.py:192 sis/models.py:153 sis/models.py:358
 msgid "mid"
 msgstr "uts"
 
-#: .\admin.py:200 .\models.py:154 .\models.py:363
+#: sis/admin.py:200 sis/models.py:154 sis/models.py:363
 msgid "final"
 msgstr "uas"
 
-#: .\admin.py:229
+#: sis/admin.py:229
 msgid "current student count"
 msgstr "jumlah mahasiswa saat ini"
 
-#: .\filters.py:11
+#: sis/filters.py:11
 msgid "assignment cateory"
 msgstr "kategori tugas"
 
-#: .\filters.py:39
+#: sis/filters.py:39
 msgid "has been examined"
 msgstr "telah diperiksa"
 
-#: .\filters.py:44
+#: sis/filters.py:44
 msgid "True"
-msgstr "True"
+msgstr "Ya"
 
-#: .\filters.py:45
+#: sis/filters.py:45
 msgid "False"
-msgstr "False"
+msgstr "Tidak"
 
-#: .\forms.py:29 .\forms.py:32
+#: sis/forms.py:29 sis/forms.py:32
 msgid "Make sure score percentage add up to 100."
 msgstr "Pastikan jumlah persentase soal sama dengan 100."
 
-#: .\models.py:28
+#: sis/models.py:28
 msgid "class name"
 msgstr "nama kelas"
 
-#: .\models.py:31
+#: sis/models.py:31
 msgid "Class max capacity"
 msgstr "Kapasitas maksimal kelas"
 
-#: .\models.py:33
+#: sis/models.py:33
 msgid "capacity"
 msgstr "kapasitas"
 
-#: .\models.py:37 .\models.py:38
+#: sis/models.py:37 sis/models.py:38
 msgid "class"
 msgstr "kelas"
 
-#: .\models.py:53
+#: sis/models.py:53
 msgid "file upload"
 msgstr "unggah berkas"
 
-#: .\models.py:59
+#: sis/models.py:59
 msgid "attachment"
 msgstr "lampiran"
 
-#: .\models.py:60 .\models.py:133 .\models.py:209 .\models.py:233
+#: sis/models.py:60 sis/models.py:133 sis/models.py:209 sis/models.py:233
 msgid "attachments"
 msgstr "lampiran"
 
-#: .\models.py:123
+#: sis/models.py:123
 msgid "title"
 msgstr "judul"
 
-#: .\models.py:130 .\models.py:203 .\models.py:232
+#: sis/models.py:130 sis/models.py:203 sis/models.py:232
 msgid "text"
 msgstr "teks"
 
-#: .\models.py:132 .\models.py:165
+#: sis/models.py:132 sis/models.py:165
 msgid "created on"
 msgstr "dibuat pada tanggal"
 
-#: .\models.py:136
+#: sis/models.py:136
 msgid "module"
 msgstr "bahan kuliah"
 
-#: .\models.py:137
+#: sis/models.py:137
 msgid "modules"
 msgstr "bahan kuliah"
 
-#: .\models.py:155
+#: sis/models.py:155
 msgid "draft"
 msgstr "draft"
 
-#: .\models.py:156
+#: sis/models.py:156
 msgid "publish"
 msgstr "publish"
 
-#: .\models.py:161
+#: sis/models.py:161
 msgid "short description"
 msgstr "deskripsi singkat"
 
-#: .\models.py:163
+#: sis/models.py:163
 msgid "category"
 msgstr "kategori"
 
-#: .\models.py:168
+#: sis/models.py:168
 msgid "status"
 msgstr "status"
 
-#: .\models.py:172
+#: sis/models.py:172
 msgid ""
 "Time limit on when student can still submit an answer for this assignment"
 msgstr "Batas waktu mahasiswa bisa mengumpulkan jawaban untuk tugas ini"
 
-#: .\models.py:174
+#: sis/models.py:174
 msgid "due at"
 msgstr "dikumpulkan pada"
 
-#: .\models.py:179
+#: sis/models.py:179
 msgid "assignments"
 msgstr "tugas"
 
-#: .\models.py:184
+#: sis/models.py:184
 msgid "{!s}"
 msgstr "{!s}"
 
-#: .\models.py:208
+#: sis/models.py:208
 msgid "score percentage"
 msgstr "persentase nilai"
 
-#: .\models.py:212 .\models.py:231
+#: sis/models.py:212 sis/models.py:231
 msgid "question"
 msgstr "pertanyaan"
 
-#: .\models.py:213
+#: sis/models.py:213
 msgid "questions"
 msgstr "pertanyaan"
 
-#: .\models.py:218
+#: sis/models.py:218
 msgid "This question has no written text"
 msgstr "Petanyaan tanpa teks"
 
-#: .\models.py:228 .\models.py:298 .\models.py:326
+#: sis/models.py:228 sis/models.py:298 sis/models.py:326
 msgid "student"
 msgstr "mahasiswa"
 
-#: .\models.py:237 .\models.py:305 .\models.py:330
+#: sis/models.py:237 sis/models.py:305 sis/models.py:330
 msgid "score"
 msgstr "nilai"
 
-#: .\models.py:240
+#: sis/models.py:240
 msgid "yes, mean its 100% true, false otherwise"
 msgstr "pilih benar jika jawaban ini 100% betul, pilih salah jika sebaliknya"
 
-#: .\models.py:241
+#: sis/models.py:241
 msgid "is it correct ?"
 msgstr "apakah benar"
 
-#: .\models.py:245
+#: sis/models.py:245
 msgid "answer"
 msgstr "jawaban"
 
-#: .\models.py:246
+#: sis/models.py:246
 msgid "answers"
 msgstr "jawaban"
 
-#: .\models.py:255
+#: sis/models.py:255
 msgid "This answer has no written text"
 msgstr "Jawaban tanpa teks"
 
-#: .\models.py:264
+#: sis/models.py:264
 msgid "You can't make an answer for an assignment that already expired"
-msgstr "Anda tidak dapat mengumpulkan jawaban untuk tugas yang telah lewat batas waktu pengumpulannya"
+msgstr ""
+"Anda tidak dapat mengumpulkan jawaban untuk tugas yang telah lewat batas "
+"waktu pengumpulannya"
 
-#: .\models.py:309 .\models.py:310
+#: sis/models.py:309 sis/models.py:310
 msgid "assignment result"
 msgstr "nilai tugas"
 
-#: .\models.py:333 .\models.py:334
+#: sis/models.py:333 sis/models.py:334
 msgid "final result"
 msgstr "nilai akhir"
 
-#: .\models.py:367 .\models.py:368
+#: sis/models.py:367 sis/models.py:368
 msgid "final result percentage"
 msgstr "persentase nilai akhir"
 
-#: .\utils.py:67
+#: sis/utils.py:67
 msgid "No preview available for this file type."
 msgstr "Berkas dengan tipe ini tidak dapat ditampilkan."
 
-#: .\validators.py:6
+#: sis/validators.py:6
 msgid "Ensure this value is greater than or equal to today's date."
 msgstr "Pastikan nilai ini sama atau lebih besar dari tanggal hari ini."

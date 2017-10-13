@@ -1,3 +1,6 @@
 from django.contrib import admin
 
-# Register your models here.
+
+admin.site.index_title = "Administrasi situs"
+admin.site.site_title = "Admin situs Elearning"
+admin.site.site_header = "Administrasi Elearning"

@@ -110,9 +110,10 @@ class Student(BaseAccountModel):
         verbose_name_plural = _("students")
 
     def clean(self):
-        if self.belong_in:
+        if self.belong_in and self not in self.belong_in.student_set.all():
             cap = self.belong_in.capacity
             student_count = self.belong_in.student_set.count()
+            print([cap, student_count])
             if student_count >= cap:
                 raise ValidationError(
                     {'belong_in': _(("This class already full,"
