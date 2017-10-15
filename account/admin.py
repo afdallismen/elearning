@@ -27,6 +27,9 @@ class MyUserAdmin(BaseUserAdmin):
     list_filter = ('is_active', filter_identity, 'student__belong_in',
                    filter_semester)
 
+    def has_add_permission(self, request):
+        return False
+
     def name(self, obj):
         return obj.name
     name.short_description = _("name")
@@ -47,6 +50,9 @@ class MyUserAdmin(BaseUserAdmin):
 class NoModulePermissionAdmin(admin.ModelAdmin):
     empty_value_display = "-"
     readonly_fields = ['avatar_thumbnail']
+
+    def has_add_permission(self, request):
+        return False
 
     def has_module_permission(self, request):
         return False

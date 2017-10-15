@@ -75,8 +75,12 @@ class AnswerAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
                    ('student', admin.RelatedOnlyFieldListFilter))
     list_display = ('student', 'assignment', 'question', 'score_percentage',
                     'score', 'has_examined', 'object_action')
+    readonly_fields = ('student', 'question')
     list_display_links = None
     inlines = [AttachmentInline]
+
+    def has_add_permission(self, request):
+        return False
 
     def assignment(self, obj):
         return obj.question.assignment
