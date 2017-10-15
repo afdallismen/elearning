@@ -113,6 +113,6 @@ def _get_docs_display(url):
             >View on new window
         </a>'''
     encoded = urlencode(
-        {'': "http://localhost:8000" + url}
+        {'': "http://devitrichan.pythonanywhere.com" + url}
     )[1:]
     return format_html(html_tag, encoded)

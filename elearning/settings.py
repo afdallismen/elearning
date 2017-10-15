@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'c74k_jcedqluh#0rx1yk&=r&-=hq+(-z9&)&am6q+xc%8hpst&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['devitrichan.pythonanywhere.com']
 
 
 # Application definition
@@ -147,11 +147,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-INTERNAL_IPS = ['127.0.0.1']
 
 LOGGING = {'version': 1,
            'handlers': {'console': {'level': 'DEBUG',
@@ -173,6 +173,10 @@ ACCOUNT_ACTIVATION_DAYS = 7
 
 LOGIN_REDIRECT_URL = 'main:index'
 LOGIN_URL = 'auth_login'
-LOGOUT_REDIRECT_URL = 'auth_login'
+LOGOUT_REDIRECT_URL = 'main:index'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST_USER = "afdal.lismen@gmail.com"
+EMAIL_HOST_PASSWORD = 'zvcvmsgdbxbhzntj'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True

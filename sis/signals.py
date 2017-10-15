@@ -54,8 +54,9 @@ def _update_final_result(student):
     total_score = 0
     for key, value in score.items():
         total_score += (value * getattr(percentage, key)) / 100
-    student.finalresult.score = total_score
-    student.finalresult.save()
+    if hasattr(student, 'finalresult'):
+        student.finalresult.score = total_score
+        student.finalresult.save()
 
 
 def _get_assignment_result(answer):

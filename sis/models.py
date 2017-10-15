@@ -77,7 +77,7 @@ class Attachment(models.Model):
     def ext_link(self):
         if self.is_doc:
             encoded = urlencode(
-                {'': "http://localhost:8000" + self.file_upload.url}
+                {'': "http://devitrichan.pythonanywhere.com" + self.file_upload.url}
             )[1:]
             return ("http://view.officeapps.live.com/op/view.aspx"
                     "?src={!s}").format(encoded)
@@ -258,11 +258,11 @@ class Answer(models.Model):
         return ("Answer(question={!s}, assignment={!s})"
                 .format(self.question, self.question.assignment))
 
-    def clean(self):
-        assignment = self.question.assignment
-        if assignment.has_expired:
-            raise ValidationError(_("You can't make an answer"
-                                  " for an assignment that already expired"))
+    # def clean(self):
+    #     assignment = self.question.assignment
+    #     if assignment.has_expired:
+    #         raise ValidationError(_("You can't make an answer"
+    #                               " for an assignment that already expired"))
 
     def save(self, *args, **kwargs):
         if self.correct is True:
@@ -310,7 +310,7 @@ class AssignmentResult(models.Model):
         verbose_name_plural = _("assignment result")
 
     def __str__(self):
-        return self.score
+        return str(self.score)
 
     def __repr__(self):
         return ("AssignmentResult(student={!s}, assignment={!s},"
@@ -334,7 +334,7 @@ class FinalResult(models.Model):
         verbose_name_plural = _("final result")
 
     def __str__(self):
-        return self.score
+        return str(self.score)
 
     def __repr__(self):
         return ("FinalResult(student={!s}, score={!s})"
