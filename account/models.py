@@ -98,7 +98,7 @@ class Student(BaseAccountModel):
                             verbose_name=_("no. bp"))
 
     belong_in = models.ForeignKey('sis.Course',
-                                  on_delete=models.CASCADE,
+                                  on_delete=models.SET_NULL,
                                   blank=True,
                                   null=True,
                                   verbose_name=_("class"))
@@ -159,9 +159,9 @@ class Lecturer(BaseAccountModel):
                                   '[12]'  # Gender: 1/2
                                   '[0-9]{3}$')  # Sequence: 000 - 999
 
-    nip = models.CharField(max_length=18,
+    nip = models.CharField(max_length=20,
                            unique=True,
-                           help_text=_("Minimal 18 digit"),
+                           help_text=_("Minimal 20 digit"),
                            validators=[NIPVALIDATOR],
                            verbose_name=_("no. nip"))
 

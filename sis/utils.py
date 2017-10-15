@@ -7,7 +7,7 @@ from django.utils.html import strip_tags, format_html
 from django.utils.translation import ugettext as _
 
 from imagekit import ImageSpec
-from imagekit.processors import ResizeToFill
+from imagekit.processors import ResizeToFit
 
 
 FILE_EXTENSION = {
@@ -19,7 +19,7 @@ FILE_EXTENSION = {
 
 
 class Thumbnail(ImageSpec):
-    processors = [ResizeToFill(640, 480)]
+    processors = [ResizeToFit(640, 480)]
     format = 'JPEG'
     options = {'quality': 100}
 
@@ -113,6 +113,6 @@ def _get_docs_display(url):
             >View on new window
         </a>'''
     encoded = urlencode(
-        {'': "http://devitrichan.pythonanywhere.com" + url}
+        {'': "http://localhost:8000" + url}
     )[1:]
     return format_html(html_tag, encoded)

@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="z-depth-1 white px-5 pt-5 pb-5 mb-5">
-  <div class="mb-5">
+  <div class="mb-5 counter" hidden>
     <p class="h6 text-muted">Jawaban akan otomatis di submit dalam waktu: <span class="px-2" id="counter"></span></p>
     <hr>
   </div>
@@ -55,6 +55,7 @@
     now = new Date()
 
     if (due - now < 7200000) {
+      $('.counter').show()
       var int = setInterval(function () {
         if (due - new Date() <= 0) {
           clearInterval(int)
@@ -62,8 +63,6 @@
         }
         $('#counter').html(msToTime(due - new Date()))
       }, 1000)
-    } else {
-      $('#counter').html("Waktu habis.")
     }
   })
 </script>

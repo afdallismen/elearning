@@ -5,7 +5,6 @@ from django.contrib.admin.models import LogEntry,  CHANGE
 from django.contrib.contenttypes.fields import (
     GenericForeignKey, GenericRelation)
 from django.contrib.contenttypes.models import ContentType
-from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
@@ -17,6 +16,7 @@ from tinymce import models as tinymce_models
 from account.models import Student
 from sis.utils import (
     attachment_directory, nstrip_tags, file_html_display, FILE_EXTENSION)
+from sis.validators import MinDateValueValidator
 
 
 SCORE_VALIDATOR = MaxValueValidator(100)
@@ -77,7 +77,7 @@ class Attachment(models.Model):
     def ext_link(self):
         if self.is_doc:
             encoded = urlencode(
-                {'': "http://devitrichan.pythonanywhere.com" + self.file_upload.url}
+                {'': "http://localhost:8000" + self.file_upload.url}
             )[1:]
             return ("http://view.officeapps.live.com/op/view.aspx"
                     "?src={!s}").format(encoded)
@@ -168,7 +168,7 @@ class Assignment(models.Model):
                                               verbose_name=_("status"))
     due = models.DateTimeField(
         default=timezone.now,
-        validators=[MinValueValidator(timezone.now())],
+        validators=[MinValueValidator(timezone.now)],
         help_text=_("Time limit on when student can still submit an"
                     " answer for this assignment"),
         verbose_name=_("due at")
@@ -230,7 +230,6 @@ class Answer(models.Model):
                                  on_delete=models.CASCADE,
                                  verbose_name=_("question"))
     text = models.TextField(blank=True, default="", verbose_name=_("text"))
-    attachments = GenericRelation(Attachment, verbose_name=_("attachments"))
     score = models.PositiveIntegerField(blank=True,
                                         default=0,
                                         validators=[SCORE_VALIDATOR],
