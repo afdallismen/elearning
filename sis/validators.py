@@ -1,4 +1,5 @@
 from django.core.validators import MinValueValidator
+from django.utils import timezone
 from django.utils.translation import ugettext as _
 
 
@@ -7,4 +8,4 @@ class MinDateValueValidator(MinValueValidator):
     code = 'min_value'
 
     def compare(self, a, b):
-        return a < b
+        return a < timezone.now()

@@ -67,6 +67,9 @@ class MyUserAdmin(BaseUserAdmin):
 class NoModulePermissionAdmin(admin.ModelAdmin):
     readonly_fields = ['avatar_thumbnail']
 
+    def has_add_permission(self, request):
+        return False
+
     def has_module_permission(self, request):
         return False
 
