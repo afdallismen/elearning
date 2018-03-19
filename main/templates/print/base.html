@@ -20,22 +20,20 @@
 
   {% block stylesheet %}{% endblock %}
 </head>
-<body>
-  <div class="py-2">
-    <div class="row justify-content-start">
-      <div class="col-auto">
-        <img height=85 width=85 src="{% static 'img/logo.png' %}">
+<body class="py-2 px-2">
+  <div>
+    <div class="border border-dark py-2 px-2 pr-3 d-inline-block bg-white">
+      <div class="d-inline-block">
+        <img src="{% static 'img/logo.png' %}" class="mr-3" width="120"/>
       </div>
-      <div class="col-auto">
-        <p class="h2 font-weight-bold">E-learning</p>
-        <p class="h6 font-weight-normal">Tugas Akhir Strata I Stmik Indonesia Padang</p>
-        <p class="h6 font-weight-normal">oleh Devitri Chan</p>
+      <div class="d-inline-block">
+        <h4 class="mt-0">STMIK<span class="text-muted">-INDONESIA PADANG</span></h4>
+        <p class="small mb-0">Jl. Khatib Sulaiman Dalam No.1 Padang</p>
+        <p class="small">Telp (+62751)-7056199</p>
+        <h4><b>LEMBARAN HASIL STUDI</b></h4>
       </div>
     </div>
-    <hr class="mb-5">
-    {% block content %}
-    {% endblock %}
-  </div>
+    {% block content %}{% endblock %}
   <!-- SCRIPTS -->
   <!-- JQuery -->
   <script type="text/javascript" src="{% static 'jquery/jquery-3.2.1.min.js' %}"></script>

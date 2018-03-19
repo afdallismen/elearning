@@ -13,7 +13,7 @@ def module_detail(request, slug):
     try:
         module = Module.objects.get(slug=slug)
     except Module.DoesNotExist:
-        raise Http404('Module does not exist')
+        raise Http404("Module does not exist")
     return render(request, 'sis/module_detail.html', {'module': module})
 
 
@@ -27,7 +27,7 @@ def assignment_detail(request, pk):
             question__in=assignment.question_set.all()
         ).values_list('question', flat=True)
     except Assignment.DoesNotExist:
-        raise Http404('Assignment does not exist')
+        raise Http404("Assignment does not exist")
     return render(
         request,
         'sis/assignment_detail.html',
@@ -74,7 +74,7 @@ def do_answer(request, pk):
                     )
                 )
     except Question.DoesNotExist:
-        raise Http404('Question does not exist')
+        raise Http404("Question does not exist")
     contexts = {
         'answer': answer,
         'question': question

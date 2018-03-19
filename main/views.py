@@ -20,7 +20,8 @@ def index(request):
         user_assignments = Assignment.objects.filter(pk__in=pks).values()
 
         if get['content'] == "module":
-            modules = Module.objects.values()
+            modules = Module.objects.filter(
+                courses__in=[request.user.student.belong_in.pk]).values()
         elif get['content'] == "assignment":
             get['assignment'] = request.GET.get('assignment', False)
 
@@ -28,12 +29,20 @@ def index(request):
                 assignments = user_assignments
             elif get['assignment'] == 'unfollwed':
                 assignments = Assignment.objects.exclude(
-                    pk__in=pks).values()
+                    pk__in=pks).filter(
+                        status=1,
+                        courses__in=[request.user.student.belong_in.pk]
+                    ).values()
             else:
-                assignments = Assignment.objects.filter(status=1).values()
+                assignments = Assignment.objects.filter(
+                    status=1, courses__in=[request.user.student.belong_in.pk]
+                ).values()
         else:
-            modules = Module.objects.values()
-            assignments = Assignment.objects.filter(status=1).values()
+            modules = Module.objects.filter(
+                courses__in=[request.user.student.belong_in.pk]).values()
+            assignments = Assignment.objects.filter(
+                status=1, courses__in=[request.user.student.belong_in.pk]
+            ).values()
 
         items = list(modules) + list(assignments)
         contents = []
@@ -50,19 +59,20 @@ def index(request):
                     category = Assignment.objects.get(
                         pk=item['id']).get_category_display
                     item.update({'category': category})
-                contents.append(
-                    {
-                        'created_on': item['created_on'],
-                        'instance_of': instance_of,
-                        'item': item,
-                    }
-                )
-            contents = sorted(contents,
-                              key=itemgetter('created_on'),
-                              reverse=True)
+                contents.append({
+                    'created_on': item['created_on'],
+                    'instance_of': instance_of,
+                    'item': item,
+                })
+            contents = sorted(
+                contents,
+                key=itemgetter('created_on'),
+                reverse=True
+            )
         now = timezone.now()
         exams = Assignment.objects.filter(
             status=1,
+            courses__in=[request.user.student.belong_in.pk],
             due__range=(now, now + timezone.timedelta(hours=2))
         )
         contexts = {'contents': contents, 'exams': exams}

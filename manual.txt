@@ -1,0 +1,18 @@
+1. Buka cmd
+2. Ketik "D:"
+3. Ketik "cd elearning"
+4. Ketik "python manage.py runserver"
+5. Buka browser, ketik alamat "localhost:8000"
+
+Matiin server:
+- Tekan CTRL+c
+
+Hidupin server:
+- Ketik "python manage.py runserver"
+
+Buat data baru
+1. Buka cmd
+2. Ketik "D:"
+3. Ketik "cd elearning"
+4. Ketik "python manage.py initproject"
+5. (Membuat akun admin) Ketik "python manage.py createsuperuser"

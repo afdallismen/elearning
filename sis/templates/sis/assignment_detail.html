@@ -20,7 +20,7 @@
             {{forloop.counter}}.
           </div>
           <div class="col-auto ml-2">
-            <div>{{question.text|safe}} ?</div>
+            <div>{{question.text.capitalize|safe}} ?</div>
             {% if question.attachments.count %}
             <div class="row align-items-start no-gutters">
               <div class="col-auto">

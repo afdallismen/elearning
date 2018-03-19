@@ -1,3 +1,56 @@
-body {
-  font-size: 0.7rem !important;
+@media screen {
+  body {
+    background-color: #E8E8E8 !important;
+  }
+
+  table, th, td {
+    border-bottom: 0;
+  }
+
+  th {
+    background-color: #009900 !important;
+    color: #fff;
+  }
+
+  td.shrink {
+    white-space: nowrap !important;
+  }
+
+  td.expand {
+    width: 99% !important;
+  }
+
+  .container-table {
+    border: 2px solid #D3D3D3 !important;
+  }
+
+  .table-caption {
+    background-color: #F0F0F0 !important;
+  }
+
+  .table-nilai-akhir td {
+    background-color: #FFF !important;
+  }
+}
+
+@media print {
+  .container-table {
+    border: 0;
+  }
+
+  table, th, td {
+    border-bottom: 0;
+  }
+
+  th {
+    font-weight: normal;
+  }
+
+  td.shrink {
+    white-space: nowrap !important;
+  }
+
+  td.expand {
+    width: 99% !important;
+  }
 }

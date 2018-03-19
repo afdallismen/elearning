@@ -1,7 +1,6 @@
 from django.http import Http404
 from django.shortcuts import redirect
 from django.urls import reverse
-from django.utils import timezone
 
 from sis.models import Assignment, Question
 

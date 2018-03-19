@@ -35,14 +35,16 @@ class StudentSemesterListFilter(admin.SimpleListFilter):
         students = Student.objects.all()
         objs = []
         for student in students:
-            year = student.nobp
+            year = student.nobp  # CHECK THIS !
             exist = False
             for obj in objs:
                 if obj['year'] == year:
                     exist = True
             if not exist:
-                objs.append(
-                    {'year': student.nobp[0:2], 'semester': student.semester})
+                objs.append({
+                    'year': student.nobp[0:2],
+                    'semester': student.semester
+                })
         objs = sorted(objs, key=itemgetter('semester'), reverse=True)
         return ((obj['year'], obj['semester']) for obj in objs)
 

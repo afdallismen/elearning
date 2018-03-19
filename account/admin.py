@@ -9,8 +9,10 @@ from django.utils.translation import ugettext as _
 from account.actions import activate_users, deactivate_users
 from account.filters import (
     UserIdentityListFilter as filter_identity,
-    StudentSemesterListFilter as filter_semester)
+    StudentSemesterListFilter as filter_semester
+)
 from account.models import Student, Lecturer, MyUser
+from main.utils import object_link
 
 
 class MyUserAdmin(BaseUserAdmin):
@@ -23,29 +25,46 @@ class MyUserAdmin(BaseUserAdmin):
     add_fieldsets = (
         (None, {'fields': ('username', 'password1', 'password2'), }),
     )
-    list_display = ('name', 'email', 'identity', 'is_active')
+    list_display = ('name_display', 'identity_display', 'semester_display',
+                    'class_display', 'is_active')
+    list_display_links = None
     list_filter = ('is_active', filter_identity, 'student__belong_in',
                    filter_semester)
 
-    def name(self, obj):
-        return obj.name
-    name.short_description = _("name")
+    def name_display(self, obj):
+        return object_link(
+            'admin:account_myuser_change',
+            obj.name.title(),
+            obj.pk
+        )
+    name_display.short_description = _("name")
+    name_display.admin_order_field = 'username'
 
-    def identity(self, obj):
-        if not obj.is_student and not obj.is_lecturer:
-            return self.empty_value_display
+    def identity_display(self, obj):
+        return object_link(
+            'admin:account_{}_change'.format(obj.identity[0]),
+            obj.identity[1],
+            getattr(obj, obj.identity[0]).pk
+        )
+    identity_display.short_description = _("identity number")
+    identity_display.admin_order_field = 'student__nobp'
 
-        classname, idt = obj.identity
+    def semester_display(self, obj):
+        if obj.is_student:
+            return obj.student.semester
+        return self.empty_value_display
+    semester_display.short_description = _("semester")
+    semester_display.admin_order_field = 'student__nobp'
 
-        link = reverse("admin:account_{}_change".format(classname),
-                       args=(getattr(obj, classname).pk, ))
-
-        return format_html("<a href={}><b>{}</b></a>", link, idt)
-    identity.short_description = _("id")
+    def class_display(self, obj):
+        if obj.is_student:
+            return obj.student.belong_in
+        return self.empty_value_display
+    class_display.short_description = _("class")
+    class_display.admin_order_field = 'student__belong_in'
 
 
 class NoModulePermissionAdmin(admin.ModelAdmin):
-    empty_value_display = "-"
     readonly_fields = ['avatar_thumbnail']
 
     def has_module_permission(self, request):
@@ -56,12 +75,16 @@ class NoModulePermissionAdmin(admin.ModelAdmin):
         if self.has_change_permission(request, None):
             post_url = reverse(
                 'admin:{!s}_{!s}_changelist'.format(
-                    MyUser._meta.app_label, MyUser._meta.model_name
-                ), current_app=self.admin_site.name
+                    MyUser._meta.app_label,
+                    MyUser._meta.model_name
+                ),
+                current_app=self.admin_site.name
             )
         else:
-            post_url = reverse('admin:index',
-                               current_app=self.admin_site.name)
+            post_url = reverse(
+                'admin:index',
+                current_app=self.admin_site.name
+            )
         return HttpResponseRedirect(post_url)
 
     def response_post_save_change(self, request, obj):
@@ -69,12 +92,16 @@ class NoModulePermissionAdmin(admin.ModelAdmin):
         if self.has_change_permission(request, None):
             post_url = reverse(
                 'admin:{!s}_{!s}_changelist'.format(
-                    MyUser._meta.app_label, MyUser._meta.model_name
-                ), current_app=self.admin_site.name
+                    MyUser._meta.app_label,
+                    MyUser._meta.model_name
+                ),
+                current_app=self.admin_site.name
             )
         else:
-            post_url = reverse('admin:index',
-                               current_app=self.admin_site.name)
+            post_url = reverse(
+                'admin:index',
+                current_app=self.admin_site.name
+            )
         return HttpResponseRedirect(post_url)
 
     def avatar_thumbnail(self, obj):

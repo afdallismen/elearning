@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-14 00:32+0700\n"
+"POT-Creation-Date: 2018-03-11 22:19+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,107 +17,98 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
 #: account/actions.py:8
 msgid "Make selected users account active"
 msgstr "Aktifkan akun pengguna yang terpilih"
 
 #: account/actions.py:13
 msgid "Make selected users account inactive"
-msgstr "Nonaktifkan akun penggunan yang terpilih"
+msgstr "Nonaktifkan akun pengguna yang terpilih"
 
-#: account/admin.py:21
+#: account/admin.py:23
 msgid "Personal info"
 msgstr "Informasi pribadi"
 
-#: account/admin.py:32
+#: account/admin.py:40
 msgid "name"
 msgstr "nama"
 
-#: account/admin.py:44
-msgid "id"
-msgstr "id"
+#: account/admin.py:49
+msgid "identity number"
+msgstr "nomor identitas"
 
-#: account/admin.py:87
-msgid "profile picture"
-msgstr "photo profil"
-
-#: account/filters.py:10
-msgid "group"
-msgstr "golongan"
-
-#: account/filters.py:15
-msgid "Student"
-msgstr "Mahasiswa"
-
-#: account/filters.py:16
-msgid "Lecturer"
-msgstr "Dosen"
-
-#: account/filters.py:31
+#: account/admin.py:56 account/filters.py:31
 msgid "semester"
 msgstr "semester"
 
-#: account/forms.py:34
-msgid "User with with no bp you entered has regitered."
-msgstr "Pengguna dengan nobp yang anda inputkan telah teregistrasi."
-
-#: account/models.py:17
-msgid "male"
-msgstr "laki-laki"
-
-#: account/models.py:18
-msgid "female"
-msgstr "perempuan"
-
-#: account/models.py:19
-msgid "computer system"
-msgstr "sistem komputer"
-
-#: account/models.py:20
-msgid "information system"
-msgstr "sistem informasi"
-
-#: account/models.py:28
-msgid "user"
-msgstr "pengguna"
-
-#: account/models.py:29
-msgid "users"
-msgstr "pengguna"
-
-#: account/models.py:96
-msgid "Minimal 9 digit"
-msgstr "Minimal 9 digit"
-
-#: account/models.py:98
-msgid "no. bp"
-msgstr "no. bp"
-
-#: account/models.py:104
+#: account/admin.py:63 account/models.py:118
 msgid "class"
 msgstr "kelas"
 
-#: account/models.py:109
+#: account/admin.py:114
+msgid "profile picture"
+msgstr "foto profil"
+
+#: account/filters.py:10
+msgid "group"
+msgstr "grup"
+
+#: account/forms.py:36
+msgid "User with with the same no.bp you entered has regitered."
+msgstr "Pengguna dengan nobp yang kamu inputkan telah terdaftar"
+
+#: account/models.py:18
+msgid "male"
+msgstr "laki-laki"
+
+#: account/models.py:19
+msgid "female"
+msgstr "perempuan"
+
+#: account/models.py:22
+msgid "computer system"
+msgstr "sistem komputer"
+
+#: account/models.py:23
+msgid "information system"
+msgstr "sistem informasi"
+
+#: account/models.py:32
+msgid "user"
+msgstr "pengguna"
+
+#: account/models.py:33
+msgid "users"
+msgstr "pengguna"
+
+#: account/models.py:108
+msgid "Minimal 9 digit"
+msgstr "Minimal 9 digit"
+
+#: account/models.py:110
+msgid "no. bp"
+msgstr "no. bp"
+
+#: account/models.py:124
 msgid "student"
 msgstr "mahasiswa"
 
-#: account/models.py:110
+#: account/models.py:125
 msgid "students"
 msgstr "mahasiswa"
 
-#: account/models.py:164
+#: account/models.py:177
 msgid "Minimal 18 digit"
 msgstr "Minimal 18 digit"
 
-#: account/models.py:166
+#: account/models.py:179
 msgid "no. nip"
 msgstr "no. nip"
 
-#: account/models.py:171
+#: account/models.py:185
 msgid "lecturer"
 msgstr "dosen"
 
-#: account/models.py:172
+#: account/models.py:186
 msgid "lecturers"
 msgstr "dosen"

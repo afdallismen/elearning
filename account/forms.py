@@ -5,6 +5,7 @@ from django.utils.translation import ugettext as _
 from registration.forms import RegistrationFormUniqueEmail as RegistrationForm
 
 from account.models import MyUser, Student
+from sis.models import Course
 
 
 class StudentRegistrationForm(RegistrationForm):
@@ -12,11 +13,13 @@ class StudentRegistrationForm(RegistrationForm):
 
     class Meta(RegistrationForm.Meta):
         model = MyUser
-        fields = [User.USERNAME_FIELD,
-                  'email',
-                  'password1',
-                  'password2',
-                  'nobp']
+        fields = [
+            User.USERNAME_FIELD,
+            'email',
+            'password1',
+            'password2',
+            'nobp'
+        ]
         required_css_class = 'required'
 
     def clean(self):
@@ -30,13 +33,23 @@ class StudentRegistrationForm(RegistrationForm):
 
         # Check unique nobp
         if Student.objects.filter(nobp=self.cleaned_data['nobp']).exists():
-            raise ValidationError(
-                {'nobp': _("User with with no bp you entered has regitered.")}
-            )
+            raise ValidationError({
+                'nobp': _("User with with the same no.bp you "
+                          "entered has regitered.")
+            })
 
     def save(self, commit=True):
         user = super(StudentRegistrationForm, self).save(commit)
         user.save()
-        Student.objects.get_or_create(user=user,
-                                      nobp=self.cleaned_data['nobp'])
+        courses = Course.objects.all()
+        course = None
+        for c in courses:
+            count = len(c.student_set.all())
+            if c.capacity > count:
+                course = c
+        Student.objects.get_or_create(
+            user=user,
+            nobp=self.cleaned_data['nobp'],
+            belong_in=course
+        )
         return user

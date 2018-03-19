@@ -24,10 +24,10 @@ class Thumbnail(ImageSpec):
     options = {'quality': 100}
 
 
-def answer_admin_change_link(pk):
+def answer_change_link(pk):
     return format_html(
         '<a href="{}" style="margin-right:10px">'
-        '<i class="fa fa-edit" aria-hidden="true"></i> Edit'
+        '<b><i class="fa fa-edit" aria-hidden="true"></i> Check</b>'
         '</a>',
         reverse("admin:sis_answer_change", args=(pk, ))
     )
@@ -35,9 +35,11 @@ def answer_admin_change_link(pk):
 
 def attachment_directory(instance, filename):
     now = timezone.now()
-    return "attachment/{}/{:%Y%m%d}/{}".format(instance.content_type.name,
-                                               now,
-                                               filename)
+    return "attachment/{}/{:%Y%m%d}/{}".format(
+        instance.content_type.name,
+        now,
+        filename
+    )
 
 
 def nstrip_tags(n, text):
@@ -113,6 +115,6 @@ def _get_docs_display(url):
             >View on new window
         </a>'''
     encoded = urlencode(
-        {'': "http://devitrichan.pythonanywhere.com" + url}
+        {'': "http://localhost:8000" + url}
     )[1:]
     return format_html(html_tag, encoded)

@@ -1,114 +1,112 @@
 {% extends 'print/base.html' %}
 
 {% block content %}
-<div class="row justify-content-center">
-  <div class="col-auto">
-    <p class="h5 text-center mb-3">REKAPITULASI NILAI MAHASISWA</p>
-  </div>
-  <div class="w100"></div>
-  <div class="col-12">
-    <table class="table table-bordered table-sm text-center">
-      <thead>
-        <tr>
-          <th class="align-top text-center" rowspan="2">No.</th>
-          <th class="align-top text-left" rowspan="2">Nama Mahasiswa</th>
-          {% if assignments.exercises %}
-            {% if assignments.exercises.count > 1 %}
-              <th class="text-center" colspan="{{assignments.exercises.count}}">Tugas</th>
-            {% else %}
-              <th class="text-center" rowspan="2">Tugas</th>
-            {% endif %}
+<div class="container-table px-1 pt-1 my-5 bg-white">
+  <table class="table table-bordered mb-1 table-sm">
+    <thead>
+      <tr>
+        <th class="text-center align-middle" rowspan="2">No.</th>
+        <th class="text-center align-middle" rowspan="2">No.BP</th>
+        <th class="text-center align-middle" rowspan="2">Nama</th>
+        <th class="text-center align-middle" rowspan="2">Kelas</th>
+        {% if assignments.exercises %}
+          {% if assignments.exercises.count > 1 %}
+            <th class="text-center" colspan="{{assignments.exercises.count}}">Tugas</th>
+          {% else %}
+            <th class="text-center" rowspan="2">Tugas</th>
           {% endif %}
+        {% endif %}
 
-          {% if assignments.quizes %}
-            {% if assignments.quizes.count > 1 %}
-              <th class="text-center" colspan="{{assignments.quizes.count}}">Kuis</th>
-            {% else %}
-              <th class="text-center" rowspan="2">Kuis</th>
-            {% endif %}
+        {% if assignments.quizes %}
+          {% if assignments.quizes.count > 1 %}
+            <th class="text-center" colspan="{{assignments.quizes.count}}">Kuis</th>
+          {% else %}
+            <th class="text-center" rowspan="2">Kuis</th>
           {% endif %}
+        {% endif %}
 
-          {% if assignments.mids %}
-            {% if assignments.mids.count > 1 %}
-              <th class="text-center" colspan="{{assignments.mids.count}}">UTS</th>
-            {% else %}
-              <th class="text-center" rowspan="2">UTS</th>
-            {% endif %}
+        {% if assignments.mids %}
+          {% if assignments.mids.count > 1 %}
+            <th class="text-center" colspan="{{assignments.mids.count}}">UTS</th>
+          {% else %}
+            <th class="text-center" rowspan="2">UTS</th>
           {% endif %}
+        {% endif %}
 
-          {% if assignments.finals %}
-            {% if assignments.finals.count > 1 %}
-              <th class="text-center" colspan="{{assignments.quizes.count}}">UAS</th>
-            {% else %}
-              <th class="text-center" rowspan="2">UAS</th>
-            {% endif %}
+        {% if assignments.finals %}
+          {% if assignments.finals.count > 1 %}
+            <th class="text-center" colspan="{{assignments.quizes.count}}">UAS</th>
+          {% else %}
+            <th class="text-center" rowspan="2">UAS</th>
           {% endif %}
-          <th class="text-center" colspan="2">Nilai Akhir</th>
-        </tr>
-        <tr>
-          {% if assignments.exercises %}
-            {% if assignments.exercises.count > 1 %}
-              {% for assignment in assignments.exercises %}
-                <th class="text-center">{{forloop.counter}}</th>
-              {% endfor %}
-            {% endif %}
-          {% endif %}
-          {% if assignments.quizes %}
-            {% if assignments.quizes.count > 1 %}
-              {% for assignment in assignments.quizes %}
-                <th class="text-center">{{forloop.counter}}</th>
-              {% endfor %}
-            {% endif %}
-          {% endif %}
-          {% if assignments.mids %}
-            {% if assignments.mids.count > 1 %}
-              {% for assignment in assignments.mids %}
-                <th class="text-center">{{forloop.counter}}</th>
-              {% endfor %}
-            {% endif %}
-          {% endif %}
-          {% if assignments.finals %}
-            {% if assignments.finals.count > 1 %}
-              {% for assignment in assignments.finals %}
-                <th class="text-center">{{forloop.counter}}</th>
-              {% endfor %}
-            {% endif %}
-          {% endif %}
-          <th class="text-center">Angka</th>
-          <th class="text-center">Huruf</th>
-        <tr>
-      </thead>
-      <tbody>
-        {% for student, score in data.items %}
-        <tr>
-          <td>{{forloop.counter}}</td>
-          <td class="text-left">{{student}}</td>
-          {% if score.exercise %}
-            {% for s in score.exercise %}
-              <td>{{s.1}}</td>
+        {% endif %}
+        <th class="text-center" colspan="2">Nilai Akhir</th>
+      </tr>
+      <tr>
+        {% if assignments.exercises %}
+          {% if assignments.exercises.count > 1 %}
+            {% for assignment in assignments.exercises %}
+              <th class="text-center">{{forloop.counter}}</th>
             {% endfor %}
           {% endif %}
-          {% if score.quiz %}
-            {% for s in score.quiz %}
-              <td>{{s.1}}</td>
+        {% endif %}
+        {% if assignments.quizes %}
+          {% if assignments.quizes.count > 1 %}
+            {% for assignment in assignments.quizes %}
+              <th class="text-center">{{forloop.counter}}</th>
             {% endfor %}
           {% endif %}
-          {% if score.mid %}
-            {% for s in score.mid %}
-              <td>{{s.1}}</td>
+        {% endif %}
+        {% if assignments.mids %}
+          {% if assignments.mids.count > 1 %}
+            {% for assignment in assignments.mids %}
+              <th class="text-center">{{forloop.counter}}</th>
             {% endfor %}
           {% endif %}
-          {% if score.final %}
-            {% for s in score.final %}
-              <td>{{s.1}}</td>
+        {% endif %}
+        {% if assignments.finals %}
+          {% if assignments.finals.count > 1 %}
+            {% for assignment in assignments.finals %}
+              <th class="text-center">{{forloop.counter}}</th>
             {% endfor %}
           {% endif %}
-          <td>{{score.result}}</td>
-          <td>{{score.result|letter}}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+        {% endif %}
+        <th class="text-center">Angka</th>
+        <th class="text-center">Huruf</th>
+      <tr>
+    </thead>
+    <tbody>
+      {% for student, score in data.items %}
+      <tr>
+        <td class="text-center shrink">{{forloop.counter}}</td>
+        <td class="text-center shrink">{{score.nobp}}</td>
+        <td class="text-left text-nowrap expand">{{student|title}}</td>
+        <td class="text-center text-nowrap">{{score.belong_in|title}}</td>
+        {% if score.exercise %}
+          {% for s in score.exercise %}
+            <td class="text-center shrink">{{s.1}}</td>
+          {% endfor %}
+        {% endif %}
+        {% if score.quiz %}
+          {% for s in score.quiz %}
+            <td class="text-center shrink">{{s.1}}</td>
+          {% endfor %}
+        {% endif %}
+        {% if score.mid %}
+          {% for s in score.mid %}
+            <td class="text-center shrink">{{s.1}}</td>
+          {% endfor %}
+        {% endif %}
+        {% if score.final %}
+          {% for s in score.final %}
+            <td class="text-center shrink">{{s.1}}</td>
+          {% endfor %}
+        {% endif %}
+        <td class="text-center shrink">{{score.result}}</td>
+        <td class="text-center shrink">{{score.result|letter}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
 {% endblock %}

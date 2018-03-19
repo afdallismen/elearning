@@ -3,10 +3,11 @@ from urllib.parse import urlencode
 from django.conf import settings
 from django.contrib.admin.models import LogEntry,  CHANGE
 from django.contrib.contenttypes.fields import (
-    GenericForeignKey, GenericRelation)
+    GenericForeignKey, GenericRelation
+)
 from django.contrib.contenttypes.models import ContentType
-from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
@@ -16,16 +17,19 @@ from tinymce import models as tinymce_models
 
 from account.models import Student
 from sis.utils import (
-    attachment_directory, nstrip_tags, file_html_display, FILE_EXTENSION)
+    attachment_directory, nstrip_tags, file_html_display, FILE_EXTENSION
+)
 
 
 SCORE_VALIDATOR = MaxValueValidator(100)
 
 
 class Course(models.Model):
-    name = models.CharField(max_length=100,
-                            unique=True,
-                            verbose_name=_("class name"))
+    name = models.CharField(
+        max_length=100,
+        unique=True,
+        verbose_name=_("class name")
+    )
     capacity = models.PositiveSmallIntegerField(
         default=1,
         help_text=_("Class max capacity"),
@@ -35,7 +39,7 @@ class Course(models.Model):
 
     class Meta:
         verbose_name = _("class")
-        verbose_name_plural = _("class")
+        verbose_name_plural = _("classes")
 
     def __repr__(self):
         return "Course(name=\"{!s}\")".format(self.name)
@@ -45,12 +49,16 @@ class Course(models.Model):
 
 
 class Attachment(models.Model):
-    SUPPORTED_FILE_EXTENSION = [*FILE_EXTENSION['image'],
-                                *FILE_EXTENSION['animation'],
-                                *FILE_EXTENSION['video'],
-                                *FILE_EXTENSION['doc']]
-    file_upload = models.FileField(upload_to=attachment_directory,
-                                   verbose_name=_("file upload"))
+    SUPPORTED_FILE_EXTENSION = [
+        *FILE_EXTENSION['image'],  # noqa
+        *FILE_EXTENSION['animation'],
+        *FILE_EXTENSION['video'],
+        *FILE_EXTENSION['doc']
+    ]
+    file_upload = models.FileField(
+        upload_to=attachment_directory,
+        verbose_name=_("file upload")
+    )
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
@@ -77,7 +85,7 @@ class Attachment(models.Model):
     def ext_link(self):
         if self.is_doc:
             encoded = urlencode(
-                {'': "http://devitrichan.pythonanywhere.com" + self.file_upload.url}
+                {'': "http://localhost:8000" + self.file_upload.url}
             )[1:]
             return ("http://view.officeapps.live.com/op/view.aspx"
                     "?src={!s}").format(encoded)
@@ -118,18 +126,30 @@ class Attachment(models.Model):
 
 
 class Module(models.Model):
-    title = models.CharField(max_length=200,
-                             unique=True,
-                             verbose_name=_("title"))
-    slug = models.SlugField(blank=True,
-                            default="",
-                            editable=False,
-                            max_length=200)
-    text = tinymce_models.HTMLField(blank=True,
-                                    default="",
-                                    verbose_name=_("text"))
-    created_on = models.DateTimeField(auto_now_add=True,
-                                      verbose_name=_("created on"))
+    title = models.CharField(
+        max_length=200,
+        unique=True,
+        verbose_name=_("title")
+    )
+    slug = models.SlugField(
+        blank=True,
+        default="",
+        editable=False,
+        max_length=200
+    )
+    courses = models.ManyToManyField(
+        Course,
+        verbose_name=_("courses")
+    )
+    text = tinymce_models.HTMLField(
+        blank=True,
+        default="",
+        verbose_name=_("text")
+    )
+    created_on = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name=_("created on")
+    )
     attachments = GenericRelation(Attachment, verbose_name=_("attachments"))
 
     class Meta:
@@ -148,24 +168,40 @@ class Module(models.Model):
 
 
 class Assignment(models.Model):
-    CATEGORY_CHOICES = ((0, _("exercise")),
-                        (1, _("quiz")),
-                        (2, _("mid")),
-                        (3, _("final")))
-    STATUS_CHOICES = ((0, _("draft")),
-                      (1, _("publish")))
+    CATEGORY_CHOICES = (
+        (0, _("exercise")),
+        (1, _("quiz")),
+        (2, _("mid")),
+        (3, _("final"))
+    )
+    STATUS_CHOICES = (
+        (0, _("draft")),
+        (1, _("publish"))
+    )
 
-    short_description = models.CharField(max_length=100,
-                                         blank=True,
-                                         default="",
-                                         verbose_name=_("short description"))
-    category = models.PositiveIntegerField(choices=CATEGORY_CHOICES,
-                                           verbose_name=_("category"))
-    created_on = models.DateTimeField(auto_now_add=True,
-                                      verbose_name=_("created on"))
-    status = models.PositiveSmallIntegerField(choices=STATUS_CHOICES,
-                                              default=0,
-                                              verbose_name=_("status"))
+    short_description = models.CharField(
+        max_length=100,
+        blank=True,
+        default="",
+        verbose_name=_("short description")
+    )
+    category = models.PositiveIntegerField(
+        choices=CATEGORY_CHOICES,
+        verbose_name=_("category")
+    )
+    created_on = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name=_("created on")
+    )
+    status = models.PositiveSmallIntegerField(
+        choices=STATUS_CHOICES,
+        default=0,
+        verbose_name=_("status")
+    )
+    courses = models.ManyToManyField(
+        Course,
+        verbose_name=_("courses")
+    )
     due = models.DateTimeField(
         default=timezone.now,
         validators=[MinValueValidator(timezone.now())],
@@ -195,17 +231,20 @@ class Assignment(models.Model):
 
 
 class Question(models.Model):
-    assignment = models.ForeignKey(Assignment,
-                                   blank=True,
-                                   null=True,
-                                   on_delete=models.CASCADE,
-                                   verbose_name=_("assignment"))
+    assignment = models.ForeignKey(
+        Assignment,
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        verbose_name=_("assignment")
+    )
     text = models.TextField(blank=True, default="", verbose_name=_("text"))
     score_percentage = models.PositiveIntegerField(
         blank=True,
         default=0,
         validators=[SCORE_VALIDATOR],
-        verbose_name=_("score percentage"))
+        verbose_name=_("score percentage")
+    )
     attachments = GenericRelation(Attachment, verbose_name=_("attachments"))
 
     class Meta:
@@ -223,22 +262,23 @@ class Question(models.Model):
 
 
 class Answer(models.Model):
-    student = models.ForeignKey(Student,
-                                on_delete=models.CASCADE,
-                                verbose_name=_("student"))
-    question = models.ForeignKey(Question,
-                                 on_delete=models.CASCADE,
-                                 verbose_name=_("question"))
+    student = models.ForeignKey(
+        Student,
+        on_delete=models.CASCADE,
+        verbose_name=_("student")
+    )
+    question = models.ForeignKey(
+        Question,
+        on_delete=models.CASCADE,
+        verbose_name=_("question")
+    )
     text = models.TextField(blank=True, default="", verbose_name=_("text"))
     attachments = GenericRelation(Attachment, verbose_name=_("attachments"))
-    score = models.PositiveIntegerField(blank=True,
-                                        default=0,
-                                        validators=[SCORE_VALIDATOR],
-                                        verbose_name=_("score"))
-    correct = models.NullBooleanField(
+    score = models.PositiveIntegerField(
         blank=True,
-        help_text=_("yes, mean its 100% true, false otherwise"),
-        verbose_name=_("is it correct ?")
+        default=0,
+        validators=[SCORE_VALIDATOR],
+        verbose_name=_("score")
     )
 
     class Meta:
@@ -255,21 +295,14 @@ class Answer(models.Model):
         return _("This answer has no written text")
 
     def __repr__(self):
-        return ("Answer(question={!s}, assignment={!s})"
-                .format(self.question, self.question.assignment))
+        return ("Answer(student={!s}, question={!s}, assignment={!s})"
+                .format(self.student, self.question, self.question.assignment))
 
-    # def clean(self):
-    #     assignment = self.question.assignment
-    #     if assignment.has_expired:
-    #         raise ValidationError(_("You can't make an answer"
-    #                               " for an assignment that already expired"))
-
-    def save(self, *args, **kwargs):
-        if self.correct is True:
-            self.score = 100
-        elif self.correct is False:
-            self.score = 0
-        super(Answer, self).save(*args, **kwargs)
+    def clean(self):
+        assignment = self.question.assignment
+        if assignment.has_expired:
+            raise ValidationError(_("You can't make an answer"
+                                  " for an assignment that already expired"))
 
     @property
     def has_examined(self):
@@ -279,7 +312,8 @@ class Answer(models.Model):
                 user__is_staff=True,
                 content_type=ct,
                 object_id=self.id,
-                action_flag=CHANGE).exists()
+                action_flag=CHANGE
+            ).exists()
         return self.examined
 
 
@@ -293,45 +327,57 @@ class AssignmentResultManager(models.Manager):
 
 
 class AssignmentResult(models.Model):
-    student = models.ForeignKey(Student,
-                                on_delete=models.CASCADE,
-                                verbose_name=_("student"))
-    assignment = models.ForeignKey(Assignment,
-                                   on_delete=models.CASCADE,
-                                   verbose_name=_("assignment"))
-    score = models.PositiveIntegerField(blank=True,
-                                        default=0,
-                                        validators=[SCORE_VALIDATOR],
-                                        verbose_name=_("score"))
+    student = models.ForeignKey(
+        Student,
+        on_delete=models.CASCADE,
+        verbose_name=_("student")
+    )
+    assignment = models.ForeignKey(
+        Assignment,
+        on_delete=models.CASCADE,
+        verbose_name=_("assignment")
+    )
+    score = models.PositiveIntegerField(
+        blank=True,
+        default=0,
+        validators=[SCORE_VALIDATOR],
+        verbose_name=_("score")
+    )
     objects = AssignmentResultManager()
 
     class Meta:
         verbose_name = _("assignment result")
-        verbose_name_plural = _("assignment result")
+        verbose_name_plural = _("assignment results")
 
     def __str__(self):
         return str(self.score)
 
     def __repr__(self):
-        return ("AssignmentResult(student={!s}, assignment={!s},"
-                "score={!s}").format(
-                    self.student,
-                    self.assignment,
-                    self.score)
+        return (
+            "AssignmentResult(student={!s}, assignment={!s}, score={!s})"
+        ).format(
+            self.student,
+            self.assignment,
+            self.score
+        )
 
 
 class FinalResult(models.Model):
-    student = models.OneToOneField(Student,
-                                   on_delete=models.CASCADE,
-                                   verbose_name=_("student"))
-    score = models.PositiveIntegerField(blank=True,
-                                        default=0,
-                                        validators=[SCORE_VALIDATOR],
-                                        verbose_name=_("score"))
+    student = models.OneToOneField(
+        Student,
+        on_delete=models.CASCADE,
+        verbose_name=_("student")
+    )
+    score = models.PositiveIntegerField(
+        blank=True,
+        default=0,
+        validators=[SCORE_VALIDATOR],
+        verbose_name=_("score")
+    )
 
     class Meta:
         verbose_name = _("final result")
-        verbose_name_plural = _("final result")
+        verbose_name_plural = _("final results")
 
     def __str__(self):
         return str(self.score)
@@ -365,4 +411,4 @@ class FinalResultPercentage(models.Model):
 
     class Meta:
         verbose_name = _("final result percentage")
-        verbose_name_plural = _("final result percentage")
+        verbose_name_plural = _("final result percentages")

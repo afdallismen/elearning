@@ -1,7 +1,4 @@
-import ast
-
 from django.contrib import admin
-from django.utils import timezone
 from django.utils.translation import ugettext as _
 
 from sis.models import Assignment, Answer, AssignmentResult

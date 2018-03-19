@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'c74k_jcedqluh#0rx1yk&=r&-=hq+(-z9&)&am6q+xc%8hpst&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['devitrichan.pythonanywhere.com']
+ALLOWED_HOSTS = ['localhost']
 
 
 # Application definition
@@ -87,8 +87,8 @@ WSGI_APPLICATION = 'elearning.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+       'ENGINE': 'django.db.backends.sqlite3',
+       'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
     # 'default': {
     #     'ENGINE': 'django.db.backends.postgresql',
@@ -102,7 +102,7 @@ DATABASES = {
     #     'ENGINE': 'django.db.backends.mysql',
     #     'NAME': 'skripsi',
     #     'USER': 'root',
-    #     'PASSWORD': 'cdefgabc',
+    #     'PASSWORD': '',
     #     'HOST': '127.0.0.1',
     #     'PORT': '3306',
     # }
@@ -147,7 +147,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 
@@ -175,8 +175,10 @@ LOGIN_REDIRECT_URL = 'main:index'
 LOGIN_URL = 'auth_login'
 LOGOUT_REDIRECT_URL = 'main:index'
 
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_HOST_USER = "afdal.lismen@gmail.com"
-EMAIL_HOST_PASSWORD = 'zvcvmsgdbxbhzntj'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# EMAIL_HOST = "smtp.gmail.com"
+# EMAIL_HOST_USER = "afdal.lismen@gmail.com"
+# EMAIL_HOST_PASSWORD = 'zvcvmsgdbxbhzntj'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True

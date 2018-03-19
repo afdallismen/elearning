@@ -2,8 +2,8 @@ from django.forms.models import modelform_factory
 from django.shortcuts import render
 
 from account.models import MyUser, Student
-from sis.models import Assignment
 from sis.decorators import redirect_admin
+from sis.models import Assignment, AssignmentResult
 
 
 @redirect_admin
@@ -34,7 +34,10 @@ def edit(request):
             userform.save()
             studentform.save()
             userform = BaseUserForm(instance=request.user, prefix="usr")
-            studentform = BaseStudentForm(instance=request.user.student, prefix="std")
+            studentform = BaseStudentForm(
+                instance=request.user.student,
+                prefix="std"
+            )
     contexts = {
         'userform': userform,
         'studentform': studentform
@@ -43,7 +46,8 @@ def edit(request):
 
 
 def print_result(request):
-    assignments = Assignment.objects.all()
+    student_ar = AssignmentResult.objects.filter(student=request.user.student)
+    assignments = [ar.assignment for ar in student_ar]
     data = dict()
     for assignment in assignments:
         data[str(assignment).title()] = []
@@ -51,23 +55,21 @@ def print_result(request):
         for question in assignment.question_set.all():
             answers = request.user.student.answer_set
             if answers.filter(question=question).exists():
-                total = int(total) + (question.score_percentage * answers.get(question=question).score) // 100 # noqa
-                data[str(assignment).title()].append(
-                    (
-                        str(question),
-                        question.score_percentage,
-                        answers.get(question=question).score,
-                        (question.score_percentage * answers.get(question=question).score) // 100 # noqa
-                    )
-                )
+                total = int(total) + (
+                    question.score_percentage * answers.get(
+                        question=question).score) // 100
+                data[str(assignment).title()].append((
+                    str(question),
+                    question.score_percentage,
+                    answers.get(question=question).score,
+                    (question.score_percentage * answers.get(question=question).score) // 100  # noqa
+                ))
             else:
-                data[str(assignment).title()].append(
-                    (
-                        str(question),
-                        question.score_percentage,
-                        0,
-                        0
-                    )
-                )
+                data[str(assignment).title()].append((
+                    str(question),
+                    question.score_percentage,
+                    0,
+                    0
+                ))
         data[str(assignment).title()].append(total if total else int(0))
     return render(request, 'print/student_result.html', {'data': data})

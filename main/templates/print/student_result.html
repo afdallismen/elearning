@@ -1,111 +1,85 @@
 {% extends 'print/base.html' %}
 {% load static %}
-{% block stylesheet %}
-<style>
-img.img-thumbnail {
-  position: relative;
-  top: 1rem;
-}
-table.bio {
-  border: #fff;
-}
-table td {
-  font-size: 1rem;
-}
-table.bio td{
-  border-top: #fff !important;
-  border-bottom: 1px solid #eceeef !important;
-}
-table td::first-letter {
-  margin-top: 0;
-}
-table thead tr th {
-  width: 1rem;
-}
-table thead tr th:nth-child(3) {
-  width: 7rem;
-}
-table thead tr th:nth-child(2) {
-  width: auto;
-}
-table:last-child td{
-  border-bottom: 1px solid #eceeef !important;
-}
-</style>
-{% endblock %}
+{% block stylesheet %}{% endblock %}
 {% block content %}
-<div class="row justify-content-center">
-  <div class="col-auto">
-    <p class="h5 text-center mb-5">KARTU HASIL STUDI MAHASISWA</p>
-  </div>
-  <div class="w-100"></div>
-  <div class="col mb-4">
-    <div class="row">
-      <div class="col-auto">
-        {% if request.user.student.avatar %}
-          <img class="img-thumbnail" width=130 height=130 src="{{request.user.student.avatar_thumbnail.url}}">
-        {% else %}
-          <img class="img-thumbnail" width=130 height=130 src="{% static 'img/stock_avatar.jpg' %}">
-        {% endif %}
-      </div>
-      <div class="col-auto">
-        <table class="table bio">
-          <tbody>
-            <tr>
-              <td><b>Nama</b></td>
-              <td>: {{request.user.name|title}}</td>
-            </tr>
-            <tr>
-              <td><b>No. Bp</b></td>
-              <td>: {{request.user.student.nobp}}</td>
-            </tr>
-            <tr>
-              <td><b>Semester</b></td>
-              <td>: {{request.user.student.semester}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-  <div class="col-12">
-    {% for assignment, answer in data.items %}
-      <p class="h6">{{assignment}}</p>
-      <table class="table table-bordered mb-4">
-        <thead>
-          <tr>
-            <th>No.</th>
-            <th>Pertanyaan</th>
-            <th>Persentase (%)</th>
-            <th>Nilai</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for ans in answer %}
-          {% if not forloop.last %}
-          <tr>
-            <td>{{forloop.counter}}</td>
-            <td>{{ans.0}}</td>
-            <td>{{ans.1}}</td>
-            <td>{{ans.2}}</td>
-            <td>{{ans.3}}</td>
-          </tr>
-          {% endif %}
-          {% endfor %}
-          <tr>
-            <th colspan="4">Nilai Tugas</th>
-            <td>{% if answer.2 %}{{answer.2|letter}}{% else %}{{0|letter}}{% endif %}</td>
-          </tr>
-        </tbody>
-      </table>
-    {% endfor %}
-    <table class="table finalresult">
+<div class="my-4 mb-5">
+  <table>
+    <tbody>
       <tr>
-        <td><p class="h6">Nilai Akhir</p></td>
-        <td class="text-right pr-4">{{request.user.student.finalresult.score|letter}}</td>
+        <td class="pr-5">NO.BP</td>
+        <td class="pr-3">:</td>
+        <td>{{ request.user.student.nobp }}</td>
       </tr>
-    </table>
-  </div>
+      <tr>
+        <td class="pr-5">Nama Mahasiswa</td>
+        <td class="pr-3">:</td>
+        <td>{{ request.user.name|title }}</td>
+      </tr>
+      <tr>
+        <td class="pr-5">Kelas</td>
+        <td class="pr-3">:</td>
+        <td>{{ request.user.student.belong_in.name|title }}</td>
+      </tr>
+      <tr>
+        <td class="pr-5">Semester</td>
+        <td class="pr-3">:</td>
+        <td>{{ request.user.student.semester }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+{% for assignment, answer in data.items %}
+<div class="container-table px-1 pt-1 my-5 bg-white">
+  <div class="table-caption px-3 py-1 mb-1"><p><b>{{assignment}}</b></p></div>
+  <table class="table table-bordered mb-1">
+    <thead>
+      <tr>
+        <th class="text-center">No.</th>
+        <th class="text-center">Pertanyaan</th>
+        <th class="text-nowrap text-center">Persentase (%)</th>
+        <th class="text-center">Nilai</th>
+        <th class="text-nowrap text-center">Nilai Akhir</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ans in answer %}
+      {% if not forloop.last %}
+      <tr>
+        <td class="text-center shrink">{{ forloop.counter }}</td>
+        <td class="expand">{{ ans.0 }}</td>
+        <td class="text-center shrink">{{ ans.1 }}</td>
+        <td class="text-center shrink">{{ ans.2 }}</td>
+        <td class="text-center shrink">{{ ans.3 }}</td>
+      </tr>
+      {% endif %}
+      {% endfor %}
+      <tr>
+        <td class="text-right" colspan="4"><b>Total</b></td>
+        <td class="text-center">{% if answer.2 %}{{answer.2}}{% else %}{{0}}{% endif %}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+{% endfor %}
+
+<div class=" container-table float-right px-1 py-1 bg-white my-3">
+  <table class="mb-0 table-nilai-akhir text-center table table-bordered table-sm">
+    <thead>
+      <tr>
+        <th colspan="2">Nilai Akhir</th>
+      </tr>
+      <tr>
+        <th>Angka</th>
+        <th>Huruf</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="px-5 pt-3"><h2>{{ request.user.student.finalresult.score}}</h2></td>
+        <td class="px-5 pt-3"><h2>{{ request.user.student.finalresult.score|letter}}</h2></td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 {% endblock %}

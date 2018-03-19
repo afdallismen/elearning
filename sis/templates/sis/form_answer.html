@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="z-depth-1 white px-5 pt-5 pb-5 mb-5">
-  <div class="mb-5">
+  <div class="mb-5" id="container-counter">
     <p class="h6 text-muted">Jawaban akan otomatis di submit dalam waktu: <span class="px-2" id="counter"></span></p>
     <hr>
   </div>
@@ -26,7 +26,7 @@
       <p class="h6 text-muted mb-4">Jawaban :</p>
       <form id="form_answer" method="POST" class="ml-3" action="#">
         {% csrf_token %}
-        <textarea class="mb-3" type="text" name="text">{% if answer %}{{answer.text}}{% endif %}</textarea>
+        <textarea class="col-12 mb-3" type="text" name="text">{% if answer %}{{answer.text}}{% endif %}</textarea>
         <input type="submit" class="btn btn-success ml-auto" value="Submit">
         <a class="btn btn-flat btn-default" href="{% url 'sis:assignment_detail' pk=question.assignment_id %}">Kembali</a>
       </form>
@@ -52,9 +52,7 @@
     var due = "{{question.assignment.due|date:'c'}}"
     var int;
     due = new Date(due)
-    now = new Date()
-
-    if (due - now < 7200000) {
+    if (due - new Date() < 7200000) {
       var int = setInterval(function () {
         if (due - new Date() <= 0) {
           clearInterval(int)
@@ -62,8 +60,10 @@
         }
         $('#counter').html(msToTime(due - new Date()))
       }, 1000)
-    } else {
+    } else if (due - new Date() < 0) {
       $('#counter').html("Waktu habis.")
+    } else if (due - new Date() > 7200000) {
+      $('#container-counter').hide()
     }
   })
 </script>

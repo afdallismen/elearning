@@ -8,13 +8,21 @@ register = template.Library()
 @stringfilter
 def letter(value):
     value = int(value)
-    if 85 <= value <= 100:
+    if 87 <= value <= 100:
         return "A"
-    elif 75 <= value <= 84:
+    elif 81 <= value <= 86:
+        return "A-"
+    elif 74 <= value <= 80:
+        return "B+"
+    elif 68 <= value <= 73:
         return "B"
-    elif 60 <= value <= 74:
+    elif 62 <= value <= 67:
+        return "C+"
+    elif 50 <= value <= 61:
         return "C"
-    elif 50 <= value <= 59:
+    elif 43 <= value <= 49:
+        return "C-"
+    elif 25 <= value <= 42:
         return "D"
     else:
         return "E"
