@@ -8,4 +8,4 @@ class MinDateValueValidator(MinValueValidator):
     code = 'min_value'
 
     def compare(self, a, b):
-        return a < timezone.now()
+        return a < b

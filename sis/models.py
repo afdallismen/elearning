@@ -204,7 +204,7 @@ class Assignment(models.Model):
     )
     due = models.DateTimeField(
         default=timezone.now,
-        validators=[MinValueValidator(timezone.now)],
+        validators=[MinValueValidator(timezone.now())],
         help_text=_("Time limit on when student can still submit an"
                     " answer for this assignment"),
         verbose_name=_("due at")
