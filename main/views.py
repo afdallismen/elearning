@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.utils import timezone
 
 from sis.decorators import redirect_admin
-from sis.models import Module, Assignment, AssignmentResult
+from sis.models import Module, Assignment
 
 
 @redirect_admin
@@ -15,28 +15,15 @@ def index(request):
         modules, assignments = [], []
         get['content'] = request.GET.get('content', False)
 
-        pks = AssignmentResult.objects.filter(
-            student=request.user.student).values('assignment')
-        user_assignments = Assignment.objects.filter(pk__in=pks).values()
-
         if get['content'] == "module":
             modules = Module.objects.filter(
                 courses__in=[request.user.student.belong_in.pk]).values()
         elif get['content'] == "assignment":
             get['assignment'] = request.GET.get('assignment', False)
 
-            if get['assignment'] == 'followed':
-                assignments = user_assignments
-            elif get['assignment'] == 'unfollwed':
-                assignments = Assignment.objects.exclude(
-                    pk__in=pks).filter(
-                        status=1,
-                        courses__in=[request.user.student.belong_in.pk]
-                    ).values()
-            else:
-                assignments = Assignment.objects.filter(
-                    status=1, courses__in=[request.user.student.belong_in.pk]
-                ).values()
+            assignments = Assignment.objects.filter(
+                status=1, courses__in=[request.user.student.belong_in.pk]
+            ).values()
         else:
             modules = Module.objects.filter(
                 courses__in=[request.user.student.belong_in.pk]).values()

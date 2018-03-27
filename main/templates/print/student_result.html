@@ -56,7 +56,11 @@
       {% endfor %}
       <tr>
         <td class="text-right" colspan="4"><b>Total</b></td>
-        <td class="text-center">{% if answer.2 %}{{answer.2}}{% else %}{{0}}{% endif %}</td>
+        <td class="text-center">
+          {% with asnwer|last as last %}
+            {{ last }}
+          {% endwith %}
+        </td>
       </tr>
     </tbody>
   </table>

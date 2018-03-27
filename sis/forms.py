@@ -19,12 +19,15 @@ class BaseQuestionFormSet(nested_admin.NestedInlineFormSet):
 
                 if empty_score:
                     assigned_score = (100 - total) // len(empty_score)
+                    count = 1
                     for form in self.forms:
                         if form in empty_score:
-                            obj = form.save(commit=False)
-                            obj.assignment = self.instance.save()
-                            obj.score_percentage = assigned_score
-                            obj.save()
+                            question = form.save(commit=False)
+                            question.score_percentage = assigned_score
+                            if self.instance._state.adding:
+                                self.instance.save()
+                            question.save()
+                        count = count + 1
                 else:
                     raise ValidationError(_("Make sure score percentage "
                                           "add up to 100."))

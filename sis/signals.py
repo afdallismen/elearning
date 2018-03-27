@@ -1,5 +1,5 @@
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_save, post_delete, m2m_changed
 from django.dispatch import receiver
 
 from account.models import Student
@@ -8,20 +8,38 @@ from sis.models import (
 )
 
 
+@receiver(m2m_changed, sender=Assignment.courses.through)
+def courses_updates(sender, instance, action, pk_set, **kwargs):
+    if action == "post_add":
+        students = Student.objects.filter(
+            belong_in__in=pk_set
+        )
+        if instance.get_status_display() == "publish":
+            for student in students:
+                AssignmentResult.objects.get_or_create(
+                    student=student,
+                    assignment=instance
+                )
+                _update_final_result(student)
+        else:
+            _deletes_result(instance)
+
+
 @receiver(post_save, sender=Assignment)
 def updates_result(sender, instance, created, **kwargs):
-    students = Student.objects.filter(
-        belong_in__in=instance.courses.values('id')
-    )
-    if instance.get_status_display() == "publish":
-        for student in students:
-            AssignmentResult.objects.get_or_create(
-                student=student,
-                assignment=instance
-            )
-            _update_final_result(student)
-    else:
-        _deletes_result(instance)
+    if not created:
+        students = Student.objects.filter(
+            belong_in__in=instance.courses.values('id')
+        )
+        if instance.get_status_display() == "publish":
+            for student in students:
+                AssignmentResult.objects.get_or_create(
+                    student=student,
+                    assignment=instance
+                )
+                _update_final_result(student)
+        else:
+            _deletes_result(instance)
 
 
 @receiver(post_delete, sender=Assignment)

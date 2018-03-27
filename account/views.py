@@ -3,7 +3,7 @@ from django.shortcuts import render
 
 from account.models import MyUser, Student
 from sis.decorators import redirect_admin
-from sis.models import Assignment, AssignmentResult
+from sis.models import AssignmentResult
 
 
 @redirect_admin
