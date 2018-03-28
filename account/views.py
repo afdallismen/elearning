@@ -72,4 +72,5 @@ def print_result(request):
                     0
                 ))
         data[str(assignment).title()].append(total if total else int(0))
+        print(data)
     return render(request, 'print/student_result.html', {'data': data})
