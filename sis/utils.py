@@ -1,7 +1,7 @@
 import base64
 from urllib.parse import urlencode
 
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.html import strip_tags, format_html
 from django.utils.translation import ugettext as _

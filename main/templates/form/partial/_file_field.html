@@ -7,7 +7,7 @@
   </div>
   <div class="custom-file">
     <input type="file" name="{% if prefix %}{{prefix}}-{% endif %}{{field.name}}" class="custom-file-input">
-    <span class="custom-file-control control-{{field.name}}">Unggah photo</span>
+    <span class="custom-file-label control-{{field.name}}">Unggah photo</span>
   </div>
   {% if field.help_text %}<small class="form-text text-muted d-block">{{field.help_text|striptags}}</small>{% endif %}
   <div class="invalid-feedback">

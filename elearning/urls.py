@@ -18,7 +18,6 @@ from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
 
-import debug_toolbar
 from registration.backends.hmac import views as regis_views
 
 from account.forms import StudentRegistrationForm
@@ -26,7 +25,6 @@ from account.forms import StudentRegistrationForm
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^__debug__/', include(debug_toolbar.urls)),
     url(r'^tinymce/', include('tinymce.urls')),
     url(r'^nested_admin/', include('nested_admin.urls')),
     url(r'^account/register/$',

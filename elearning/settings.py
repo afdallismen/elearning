@@ -41,15 +41,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-    'debug_toolbar',
-    'autofixture',
     'tinymce',
     'nested_admin',
-    'imagekit'
+    'imagekit',
+    'jquery',
+    'djangoformsetjs',
 ]
 
 MIDDLEWARE = [
-    'debug_toolbar.middleware.DebugToolbarMiddleware',  # Debug Toolbar requirement  # noqa
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -152,13 +151,6 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-LOGGING = {'version': 1,
-           'handlers': {'console': {'level': 'DEBUG',
-                                    'class': 'logging.StreamHandler'}},
-           'loggers': {'werkzeug': {'handlers': ['console'],
-                                    'level': 'DEBUG',
-                                    'propagate': True}}}
 
 TINYMCE_JS_URL = STATIC_URL + 'tinymce_4.6.5/js/tinymce/tinymce.min.js'
 TINYMCE_JS_ROOT = os.path.join(BASE_DIR, 'sis/static/tinymce_4.6.5/js/tinymce')
