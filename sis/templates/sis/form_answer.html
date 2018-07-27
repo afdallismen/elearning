@@ -1,5 +1,8 @@
 {% extends 'main/auth/base.html' %}
 
+{% load static %}
+{% load formset_tags %}
+
 {% block content %}
 <div class="z-depth-1 white px-5 pt-5 pb-5 mb-5">
   <div class="mb-5" id="container-counter">
@@ -24,9 +27,35 @@
       {% endif %}
       <hr>
       <p class="h6 text-muted mb-4">Jawaban :</p>
-      <form id="form_answer" method="POST" class="ml-3" action="#">
+      <form id="form_answer" method="POST" class="ml-3" action="#" enctype="multipart/form-data">
         {% csrf_token %}
         <textarea class="col-12 mb-3" type="text" name="text">{% if answer %}{{answer.text}}{% endif %}</textarea>
+        <div id="formset" data-formset-prefix="{{ formset.prefix }}">
+          {{ formset.management_form }}
+
+          <div data-formset-body>
+            <!-- New forms will be inserted in here -->
+            {% for form in formset %}
+              <div class="mb-2" data-formset-form>
+                {{form}}
+              </div>
+            {% endfor %}
+          </div>
+
+          <!-- The empty form template. By wrapping this in a <script> tag, the
+          __prefix__ placeholder can easily be replaced in both attributes and
+          any scripts -->
+          <script type="form-template" data-formset-empty-form>
+              {% escapescript %}
+                  <div class="mb-2" data-formset-form>
+                    {{formset.empty_form}}
+                  </div>
+              {% endescapescript %}
+          </script>
+
+          <!-- This button will add a new form when clicked -->
+          <input type="button" class="btn btn-sm btn-deep-orange mb-5" value="Tambah lampiran" data-formset-add>
+        </div>
         <input type="submit" class="btn btn-success ml-auto" value="Submit">
         <a class="btn btn-flat btn-default" href="{% url 'sis:assignment_detail' pk=question.assignment_id %}">Kembali</a>
       </form>
@@ -36,6 +65,7 @@
 {% endblock %}
 
 {% block script %}
+<script type="text/javascript" src="{% static 'js/jquery.formset.js' %}"></script>
 <script type="text/javascript">
   function msToTime(duration) {
     var milliseconds = parseInt((duration%1000)/100)
@@ -66,5 +96,13 @@
       $('#container-counter').hide()
     }
   })
+</script>
+<script>
+  jQuery(function($) {
+    $("#formset").formset({
+        animateForms: true,
+        reorderMode: 'dom',
+    });
+  });
 </script>
 {% endblock %}

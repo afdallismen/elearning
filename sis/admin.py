@@ -1,10 +1,15 @@
+import re
 import nested_admin
+from humanize import filesize
 
 from django.contrib import admin
+from django.contrib.contenttypes.models import ContentType
 from django.forms import modelformset_factory
+from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.translation import ugettext as _
 
+from account.models import Student
 from main.templatetags.mytags import letter
 from sis.actions import print_students_result
 from sis.forms import BaseQuestionFormSet
@@ -100,7 +105,7 @@ class AssignmentAdmin(nested_admin.NestedModelAdmin):
 
 class AnswerAdmin(nested_admin.NestedModelAdmin, SisAdminMixin):
     fields = ['text', 'score']
-    readonly_fields = ['text']
+    readonly_fields = ['text', ]
     search_fields = ('student__user__username',
                      'student__user__first_name',
                      'student__user__last_name',

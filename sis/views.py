@@ -1,10 +1,12 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.contenttypes.models import ContentType
 from django.http import Http404
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
 from sis.decorators import redirect_admin, reject_draft, reject_expired
-from sis.models import Module, Assignment, Question, Answer
+from sis.forms import FileUploadFormset
+from sis.models import Module, Assignment, Question, Answer, Attachment
 
 
 @login_required
@@ -44,39 +46,42 @@ def assignment_detail(request, pk):
 def do_answer(request, pk):
     try:
         question = Question.objects.get(pk=pk)
-        try:
-            answer = request.user.student.answer_set.get(question=question)
-            if request.method == "POST":
-                text = request.POST.get('text', None)
-                if answer:
-                    answer.text = text
-                    answer.save()
-                return redirect(
-                    reverse(
-                        'sis:assignment_detail',
-                        kwargs={'pk': question.assignment_id}
-                    )
+        answer, created = Answer.objects.get_or_create(
+            student=request.user.student,
+            question=question,
+        )
+        content_type = ContentType.objects.get_for_model(
+            Answer)
+        attachments = Attachment.objects.filter(
+            content_type=content_type,
+            object_id=answer.id,
+        ).values('file_upload')
+        formset = FileUploadFormset(queryset=attachments)
+        initials = attachments.values('file_upload')
+        if initials.exists():
+            formset = FileUploadFormset(initial=initials)
+        if request.method == "POST":
+            text = request.POST.get('text', None)
+            answer.text = text
+            answer.save()
+            data = FileUploadFormset(request.POST, request.FILES)
+            if data.is_valid():
+                instances = data.save(commit=False)
+                for instance in instances:
+                    instance.content_type = content_type
+                    instance.object_id = answer.id
+                    instance.save()
+            return redirect(
+                reverse(
+                    'sis:assignment_detail',
+                    kwargs={'pk': question.assignment_id}
                 )
-        except Answer.DoesNotExist:
-            answer = False
-            if request.method == "POST":
-                answer = request.POST.get('text', None)
-                if answer:
-                    Answer.objects.get_or_create(
-                        student=request.user.student,
-                        question=question,
-                        text=answer
-                    )
-                return redirect(
-                    reverse(
-                        'sis:assignment_detail',
-                        kwargs={'pk': question.assignment_id}
-                    )
-                )
+            )
     except Question.DoesNotExist:
         raise Http404("Question does not exist")
     contexts = {
         'answer': answer,
-        'question': question
+        'question': question,
+        'formset': formset
     }
     return render(request, 'sis/form_answer.html', contexts)

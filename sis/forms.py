@@ -1,7 +1,10 @@
 import nested_admin
+from djangoformsetjs.utils import formset_media_js
 
-from django.forms import ValidationError
+from django import forms
 from django.utils.translation import ugettext as _
+
+from sis.models import Attachment
 
 
 class BaseQuestionFormSet(nested_admin.NestedInlineFormSet):
@@ -29,8 +32,28 @@ class BaseQuestionFormSet(nested_admin.NestedInlineFormSet):
                             question.save()
                         count = count + 1
                 else:
-                    raise ValidationError(_("Make sure score percentage "
+                    raise forms.ValidationError(_("Make sure score percentage "
                                           "add up to 100."))
             elif total > 100:
-                raise ValidationError(_("Make sure score percentage "
+                raise forms.ValidationError(_("Make sure score percentage "
                                       "add up to 100."))
+
+
+class AttachmentForm(forms.ModelForm):
+    class Meta:
+        model = Attachment
+        fields = ['file_upload']
+    class Media:
+        js = formset_media_js
+
+
+FileUploadFormset = forms.models.modelformset_factory(
+    Attachment,
+    form=AttachmentForm,
+    fields=['file_upload'],
+    widgets={'file_upload': forms.ClearableFileInput(attrs={
+            'class': "form-control-file",
+            'label': "Lampiran"
+        })
+    }
+)

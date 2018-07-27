@@ -18,5 +18,5 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         call_command('reset_db', '--noinput')
         removes_migrations()
-        call_command('makemigrations')
+        call_command('makemigrations', 'sis', 'account')      
         call_command('migrate')
