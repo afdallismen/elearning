@@ -36,6 +36,9 @@
       <li class="nav-item mr-2 {% if 'assignment' == request.GET.content or 'assignment' in request.path %}z-depth-1 amber pr-2{% endif %}">
         <a class="nav-link {% if 'assignment' == request.GET.content or 'assignment' in request.path %}font-weight-bold black-text{% endif %}" href="{% url 'main:index' %}?content=assignment"><i class="fa fa-file-text"></i> Tugas</a>
       </li>
+      <li class="nav-item mr-2 {% if 'chat' == request.GET.content or 'chat' in request.path %}z-depth-1 amber pr-2{% endif %}">
+        <a class="nav-link {% if 'chat' == request.GET.content or 'chat' in request.path %}font-weight-bold black-text{% endif %}" href="{% url 'chat:index' %}"><i class="fa fa-comment"></i> Chat</a>
+      </li>
     </ul>
     <ul class="navbar-nav ml-auto">
       <li class="nav-item dropdown">

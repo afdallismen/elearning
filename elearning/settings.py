@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'account.apps.AccountConfig',
     'sis.apps.SisConfig',
     'main.apps.MainConfig',
+    'chat.apps.ChatConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
     'imagekit',
     'jquery',
     'djangoformsetjs',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -174,3 +176,13 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # EMAIL_HOST_PASSWORD = 'zvcvmsgdbxbhzntj'
 # EMAIL_PORT = 587
 # EMAIL_USE_TLS = True
+
+ASGI_APPLICATION = 'elearning.routing.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}

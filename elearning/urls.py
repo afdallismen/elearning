@@ -34,5 +34,6 @@ urlpatterns = [
     url(r'^account/', include('registration.backends.hmac.urls')),
     url(r'^account/', include('account.urls')),
     url(r'^sis/', include('sis.urls')),
+    url(r'^chat/', include('chat.urls')),
     url(r'^', include('main.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
